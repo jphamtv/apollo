@@ -1,3 +1,6 @@
+# My stuff
+messaging-app.md
+
 # Logs
 logs
 *.log
@@ -128,3 +131,66 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Prisma
+prisma/*.db
+*/prisma/migrations/
+*/prisma/client/
+
+# Build directories
+*/build/
+*/dist/
+*/public/build/
+
+# Testing
+/coverage/
+.jest/
+jest.config.js.map
+
+# Local development
+*.local
+.local/
+
+# Debug
+debug/
+.debug/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+temp/
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Logs (additional)
+debug.log
+error.log
+combined.log
+
+# React/Frontend specific
+# Dependencies
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/build
+
+# Misc
+.env.development
+.env.production
+.env.staging

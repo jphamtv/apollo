@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      String                    @id @default(uuid())
+  username                String                    @unique
+  email                   String                    @unique
+  password                String
+  profile                 UserProfile?
+  messages                Message[]
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  ConversationParticipant ConversationParticipant[]
+}
+
+model UserProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  displayName String
+  bio         String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  text           String
+  imageUrl       String?
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  isRead         Boolean      @default(false)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+  @@index([senderId])
+}
+
+model Conversation {
+  id           String                    @id @default(uuid())
+  name         String? // For group chats
+  isGroup      Boolean                   @default(false)
+  messages     Message[]
+  participants ConversationParticipant[]
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+}
+
+model ConversationParticipant {
+  id             String       @id @default(uuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  joinedAt       DateTime     @default(now())
+  leftAt         DateTime?
+
+  @@unique([userId, conversationId])
+  @@index([userId])
+  @@index([conversationId])
+}
