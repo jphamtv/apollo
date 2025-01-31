@@ -21,6 +21,12 @@ export const getByEmail = async (email: string) => {
   });
 };
 
+export const getByUsername = async (username: string) => {
+  return prisma.user.findUnique({
+    where: { username },
+  });
+};
+
 export const getById = async (id: string) => {
   return prisma.user.findUnique({
     where: { id },
@@ -72,6 +78,7 @@ export const resetPassword = async (token: string, newPassword: string) => {
 export default {
   createNew,
   getByEmail,
+  getByUsername,
   getById,
   createPasswordResetToken,
   resetPassword,
