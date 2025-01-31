@@ -7,9 +7,9 @@ import {
   verifyUser,
 } from "../controllers/authController";
 import { authenticateJWT } from "../middleware/authMiddleware";
-// import { requestReset, confirmReset, validateResetRequest, validateResetConfirm } from "../controllers/resetController";
+import { requestReset, confirmReset, validateResetRequest, validateResetConfirm } from "../controllers/resetController";
 import { User, AuthError, AuthRequest } from "../types/authTypes";
-import { loginLimiter, registerLimiter } from "../middleware/rateLimitMiddleware";
+import { loginLimiter, registerLimiter, generalLimiter } from "../middleware/rateLimitMiddleware";
 
 const router = express.Router();
 
@@ -44,7 +44,7 @@ router.get("/verify", authenticateJWT, verifyUser as unknown as RequestHandler);
 router.get("/logout", authenticateJWT, logoutUser);
 
 // // Password reset routes
-// router.post("/reset-request", authLimiter, validateResetRequest, requestReset);
-// router.post("/reset-confirm", authLimiter, validateResetConfirm, confirmReset);
+router.post("/reset-request", generalLimiter, validateResetRequest, requestReset as RequestHandler);
+router.post("/reset-confirm", generalLimiter, validateResetConfirm, confirmReset as RequestHandler);
 
 export default router;

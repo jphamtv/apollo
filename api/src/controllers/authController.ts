@@ -48,8 +48,8 @@ export const registerUser = [
 ] as RequestHandler[];
 
 const generateToken = (id: string) => {
-  return jwt.sign({ id }, jwtConfig.secret, {
-    expiresIn: jwtConfig.expiresIn,
+  return jwt.sign({ id }, jwtConfig.secret as jwt.Secret, {
+    expiresIn: jwtConfig.expiresIn as jwt.SignOptions["expiresIn"],
   });
 };
 
