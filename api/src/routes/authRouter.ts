@@ -7,13 +7,15 @@ import {
   verifyUser,
 } from "../controllers/authController";
 import { authenticateJWT } from "../middleware/authMiddleware";
+// import { requestReset, confirmReset, validateResetRequest, validateResetConfirm } from "../controllers/resetController";
 import { User, AuthError, AuthRequest } from "../types/authTypes";
+import { loginLimiter, registerLimiter } from "../middleware/rateLimitMiddleware";
 
 const router = express.Router();
 
 // Public routes
-router.post("/register", registerUser);
-router.post("/login", (req: Request, res: Response, next: NextFunction) => {
+router.post("/register", registerLimiter, registerUser);
+router.post("/login", loginLimiter, (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate(
     "local",
     { session: false },
@@ -40,5 +42,9 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
 // Protected routes
 router.get("/verify", authenticateJWT, verifyUser as unknown as RequestHandler);
 router.get("/logout", authenticateJWT, logoutUser);
+
+// // Password reset routes
+// router.post("/reset-request", authLimiter, validateResetRequest, requestReset);
+// router.post("/reset-confirm", authLimiter, validateResetConfirm, confirmReset);
 
 export default router;
