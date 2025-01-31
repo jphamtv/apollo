@@ -9,14 +9,18 @@ datasource db {
 
 model User {
   id                      String                    @id @default(uuid())
-  username                String                    @unique
   email                   String                    @unique
+  username                String                    @unique
   password                String
+  resetToken              String?
+  resetTokenExpiry        DateTime?
   profile                 UserProfile?
   messages                Message[]
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
   ConversationParticipant ConversationParticipant[]
+
+  @@map("users")
 }
 
 model UserProfile {
@@ -28,6 +32,8 @@ model UserProfile {
   imageUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@map("user_profiles")
 }
 
 model Message {
@@ -43,6 +49,7 @@ model Message {
 
   @@index([conversationId])
   @@index([senderId])
+  @@map("messages")
 }
 
 model Conversation {
@@ -53,6 +60,8 @@ model Conversation {
   participants ConversationParticipant[]
   createdAt    DateTime                  @default(now())
   updatedAt    DateTime                  @updatedAt
+
+  @@map("conversations")
 }
 
 model ConversationParticipant {
@@ -67,4 +76,5 @@ model ConversationParticipant {
   @@unique([userId, conversationId])
   @@index([userId])
   @@index([conversationId])
+  @@map("conversation_participants")
 }
