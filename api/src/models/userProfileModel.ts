@@ -38,7 +38,12 @@ export const getByUserId = async (userId: string) => {
 export const update = async (userId: string, data: UpdateProfileData) => {
   return prisma.userProfile.update({
     where: { userId },
-    data
+    data,
+    select: {
+      displayName: true,
+      bio: true,
+      imageUrl: true
+    }
   });
 } 
 
