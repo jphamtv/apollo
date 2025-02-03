@@ -3,6 +3,7 @@ import cors from "cors";
 import passport from "passport";
 import initializePassport from "./config/passportConfig";
 import authRouter from "./routes/authRouter";
+import userProfileRouter from "./routes/userProfilesRouter";
 
 const app: Express = express();
 
@@ -29,6 +30,7 @@ app.use(passport.initialize());
 
 // Routes
 app.use("/api/auth", authRouter);
+app.use("api/users", userProfileRouter);
 
 // Error handing
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

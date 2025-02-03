@@ -9,8 +9,8 @@ import { LoginResponse, AuthRequest } from "../types/authTypes";
 const validateUser = [
   body("username")
     .trim()
-    .isLength({ min: 3, max: 200 })
-    .withMessage(`Username must between 3 and 200 characters`)
+    .isLength({ min: 3, max: 20 })
+    .withMessage(`Username must between 3 and 20 characters`)
     .matches(/^[a-z0-9 '-_]+$/i)
     .withMessage("Username contains invalid characters"),
   body("email").trim().isEmail().withMessage(`Invalid email`),

@@ -43,7 +43,7 @@ router.post("/login", loginLimiter, (req: Request, res: Response, next: NextFunc
 router.get("/verify", authenticateJWT, verifyUser as unknown as RequestHandler);
 router.get("/logout", authenticateJWT, logoutUser);
 
-// // Password reset routes
+// Password reset routes
 router.post("/reset-request", generalLimiter, validateResetRequest, requestReset as RequestHandler);
 router.post("/reset-confirm", generalLimiter, validateResetConfirm, confirmReset as RequestHandler);
 
