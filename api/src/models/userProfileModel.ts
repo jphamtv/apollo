@@ -1,12 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 const prisma = new PrismaClient();
 
-// interface UpdateProfileData {
-//   displayName?: string;
-//   bio?: string;
-//   imageUrl?: string;
-// }
-
 type UserProfileWithDetails = Prisma.UserGetPayload<{
   select: {
     id: true,
