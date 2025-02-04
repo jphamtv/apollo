@@ -1,22 +1,6 @@
 import { PrismaClient, Prisma, ConversationParticipant, Message } from "@prisma/client";
 const prisma = new PrismaClient();
 
-type ConversationWithDetails = Prisma.ConversationGetPayload<{
-  include: {
-    messages: true,
-    participants: {
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-      },
-    },
-  },
-}>;
-
 export const createNew = async (data: Prisma.ConversationCreateInput): Promise<ConversationWithDetails> => {
   return prisma.conversation.create({
     data,

@@ -1,14 +1,7 @@
 import { Request } from "express";
-import { User as PrismaUser } from "@prisma/client";
+import { UserBasicDetails } from './base';
 
-// Use Prisma's generated User type as the base
-export type User = PrismaUser;
-
-// Auth-specific user type - only the fields we need for auth
-export type AuthUser = Pick<
-  PrismaUser,
-  "id" | "username" | "email"  
->;
+export type AuthUser = UserBasicDetails;
 
 // For the authenticated requests
 export interface AuthRequest extends Request {
@@ -24,4 +17,13 @@ export interface LoginResponse {
 export interface AuthError {
   message: string;
   status?: number;
+}
+
+export interface JwtConfig {
+  secret: string;
+  expiresIn: string | number;
+}
+
+export interface JwtPayload {
+  id: string;
 }

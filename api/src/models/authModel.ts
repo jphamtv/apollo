@@ -2,23 +2,6 @@ import { PrismaClient, Prisma } from "@prisma/client";
 import crypto from 'crypto';
 const prisma = new PrismaClient();
 
-type UserBasicDetails = Prisma.UserGetPayload<{
-  select: {
-    id: true;
-    email: true;
-    username: true;
-  };
-}>;
-
-type UserWithAuth = Prisma.UserGetPayload<{
-  select: {
-    id: true;
-    email: true;
-    username: true;
-    password: true;
-  }
-}>;
-
 export const createNew = async (
   username: string,
   email: string,
