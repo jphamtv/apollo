@@ -1,4 +1,6 @@
-import { PrismaClient, Prisma, ConversationParticipant, Message } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
+import { ConversationWithDetails } from "../types";
+
 const prisma = new PrismaClient();
 
 export const createNew = async (data: Prisma.ConversationCreateInput): Promise<ConversationWithDetails> => {

@@ -1,5 +1,7 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import crypto from 'crypto';
+import { UserBasicDetails, UserWithAuth } from "../types";
+
 const prisma = new PrismaClient();
 
 export const createNew = async (

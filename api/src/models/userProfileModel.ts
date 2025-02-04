@@ -1,6 +1,7 @@
 import { PrismaClient, Prisma } from "@prisma/client";
-const prisma = new PrismaClient();
 import { UserWithProfile, UserProfileDetails } from '../types';
+
+const prisma = new PrismaClient();
 
 export const getByUsername = async (
   username: string
