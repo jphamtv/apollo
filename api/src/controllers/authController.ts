@@ -21,7 +21,7 @@ const validateUser = [
 ];
 
 export const registerUser = [
-  validateUser,
+  ...validateUser,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
