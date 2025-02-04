@@ -1,29 +1,37 @@
 import { PrismaClient, Prisma, ConversationParticipant, Message } from "@prisma/client";
 const prisma = new PrismaClient();
 
-interface ConversationData {
-  name?: string; // For group chats
-  isGroup?: boolean;
-  messages?: Prisma.MessageCreateInput[];
-  participants?: Prisma.ConversationParticipantCreateInput[];
-}
+type ConversationWithDetails = Prisma.ConversationGetPayload<{
+  include: {
+    messages: true,
+    participants: {
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+    },
+  },
+}>;
 
-interface ConversationWithDetails {
-  id: string;
-  name?: string;
-  isGroup: boolean;
-  messages: Message[];
-  participants: ConversationParticipant[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export const createNew = async (data: ConversationData): Promise<ConversationWithDetails> => {
+export const createNew = async (data: Prisma.ConversationCreateInput): Promise<ConversationWithDetails> => {
   return prisma.conversation.create({
     data,
     include: {
       messages: true,
-      participants: true
+      participants: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+        },
+      },
     },
   });
 };
@@ -75,26 +83,35 @@ export const getById = async (id: string): Promise<ConversationWithDetails | nul
 
 export const update = async (
   id: string,
-  data: ConversationData
+  data: Prisma.ConversationUpdateInput
 ): Promise<ConversationWithDetails | null> => {
   return prisma.conversation.update({
     where: { id },
     data,
     include: {
       messages: true,
-      participants: true,
+      participants: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+        },
+      },
     },
   });
-}; 
+};
 
 export const addParticipant = async (
   conversationId: string,
   userId: string
-): Promise<ConversationParticipant> => {
+) => {
   return prisma.conversationParticipant.create({
     data: {
-      conversationId,
-      userId,
+      conversation: { connect: { id: conversationId } },
+      user: { connect: { id: userId } },
     },
   });
 };
@@ -102,22 +119,17 @@ export const addParticipant = async (
 export const removeParticipant = async (
   conversationId: string,
   userId: string
-): Promise<ConversationParticipant> => {
+) => {
   return prisma.conversationParticipant.delete({
     where: {
       userId_conversationId: {
-        conversationId,
         userId,
+        conversationId,
       },
     },
   });
 };
 
-export const deleteConversation = async (id: string): Promise<void> => {
-  await prisma.conversation.delete({
-    where: { id },
-  });
-};
 
 export const getConversationsWithLatestMessage = async (userId: string) => {
   return prisma.conversation.findMany({
@@ -152,6 +164,20 @@ export const getConversationsWithLatestMessage = async (userId: string) => {
   });
 };
 
+export const deleteConversation = async (id: string): Promise<void> => {
+  await prisma.$transaction([
+    prisma.conversationParticipant.deleteMany({
+      where: { conversationId: id },
+    }),
+    prisma.message.deleteMany({
+      where: { conversationId: id },
+    }),
+    prisma.conversation.delete({
+      where: { id },
+    }),
+  ]);
+};
+
 export default {
   createNew,
   getAllByUserId,
@@ -159,6 +185,6 @@ export default {
   update,
   addParticipant,
   removeParticipant,
-  deleteConversation,
   getConversationsWithLatestMessage,
+  deleteConversation,
 };
