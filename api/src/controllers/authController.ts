@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { body, validationResult } from "express-validator";
 import { jwtConfig } from "../config/jwtConfig";
 import { getByEmail, createNew } from "../models/authModel";
-import { LoginResponse, AuthRequest } from "../types/authTypes";
+import { AuthRequest, LoginResponse } from "../types";
 
 const validateUser = [
   body("username")

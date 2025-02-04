@@ -8,8 +8,8 @@ import {
 } from "../controllers/authController";
 import { authenticateJWT } from "../middleware/authMiddleware";
 import { requestReset, confirmReset, validateResetRequest, validateResetConfirm } from "../controllers/resetController";
-import { User, AuthError, AuthRequest } from "../types/authTypes";
 import { loginLimiter, registerLimiter, generalLimiter } from "../middleware/rateLimitMiddleware";
+import { User, AuthError, AuthRequest } from "../types";
 
 const router = express.Router();
 

@@ -1,8 +1,7 @@
 import { Request, Response, RequestHandler } from "express";
 import { body, validationResult } from "express-validator";
 import { getByUsername, getByUserId, update } from "../models/userProfileModel";
-import { AuthRequest } from "../types/authTypes"
-import { Prisma } from "@prisma/client";
+import { AuthRequest } from "../types";
 
 const validateUserProfile = [
   body("displayName")
