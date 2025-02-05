@@ -3,7 +3,7 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { jwtConfig } from "./jwtConfig";
-import { getByEmail, getById } from "../models/authModel";
+import { findByEmail, findById } from "../models/authModel";
 import { JwtPayload } from "../types/jwtTypes";
 
 function initialize() {
@@ -17,7 +17,7 @@ function initialize() {
     new LocalStrategy(options, async (email, password, done) => {
       try {
         // Find user by email
-        const user = await getByEmail(email);
+        const user = await findByEmail(email);
 
         if (!user) {
           return done(null, false, { message: "Incorrect email" });
@@ -45,7 +45,7 @@ function initialize() {
   passport.use(
     new JwtStrategy(jwtOptions, async (jwt_payload: JwtPayload, done) => {
       try {
-        const user = await getById(jwt_payload.id);
+        const user = await findById(jwt_payload.id);
         if (user) {
           return done(null, user);
         }

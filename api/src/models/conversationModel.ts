@@ -3,7 +3,7 @@ import { ConversationWithDetails } from "../types";
 
 const prisma = new PrismaClient();
 
-export const createNew = async (data: Prisma.ConversationCreateInput): Promise<ConversationWithDetails> => {
+export const create = async (data: Prisma.ConversationCreateInput): Promise<ConversationWithDetails> => {
   return prisma.conversation.create({
     data,
     include: {
@@ -22,7 +22,7 @@ export const createNew = async (data: Prisma.ConversationCreateInput): Promise<C
   });
 };
 
-export const getAllByUserId = async (userId: string) => {
+export const findAllByUserId = async (userId: string) => {
   return prisma.conversationParticipant.findMany({
     where: { userId },
     include: {
@@ -48,7 +48,7 @@ export const getAllByUserId = async (userId: string) => {
   });
 };
 
-export const getById = async (id: string): Promise<ConversationWithDetails | null> => {
+export const findById = async (id: string): Promise<ConversationWithDetails | null> => {
   return prisma.conversation.findUnique({
     where: { id },
     include: {
@@ -117,7 +117,7 @@ export const removeParticipant = async (
 };
 
 
-export const getConversationsWithLatestMessage = async (userId: string) => {
+export const findConversationsWithLatestMessage = async (userId: string) => {
   return prisma.conversation.findMany({
     where: {
       participants: {
@@ -165,12 +165,12 @@ export const deleteConversation = async (id: string): Promise<void> => {
 };
 
 export default {
-  createNew,
-  getAllByUserId,
-  getById,
+  create,
+  findAllByUserId,
+  findById,
   update,
   addParticipant,
   removeParticipant,
-  getConversationsWithLatestMessage,
+  findConversationsWithLatestMessage,
   deleteConversation,
 };

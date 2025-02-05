@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { body, validationResult } from "express-validator";
 import { jwtConfig } from "../config/jwtConfig";
-import { getByEmail, createNew } from "../models/authModel";
+import { findByEmail, create } from "../models/authModel";
 import { AuthRequest, LoginResponse } from "../types";
 
 const validateUser = [
@@ -31,13 +31,13 @@ export const registerUser = [
     try {
       const { username, email, password } = req.body;
 
-      const existingUser = await getByEmail(email);
+      const existingUser = await findByEmail(email);
       if (existingUser) {
         return res.status(400).json({ message: "Email already registered" });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const user = await createNew(username, email, hashedPassword);
+      const user = await create(username, email, hashedPassword);
 
       res.status(201).json({ message: "Account created successfully" });
     } catch (error) {

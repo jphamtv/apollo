@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
-import { createPasswordResetToken, resetPassword } from '../models/authModel';
+import { createResetToken, resetPassword } from '../models/authModel';
 import { sendPasswordResetEmail } from '../services/emailService';
 
 export const validateResetRequest = [
@@ -30,7 +30,7 @@ export const requestReset = async (req: Request, res: Response) => {
 
   try {
     const { email } = req.body;  
-    const resetToken = await createPasswordResetToken(email);
+    const resetToken = await createResetToken(email);
 
     // Whether email exists or not, proceed with the reset flow
     // This prevents email enumeration

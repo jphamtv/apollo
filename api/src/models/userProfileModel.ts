@@ -3,7 +3,7 @@ import { UserWithProfile, UserProfileDetails } from '../types';
 
 const prisma = new PrismaClient();
 
-export const getByUsername = async (
+export const findByUsername = async (
   username: string
 ): Promise<UserWithProfile | null> => {
   return prisma.user.findUnique({
@@ -22,7 +22,7 @@ export const getByUsername = async (
   });
 };
 
-export const getByUserId = async (
+export const findByUserId = async (
   userId: string
 ): Promise<UserProfileDetails | null> => {
   return prisma.userProfile.findUnique({
@@ -52,7 +52,7 @@ export const update = async (
 
 
 export default {
-  getByUsername,
-  getByUserId,
+  findByUsername,
+  findByUserId,
   update
 };

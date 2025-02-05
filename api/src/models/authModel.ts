@@ -4,7 +4,7 @@ import { UserBasicDetails, UserWithAuth } from "../types";
 
 const prisma = new PrismaClient();
 
-export const createNew = async (
+export const create = async (
   username: string,
   email: string,
   hashedPassword: string,
@@ -23,7 +23,7 @@ export const createNew = async (
   });
 };
 
-export const getByEmail = async (
+export const findByEmail = async (
   email: string
 ): Promise<UserWithAuth | null> => {
   return prisma.user.findUnique({
@@ -37,7 +37,7 @@ export const getByEmail = async (
   });
 };
 
-export const getByUsername = async (
+export const findByUsername = async (
   username: string
 ): Promise<UserWithAuth | null> => {
   return prisma.user.findUnique({
@@ -51,7 +51,7 @@ export const getByUsername = async (
   });
 };
 
-export const getById = async (
+export const findById = async (
   id: string
 ): Promise<UserBasicDetails | null> => {
   return prisma.user.findUnique({
@@ -64,10 +64,10 @@ export const getById = async (
   });
 };
 
-export const createPasswordResetToken = async (
+export const createResetToken = async (
   email: string
 ): Promise<string | null> => {
-  const user = await getByEmail(email);
+  const user = await findByEmail(email);
   if (!user) return null;
 
   const resetToken = crypto.randomBytes(32).toString('hex');
@@ -117,10 +117,10 @@ export const resetPassword = async (
 };
 
 export default {
-  createNew,
-  getByEmail,
-  getByUsername,
-  getById,
-  createPasswordResetToken,
+  create,
+  findByEmail,
+  findByUsername,
+  findById,
+  createResetToken,
   resetPassword,
 };

@@ -1,6 +1,6 @@
 import { Request, Response, RequestHandler } from "express";
 import { body, validationResult } from "express-validator";
-import { getByUsername, getByUserId, update } from "../models/userProfileModel";
+import { findByUsername, findByUserId, update } from "../models/userProfileModel";
 import { AuthRequest } from "../types";
 
 const validateUserProfile = [
@@ -33,7 +33,7 @@ export const updateUserProfile = [
     try {
       const userId = req.user.id;      
 
-      const existingProfile = await getByUserId(userId);
+      const existingProfile = await findByUserId(userId);
 
       if (!existingProfile) {
         return res.status(404).json({ message: "Profile not found" });
@@ -54,9 +54,9 @@ export const updateUserProfile = [
   },
 ] as RequestHandler[];
 
-export const getProfile = async (req: Request, res: Response) => {
+export const getUserProfile = async (req: Request, res: Response) => {
   try {
-    const userProfile = await getByUsername(req.params.username);
+    const userProfile = await findByUsername(req.params.username);
 
     if (!userProfile) {
       return res.status(404).json({
