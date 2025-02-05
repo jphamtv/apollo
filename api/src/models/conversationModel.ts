@@ -22,26 +22,34 @@ export const create = async (data: Prisma.ConversationCreateInput): Promise<Conv
   });
 };
 
-export const findAllByUserId = async (userId: string) => {
-  return prisma.conversationParticipant.findMany({
-    where: { userId },
+
+export const findConversationsByUserId = async (userId: string) => {
+  return prisma.conversation.findMany({
+    where: {
+      participants: {
+        some: {
+          userId,
+        },
+      },
+    },
     include: {
-      conversation: {
+      messages: {
+        take: 1,
+        orderBy: { createdAt: 'desc' },
+      },
+      participants: {
         include: {
-          messages: {
-            take: 1,
-            orderBy: { createdAt: 'desc'},
-          },
-          participants: {
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  username: true,
-                },
-              },
+          user: {
+            select: {
+              id: true,
+              username: true,
             },
           },
+        },
+      },
+      _count: {
+        select: {
+          messages: true,
         },
       },
     },
@@ -116,41 +124,7 @@ export const removeParticipant = async (
   });
 };
 
-
-export const findConversationsWithLatestMessage = async (userId: string) => {
-  return prisma.conversation.findMany({
-    where: {
-      participants: {
-        some: {
-          userId,
-        },
-      },
-    },
-    include: {
-      messages: {
-        take: 1,
-        orderBy: { createdAt: 'desc' },
-      },
-      participants: {
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-            },
-          },
-        },
-      },
-      _count: {
-        select: {
-          messages: true,
-        },
-      },
-    },
-  });
-};
-
-export const deleteConversation = async (id: string): Promise<void> => {
+export const deleteById = async (id: string): Promise<void> => {
   await prisma.$transaction([
     prisma.conversationParticipant.deleteMany({
       where: { conversationId: id },
@@ -166,11 +140,10 @@ export const deleteConversation = async (id: string): Promise<void> => {
 
 export default {
   create,
-  findAllByUserId,
   findById,
+  findConversationsByUserId,
   update,
   addParticipant,
   removeParticipant,
-  findConversationsWithLatestMessage,
-  deleteConversation,
+  deleteById,
 };
