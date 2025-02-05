@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import { createResetToken, resetPassword } from '../models/authModel';
@@ -22,10 +22,11 @@ export const validateResetConfirm = [
     .withMessage('Password must be at least 8 characters long'),
 ];
 
-export const requestReset = async (req: Request, res: Response) => {
+export const requestReset: RequestHandler = async (req, res): Promise<void> => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    res.status(400).json({ errors: errors.array() });
+    return;
   }
 
   try {
@@ -52,10 +53,11 @@ export const requestReset = async (req: Request, res: Response) => {
   }
 };
 
-export const confirmReset = async (req: Request, res: Response) => {
+export const confirmReset: RequestHandler = async (req, res): Promise<void> => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    res.status(400).json({ errors: errors.array() });
+    return;
   }
 
   try {
@@ -65,9 +67,10 @@ export const confirmReset = async (req: Request, res: Response) => {
     const user = await resetPassword(token, hashedPassword);
 
     if (!user) {
-      return res.status(400).json({ 
+      res.status(400).json({ 
         message: 'Invalid or expired reset token. Please request a new password reset.' 
       });
+      return; 
     }
 
     res.json({ message: 'Password has been reset successfully' });

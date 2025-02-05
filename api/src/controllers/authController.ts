@@ -85,37 +85,39 @@ export const logoutUser = (_req: Request, res: Response) => {
   res.json({ message: "Logged out successfully" });
 };
 
-export const verifyUser = async (
-  req: AuthRequest,
-  res: Response<LoginResponse>,
-) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({
-        message: "Authentication failed",
+export const verifyUser = [
+  async (
+    req: AuthRequest,
+    res: Response<LoginResponse>,
+  ) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          message: "Authentication failed",
+          token: "",
+          user: null,
+        });
+      }
+  
+      // Generate a fresh token
+      const token = generateToken(req.user.id);
+  
+      res.json({
+        message: "Token verified",
+        token,
+        user: {
+          id: req.user.id,
+          email: req.user.email,
+          username: req.user.username,
+        },
+      });
+    } catch (err) {
+      console.error("Verification error: ", err);
+      res.status(500).json({
+        message: "Error during verification",
         token: "",
         user: null,
       });
     }
-
-    // Generate a fresh token
-    const token = generateToken(req.user.id);
-
-    res.json({
-      message: "Token verified",
-      token,
-      user: {
-        id: req.user.id,
-        email: req.user.email,
-        username: req.user.username,
-      },
-    });
-  } catch (err) {
-    console.error("Verification error: ", err);
-    res.status(500).json({
-      message: "Error during verification",
-      token: "",
-      user: null,
-    });
   }
-};
+] as unknown as RequestHandler[];
