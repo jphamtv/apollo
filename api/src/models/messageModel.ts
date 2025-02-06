@@ -17,6 +17,20 @@ export const create = async (data: Prisma.MessageCreateInput): Promise<MessageWi
   });
 };
 
+export const findById = async (id: string): Promise<MessageWithDetails | null> => {
+  return prisma.message.findUnique({
+    where: { id },
+    include: {
+      sender: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+    },
+  });
+};
+
 export const markAsRead = async (
   id: string
 ): Promise<MessageWithDetails> => {
@@ -42,6 +56,7 @@ export const deleteById = async (id: string) => {
 
 export default {
   create,
+  findById,
   markAsRead,
   deleteById,
 };
