@@ -17,6 +17,20 @@ const validateMessage = [
     .withMessage("Message can contain text, numbers, emojis, and punctuation"),
 ];
 
+const toMessageResponse = (message: MessageWithDetails): MessageResponse => {
+  return {
+    id: message.id,
+    text: message.text,
+    conversationId: message.conversationId,
+    isRead: message.isRead,
+    createdAt: message.createdAt,
+    sender: {
+      id: message.sender.id,
+      username: message.sender.username
+    }
+  };
+};
+
 export const createMessage = [
   ...validateMessage,
   async (req: AuthRequest, res: Response) => {
@@ -41,20 +55,7 @@ export const createMessage = [
       };
 
       const message: MessageWithDetails = await create(data);
-
-      const response: MessageResponse = {
-        id: message.id,
-        text: message.text,
-        conversationId: message.conversationId,
-        isRead: message.isRead,
-        createdAt: message.createdAt,
-        sender: {
-          id: message.sender.id,
-          username: message.sender.username
-        }
-      };
-
-      res.json(response);
+      res.json(toMessageResponse(message));
     } catch (err) {
       console.error("Create message error: ", err);
       res.status(500).json({ message: "Error creating message" });
@@ -72,7 +73,7 @@ export const markMessageAsRead = async (req: AuthRequest, res: Response) => {
     }
 
     const updatedMessage = await markAsRead(messageId);
-    res.json(updatedMessage);
+    res.json(toMessageResponse(updatedMessage));
   } catch (err) {
     console.error("Update error: ", err);
     res.status(500).json({
