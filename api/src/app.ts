@@ -34,7 +34,7 @@ app.use(passport.initialize());
 app.use("/api/auth", authRouter);
 app.use("/api/users", userProfilesRouter);
 app.use("/api/conversations", conversationsRouter);
-app.use("/api", messagesRouter);
+app.use("/api/conversations/messages", messagesRouter);
 
 // Error handing
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

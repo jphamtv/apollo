@@ -2,10 +2,11 @@ import { Response, RequestHandler } from "express";
 import { body, validationResult } from "express-validator";
 import {
   create,
-  findById,
+  findById as findMessageById,
   markAsRead,
   deleteById,
 } from "../models/messageModel";
+import { isParticipant, findById as findConversationById } from "../models/conversationModel";
 import { AuthRequest, MessageResponse, MessageWithDetails } from "../types";
 
 const validateMessage = [
@@ -42,6 +43,21 @@ export const createMessage = [
     try {
       const conversationId = req.params.id;
       const senderId = req.user.id;
+
+      const conversation = await findById(conversationId);
+        if (!conversation) {
+          return res.status(404).json({ 
+            error: "NOT_FOUND",
+            message: "Conversation not found" 
+          });}
+
+      if (!(await isParticipant(senderId, conversationId))) {
+        return res.status(403).json({
+          error: "FORBIDDEN",
+          message: "Not a participant in this conversation"
+        });
+      }
+
       const { text } = req.body;  
 
       const data = {
@@ -63,31 +79,33 @@ export const createMessage = [
   }
 ] as unknown as RequestHandler[];
 
-export const markMessageAsRead = async (req: AuthRequest, res: Response) => {
-  try {
-    const messageId = req.params.id;
-    const message = await findById(messageId);
+export const markMessageAsRead = [
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const messageId = req.params.id;
+      const message = await findMessageById(messageId);
 
-    if (!message) {
-      return res.status(404).json({ message: "Message not found" });
+      if (!message) {
+        return res.status(404).json({ message: "Message not found" });
+      }
+
+      const updatedMessage = await markAsRead(messageId);
+      res.json(toMessageResponse(updatedMessage));
+    } catch (err) {
+      console.error("Update error: ", err);
+      res.status(500).json({
+        error: "SERVER_ERROR",
+        message: "Error updating message read status"
+      });
     }
-
-    const updatedMessage = await markAsRead(messageId);
-    res.json(toMessageResponse(updatedMessage));
-  } catch (err) {
-    console.error("Update error: ", err);
-    res.status(500).json({
-      error: "SERVER_ERROR",
-      message: "Error updating message read status"
-    });
   }
-};
+] as unknown as RequestHandler[];
 
 export const deleteMessage = [  
   async (req: AuthRequest, res: Response) => {
     try {
       const messageId = req.params.id;
-      const message = await findById(messageId);
+      const message = await findMessageById(messageId);
   
       if (!message) {
         return res.status(404).json({ message: "Message not found" });

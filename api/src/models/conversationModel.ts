@@ -22,7 +22,6 @@ export const create = async (data: Prisma.ConversationCreateInput): Promise<Conv
   });
 };
 
-
 export const findConversationsByUserId = async (userId: string) => {
   return prisma.conversation.findMany({
     where: {
@@ -124,6 +123,21 @@ export const removeParticipant = async (
   });
 };
 
+export const isParticipant = async (
+  userId: string,
+  conversationId: string
+): Promise<boolean> => {
+  const participant = await prisma.conversationParticipant.findUnique({
+    where: {
+      userId_conversationId: {
+        userId,
+        conversationId
+      }
+    }
+  });
+  return !!participant; // "!!"" converts to boolean
+};
+
 export const deleteById = async (id: string): Promise<void> => {
   await prisma.$transaction([
     prisma.conversationParticipant.deleteMany({
@@ -138,6 +152,7 @@ export const deleteById = async (id: string): Promise<void> => {
   ]);
 };
 
+
 export default {
   create,
   findById,
@@ -145,5 +160,6 @@ export default {
   update,
   addParticipant,
   removeParticipant,
+  isParticipant,
   deleteById,
 };
