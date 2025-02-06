@@ -15,29 +15,3 @@ export type ConversationWithDetails = Prisma.ConversationGetPayload<{
     },
   },
 }>;
-
-export type ConversationPreview = Prisma.ConversationGetPayload<{
-  include: {
-    messages: {
-      take: 1;
-      orderBy: {
-        createdAt: 'desc';
-      };
-    };
-    participants: {
-      include: {
-        user: {
-          select: {
-            id: true;
-            username: true;
-          };
-        };
-      };
-    };
-    _count: {
-      select: {
-        messages: true;
-      };
-    };
-  };
-}>;

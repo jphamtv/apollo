@@ -5,6 +5,7 @@ import initializePassport from "./config/passportConfig";
 import authRouter from "./routes/authRouter";
 import userProfilesRouter from "./routes/userProfilesRouter";
 import conversationsRouter from "./routes/conversationsRouter";
+import messagesRouter from "./routes/messagesRouter";
 
 const app: Express = express();
 
@@ -33,6 +34,7 @@ app.use(passport.initialize());
 app.use("/api/auth", authRouter);
 app.use("/api/users", userProfilesRouter);
 app.use("/api/conversations", conversationsRouter);
+app.use("/api", messagesRouter);
 
 // Error handing
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
