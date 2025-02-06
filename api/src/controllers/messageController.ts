@@ -44,7 +44,7 @@ export const createMessage = [
       const conversationId = req.params.id;
       const senderId = req.user.id;
 
-      const conversation = await findById(conversationId);
+      const conversation = await findConversationById(conversationId);
         if (!conversation) {
           return res.status(404).json({ 
             error: "NOT_FOUND",
