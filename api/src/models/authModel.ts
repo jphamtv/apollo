@@ -4,25 +4,6 @@ import { UserBasicDetails, UserWithAuth } from "../types";
 
 const prisma = new PrismaClient();
 
-// export const create = async (
-//   username: string,
-//   email: string,
-//   hashedPassword: string,
-// ): Promise<UserBasicDetails> => {
-//   return prisma.user.create({
-//     data: {
-//     username,
-//     email,
-//     password: hashedPassword,
-//     },
-//     select: {
-//       id: true,
-//       email: true,
-//       username: true,
-//     },
-//   });
-// };
-
 export const create = async (
   username: string,
   email: string,

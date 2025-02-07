@@ -41,7 +41,7 @@ export const createMessage = [
     }
 
     try {
-      const conversationId = req.params.id;
+      const conversationId = req.params.conversationId;
       const senderId = req.user.id;
 
       const conversation = await findConversationById(conversationId);
