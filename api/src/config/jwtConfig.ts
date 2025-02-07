@@ -1,4 +1,4 @@
-import { JwtConfig } from "../types/jwtTypes";
+import { JwtConfig } from "../types";
 import dotenv from "dotenv";
 dotenv.config();
 
