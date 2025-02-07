@@ -15,7 +15,7 @@ const router = express.Router();
 // Main conversation routes
 router.post("/", authenticateJWT, createConversation);
 router.get("/", authenticateJWT, getUserConversations);
-router.get(":id", authenticateJWT, getConversationById);
+router.get("/:id", authenticateJWT, getConversationById);
 router.put("/:id", authenticateJWT, updateGroupName);
 router.delete("/:id", authenticateJWT, deleteConversation);
 
