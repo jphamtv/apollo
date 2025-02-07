@@ -4,24 +4,57 @@ import { UserBasicDetails, UserWithAuth } from "../types";
 
 const prisma = new PrismaClient();
 
+// export const create = async (
+//   username: string,
+//   email: string,
+//   hashedPassword: string,
+// ): Promise<UserBasicDetails> => {
+//   return prisma.user.create({
+//     data: {
+//     username,
+//     email,
+//     password: hashedPassword,
+//     },
+//     select: {
+//       id: true,
+//       email: true,
+//       username: true,
+//     },
+//   });
+// };
+
 export const create = async (
   username: string,
   email: string,
   hashedPassword: string,
 ): Promise<UserBasicDetails> => {
-  return prisma.user.create({
-    data: {
-    username,
-    email,
-    password: hashedPassword,
-    },
-    select: {
-      id: true,
-      email: true,
-      username: true,
-    },
+  return prisma.$transaction(async (tx) => {
+    // Create user
+    const user = tx.user.create({
+      data: {
+        username,
+        email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+      },
+    });
+    
+    // Create associated profile
+    await tx.userProfile.create({
+      data: {
+        userId: (await user).id,
+        displayName: username, // Default to username, can be updated later
+      }
+    });
+
+    return user;
   });
 };
+  
 
 export const findByEmail = async (
   email: string
