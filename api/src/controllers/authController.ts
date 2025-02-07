@@ -20,6 +20,12 @@ const validateUser = [
     .withMessage(`Password must be longer than 8 characters`),
 ];
 
+const generateToken = (id: string) => {
+  return jwt.sign({ id }, jwtConfig.secret as jwt.Secret, {
+    expiresIn: jwtConfig.expiresIn as jwt.SignOptions["expiresIn"],
+  });
+};
+
 export const registerUser = [
   ...validateUser,
   async (req: Request, res: Response) => {
@@ -39,7 +45,18 @@ export const registerUser = [
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = await create(username, email, hashedPassword);
 
-      res.status(201).json({ message: "Account created successfully" });
+      // Generate token for the new user
+      const token = generateToken(user.id);
+
+      res.status(201).json({
+        message: "Account created successfully",
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+        }
+      });
     } catch (error) {
       console.error("Registration error:", error);
       res.status(500).json({ message: "Error registering user" });
@@ -47,11 +64,6 @@ export const registerUser = [
   },
 ] as RequestHandler[];
 
-const generateToken = (id: string) => {
-  return jwt.sign({ id }, jwtConfig.secret as jwt.Secret, {
-    expiresIn: jwtConfig.expiresIn as jwt.SignOptions["expiresIn"],
-  });
-};
 
 export const loginUser = async (
   req: AuthRequest,

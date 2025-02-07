@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import passport from "passport";
-import { AuthRequest } from "../types/authTypes";
+import { AuthRequest } from "../types";
 
 // Basic JWT authentication
 export const authenticateJWT = [

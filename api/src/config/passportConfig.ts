@@ -4,7 +4,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { jwtConfig } from "./jwtConfig";
 import { findByEmail, findById } from "../models/authModel";
-import { JwtPayload } from "../types/jwtTypes";
+import { JwtPayload } from "../types";
 
 function initialize() {
   // Local Strategy - for login
