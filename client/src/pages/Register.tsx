@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { RegisterCredentials } from "../../../shared/types/authTypes";
-import { Button } from "../../../shared/components/ui";
-import { apiClient } from "../../../shared/utils/apiClient";
+import { RegisterCredentials } from "../types/authTypes";
+import { apiClient } from "../utils/apiClient";
+import { Button } from "../components";
 
 export default function Register() {
   const [credentials, setCredentials] = useState<RegisterCredentials>({
@@ -24,6 +24,7 @@ export default function Register() {
       });
     } catch (err) {
       setError("Failed to create account");
+      console.error('Register error: ', err);
     }
   };
 

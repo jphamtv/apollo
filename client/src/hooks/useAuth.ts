@@ -39,6 +39,7 @@ export const useAuthProvider = () => {
       } catch (err) {
         apiClient.removeToken();
         setUser(null);
+        console.error('Initialize Auth error: ', err);
       } finally {
         setIsLoading(false);
       }
