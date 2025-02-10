@@ -1,12 +1,13 @@
-import { BrowserRouter as Router } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Message from './pages/Message';
 
 function App() {
   return (
-    <Router>
-      <div>
-        <h1>Messaging App</h1>
-      </div>
-    </Router>
+    <Routes>
+      <Route path='/' element={<Home />} />
+      <Route path='/chat' element={<Message />} />
+    </Routes>
   )
 }
 
