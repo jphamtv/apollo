@@ -1,13 +1,18 @@
 import { Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './components';
 import Home from './pages/Home';
-import Message from './pages/Message';
+import Conversation from './pages/Conversation';
 
 function App() {
   return (
-    <Routes>
-      <Route path='/' element={<Home />} />
-      <Route path='/chat' element={<Message />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route index element={<Home />} />
+        <Route path='/conversations/:id' element={<Conversation />} />
+        <Route path='login' element={<Login />} />
+        <Route path='register' element={<Register />} />
+      </Routes>
+    </AuthProvider>
   )
 }
 
