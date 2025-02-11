@@ -10,9 +10,11 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route path='login' element={<Login />} />
-        <Route path='register' element={<Register />} />
-        
+        {/* Public routes */}
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+
+        {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
           <Route index element={<Home />} />
           <Route path='/conversations/:id' element={<Conversation />} />

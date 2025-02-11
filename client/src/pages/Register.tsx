@@ -29,17 +29,16 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center">
-      <div className="w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-8">Create Account</h1>
+    <div>
+      <div>
+        <h1>Create Account</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error && <div className="text-red-600 text-center">{error}</div>}
+          {error && <div>{error}</div>}
 
           <div>
             <label
               htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
             >
               Username
             </label>
@@ -47,7 +46,6 @@ export default function Register() {
               id="username"
               type="text"
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none"
               value={credentials.username}
               onChange={(e) =>
                 setCredentials((prev) => ({
@@ -61,7 +59,6 @@ export default function Register() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
             >
               Email
             </label>
@@ -69,7 +66,6 @@ export default function Register() {
               id="email"
               type="email"
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none"
               value={credentials.email}
               onChange={(e) =>
                 setCredentials((prev) => ({ ...prev, email: e.target.value }))
@@ -80,7 +76,6 @@ export default function Register() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
             >
               Password
             </label>
@@ -88,7 +83,6 @@ export default function Register() {
               id="password"
               type="password"
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none"
               value={credentials.password}
               onChange={(e) =>
                 setCredentials((prev) => ({
@@ -99,14 +93,14 @@ export default function Register() {
             />
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit">
             Create Account
           </Button>
         </form>
 
-        <p className="mt-4 text-center text-gray-600">
+        <p>
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 hover:text-blue-800">
+          <Link to="/login">
             Sign in
           </Link>
         </p>
