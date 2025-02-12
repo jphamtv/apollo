@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+.input:focus {
+  outline: none;
+}
+
+.error {
+  border-color: var(--error);
+}
+
+.errorMessage {
+  font-size: 0.875rem;
+  color: var(--error);
+}
