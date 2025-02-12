@@ -6,7 +6,7 @@
 }
 
 .container:hover {
-  background: #1371c3;
+  background: var(--bg-secondary);
   border-radius: 0.5rem;
 }
 
@@ -14,7 +14,8 @@
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  background: var(--bg-secondary);
+  background: #3e3e3e;
+  border: 1px solid #5c5c5c;
   display: flex;
   align-items: center;
   justify-content: center;
