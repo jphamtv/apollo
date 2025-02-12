@@ -1,0 +1,47 @@
+/* Button.module.css */
+.button {
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  transition: colors 0.2s;
+}
+
+.button:focus {
+  outline: none;
+}
+
+/* Variants */
+.primary {
+  background-color: var(--bg-primary);
+  color: white;
+}
+
+.primary:hover {
+  background-color: var(--bg-primary);
+}
+
+.secondary {
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+/* Add other variants... */
+
+/* Sizes */
+.small {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.medium {
+  padding: 0.5rem 1rem;
+}
+
+.large {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

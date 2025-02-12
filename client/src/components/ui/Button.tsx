@@ -1,4 +1,5 @@
 import { ComponentProps } from "react";
+import styles from './Button.module.css';
 
 interface ButtonProps extends ComponentProps<"button"> {
   variant?: "primary" | "secondary" | "danger";
