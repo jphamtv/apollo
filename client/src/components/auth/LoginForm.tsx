@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { validateForm } from "../../utils/validation";
-import { Button, Input } from "../../components";
+import Button from "../ui/Button";
+import Input from "../ui/Input";
 
 interface LoginFormProps {
   onSuccess?: () => void;
