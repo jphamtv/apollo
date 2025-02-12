@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './components';
-import { ProtectedRoute } from './components';
+import AuthProvider from './components/auth/AuthProvider';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import MessagesLayout from './pages/MessagesLayout';
