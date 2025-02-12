@@ -13,5 +13,5 @@
 }
 
 .button:hover {
-  background: var(--bg-accent-hover);
+  background: var(--bg-secondary);
 }

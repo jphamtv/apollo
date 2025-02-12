@@ -9,7 +9,7 @@
 }
 
 .container:hover {
-  background: var(--bg-hover);
+  background: var(--bg-secondary);
 }
 
 .username {

@@ -6,7 +6,7 @@
 }
 
 .container:hover {
-  background: var(--bg-hover);
+  background: #1371c3;
   border-radius: 0.5rem;
 }
 
