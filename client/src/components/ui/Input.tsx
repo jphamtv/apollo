@@ -5,29 +5,28 @@ interface InputProps extends ComponentProps<"input"> {
   error?: string;
 }
 
-export const Input = ({
+export default function Input({
   label,
   error,
   className = "",
   ...props
-}: InputProps) => {
+}: InputProps) {
   return (
-    <div className="space-y-1">
+    <div className={styles.container}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700">
+        <label className={styles.label}>
           {label}
         </label>
       )}
       <input
         className={`
-          w-full rounded border px-3 py-2
-          focus:outline-none focus:ring-2
-          ${error ? "border-red-500" : "border-gray-300"}
+          ${styles.input}
+          ${error ? styles.error : ""}
           ${className}
         `.trim()}
         {...props}
       />
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className={styles.errorMessage}>{error}</p>}
     </div>
   );
-};
+}

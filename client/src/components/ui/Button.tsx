@@ -33,4 +33,4 @@ export default function Button({
       {isLoading ? "Loading..." : children}
     </button>
   );
-};
+}
