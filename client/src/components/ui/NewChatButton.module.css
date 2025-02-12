@@ -1,0 +1,17 @@
+.button {
+  padding: 0.5rem 1rem;
+  background: var(--bg-accent);
+  color: var(--text-primary);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+.button:hover {
+  background: var(--bg-accent-hover);
+}
