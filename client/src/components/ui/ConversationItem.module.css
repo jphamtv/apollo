@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.profilePic {
+  background-color: var(--bg-secondary);
+  color: #fff;
+  border-radius: 100rem;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid #000;
+  padding-bottom: 0.5rem;
+}
+
+.displayName {
+  color: var(--text-secondary);
+}
+
+.conversationPreview {
+  color: var(--text-secondary);
+}
