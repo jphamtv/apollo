@@ -1,9 +1,7 @@
 import React from "react";
 import { AuthContext, useAuthProvider } from "../../hooks/useAuth";
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const auth = useAuthProvider();
 
   if (auth.isLoading) {
@@ -11,4 +9,4 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
-};
+}

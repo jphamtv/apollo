@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { RegisterCredentials } from "../types/authTypes";
 import { apiClient } from "../utils/apiClient";
-import { Button } from "../components";
+import Button from "../components/ui/Button";
 
 export default function Register() {
   const [credentials, setCredentials] = useState<RegisterCredentials>({

@@ -7,7 +7,7 @@ interface LoginFormProps {
   onSuccess?: () => void;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
+export default function LoginForm({ onSuccess }: LoginFormProps) {
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -69,4 +69,4 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
       </Button>
     </form>
   );
-};
+}
