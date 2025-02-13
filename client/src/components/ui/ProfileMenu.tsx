@@ -1,27 +1,27 @@
 import { useState } from 'react';
 import styles from './ProfileMenu.module.css';
 
-interface Props {
+interface ProfileMenuProps {
   user: {
     username: string;
     email: string;
-    profile: {
-      displayName: string;
+    profile?: {
+      displayName?: string;
       imageUrl?: string;
     };
-  };
+  }
 }
 
-export default function ProfileMenu({ user }: Props) {
-  const [displayName, setDisplayName] = useState(user.profile.displayName);
-  const initial = user.profile.displayName.charAt(0).toUpperCase();
+export default function ProfileMenu({ user }: ProfileMenuProps) {
+  const [displayName, setDisplayName] = useState(user.profile?.displayName || '');
+  const initial = user.profile?.displayName?.charAt(0).toUpperCase() || '';
 
   return (
     <div className={styles.menu}>
       {/* User Info */}
       <div className={styles.userInfo}>
         <div className={styles.avatar}>
-          {user.profile.imageUrl ? (
+          {user.profile?.imageUrl ? (
             <img src={user.profile.imageUrl} alt="" className={styles.avatarImage} />
           ) : (
             initial
@@ -42,7 +42,7 @@ export default function ProfileMenu({ user }: Props) {
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
           className={styles.input}
-          placeholder={user.profile.displayName}
+          placeholder={user.profile?.displayName || ''}
         />
       </div>
 
@@ -50,9 +50,9 @@ export default function ProfileMenu({ user }: Props) {
       <div className={styles.section}>
         <p>Image Profile</p>
         <button className={styles.uploadButton}>
-          {user.profile.imageUrl ? 'Replace Image' : 'Upload Image'}
+          {user.profile?.imageUrl ? 'Replace Image' : 'Upload Image'}
         </button>
-        {user.profile.imageUrl && (
+        {user.profile?.imageUrl && (
           <button className={styles.removeButton}>
             Remove Image
           </button>
