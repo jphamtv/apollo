@@ -29,7 +29,9 @@ function initialize() {
           return done(null, false, { message: "Incorrect password" });
         }
 
-        return done(null, user);
+        // Remove password before passing to done
+        const { password: _, ...userWithoutPassword } = user;
+        return done(null, userWithoutPassword);
       } catch (error) {
         return done(error);
       }

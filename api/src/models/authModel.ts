@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import crypto from 'crypto';
-import { UserBasicDetails, UserWithAuth } from "../types";
 
 const prisma = new PrismaClient();
 
@@ -105,7 +104,6 @@ export const resetPassword = async (token: string, newPassword: string) => {
 export default {
   create,
   findByEmail,
-  findByUsername,
   findById,
   createResetToken,
   resetPassword,
