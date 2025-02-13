@@ -5,21 +5,22 @@
   right: 0;
   margin-bottom: 0.5rem;
   background: var(--bg-primary);
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--border-color);
   border-radius: 0.5rem;
-  padding: 1rem;
+  padding: 1rem 0.5rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .userInfo {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .avatar {
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   background: var(--bg-secondary);
   display: flex;
@@ -52,7 +53,8 @@
 
 .section {
   padding: 1rem 0;
-  border-top: 1px solid var(--border-primary);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .section label {
@@ -77,10 +79,10 @@
   width: 100%;
   padding: 0.5rem;
   margin-top: 0.5rem;
-  border: none;
   border-radius: 0.25rem;
   cursor: pointer;
   font-weight: 500;
+  box-sizing: border-box;
 }
 
 .uploadButton {
@@ -90,10 +92,10 @@
 
 .removeButton {
   background: none;
-  color: var(--text-error);
+  color: var(--error);
 }
 
 .logoutButton {
   background: none;
-  color: var(--text-error);
+  color: var(--error);
 }

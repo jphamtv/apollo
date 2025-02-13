@@ -33,8 +33,8 @@ export default function ProfileMenu({ user }: ProfileMenuProps) {
         </div>
       </div>
 
-      {/* Display Name Form */}
       <div className={styles.section}>
+        {/* Display Name Form */}
         <label htmlFor="displayName">Display name:</label>
         <input
           type="text"
@@ -44,11 +44,9 @@ export default function ProfileMenu({ user }: ProfileMenuProps) {
           className={styles.input}
           placeholder={user.profile?.displayName || ''}
         />
-      </div>
-
-      {/* Image Upload */}
-      <div className={styles.section}>
-        <p>Image Profile</p>
+        
+        {/* Image Upload */}
+        <label>Image Profile:</label>
         <button className={styles.uploadButton}>
           {user.profile?.imageUrl ? 'Replace Image' : 'Upload Image'}
         </button>
@@ -60,11 +58,9 @@ export default function ProfileMenu({ user }: ProfileMenuProps) {
       </div>
 
       {/* Logout */}
-      <div className={styles.section}>
-        <button className={styles.logoutButton}>
-          Logout
-        </button>
-      </div>
+      <button className={styles.logoutButton}>
+        Logout
+      </button>
     </div>
   );
 }

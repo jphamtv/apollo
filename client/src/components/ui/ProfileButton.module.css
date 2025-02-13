@@ -11,12 +11,12 @@
   cursor: pointer;
   border-radius: 0.5rem;
   width: 100%;
-  border: none;
-  background: none;
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
 }
 
 .container:hover {
-  background: var(--bg-hover);
+  background: var(--bg-secondary);
 }
 
 .avatar {

@@ -9,7 +9,6 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
-  border: none;
   border: 1px solid var(--border-color);
 }
 
