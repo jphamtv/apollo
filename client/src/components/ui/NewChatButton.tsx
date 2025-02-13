@@ -5,7 +5,7 @@ export default function NewChatButton() {
   return (
     <button className={styles.button}>
       <Plus size={16} />
-      New
+      New Message
     </button>
   );
 }
