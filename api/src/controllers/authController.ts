@@ -51,11 +51,7 @@ export const registerUser = [
       res.status(201).json({
         message: "Account created successfully",
         token,
-        user: {
-          id: user.id,
-          email: user.email,
-          username: user.username,
-        }
+        user
       });
     } catch (error) {
       console.error("Registration error:", error);
@@ -63,7 +59,6 @@ export const registerUser = [
     }
   },
 ] as RequestHandler[];
-
 
 export const loginUser = async (
   req: AuthRequest,
@@ -81,11 +76,7 @@ export const loginUser = async (
     res.json({
       message: "Logged in successfully",
       token,
-      user: {
-        id: req.user.id,
-        email: req.user.email,
-        username: req.user.username,
-      },
+      user: req.user
     });
   } catch (err) {
     console.error("Login error", err);
@@ -117,11 +108,7 @@ export const verifyUser = [
       res.json({
         message: "Token verified",
         token,
-        user: {
-          id: req.user.id,
-          email: req.user.email,
-          username: req.user.username,
-        },
+        user: req.user
       });
     } catch (err) {
       console.error("Verification error: ", err);

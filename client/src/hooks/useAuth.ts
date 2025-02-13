@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext } from "react";
-import { User, LoginCredentials, AuthResponse } from "../types/authTypes";
+import { User, LoginCredentials, AuthResponse } from "../types/user";
 import { apiClient } from "../utils/apiClient";
 
 interface AuthContextType {
@@ -9,9 +9,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined,
-);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -49,10 +47,7 @@ export const useAuthProvider = () => {
   }, []);
 
   const login = async (credentials: LoginCredentials) => {
-    const response = await apiClient.post<AuthResponse>(
-      "/auth/login",
-      credentials,
-    );
+    const response = await apiClient.post<AuthResponse>("/auth/login", credentials);
     apiClient.setToken(response.token);
     setUser(response.user);
   };

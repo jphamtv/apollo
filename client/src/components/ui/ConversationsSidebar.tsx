@@ -7,6 +7,9 @@ import { useAuth } from '../../hooks/useAuth';
 export default function ConversationsSidebar() {
   const { user } = useAuth();
   
+  // Don't render until we have user with profile data
+  if (!user?.profile) return null;
+  
   return (
     <aside className={styles.container}>
       <header className={styles.header}>
@@ -21,7 +24,7 @@ export default function ConversationsSidebar() {
       </main>
       
       <footer className={styles.footer}>
-        <ProfileButton username={user?.username || ''} />
+        <ProfileButton user={user} />
       </footer>
     </aside>
   );

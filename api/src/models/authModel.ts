@@ -4,83 +4,62 @@ import { UserBasicDetails, UserWithAuth } from "../types";
 
 const prisma = new PrismaClient();
 
+const userWithProfile = {
+  id: true,
+  email: true,
+  username: true,
+  profile: {
+    select: {
+      displayName: true,
+      imageUrl: true,
+      bio: true
+    }
+  }
+};
+
 export const create = async (
   username: string,
   email: string,
   hashedPassword: string,
-): Promise<UserBasicDetails> => {
+) => {
   return prisma.$transaction(async (tx) => {
     // Create user
-    const user = tx.user.create({
+    const user = await tx.user.create({
       data: {
         username,
         email,
         password: hashedPassword,
+        profile: {
+          create: {
+            displayName: username, // Default to username, can be updated later
+          }
+        }
       },
-      select: {
-        id: true,
-        email: true,
-        username: true,
-      },
+      select: userWithProfile
     });
     
-    // Create associated profile
-    await tx.userProfile.create({
-      data: {
-        userId: (await user).id,
-        displayName: username, // Default to username, can be updated later
-      }
-    });
-
     return user;
   });
 };
-  
 
-export const findByEmail = async (
-  email: string
-): Promise<UserWithAuth | null> => {
+export const findByEmail = async (email: string) => {
   return prisma.user.findUnique({
     where: { email },
     select: {
-      id: true,
-      email: true,
-      username: true,
+      ...userWithProfile,
       password: true,
     },
   });
 };
 
-export const findByUsername = async (
-  username: string
-): Promise<UserWithAuth | null> => {
-  return prisma.user.findUnique({
-    where: { username },
-    select: {
-      id: true,
-      email: true,
-      username: true,
-      password: true,
-    },
-  });
-};
-
-export const findById = async (
-  id: string
-): Promise<UserBasicDetails | null> => {
+export const findById = async (id: string) => {
   return prisma.user.findUnique({
     where: { id },
-    select: {
-      id: true,
-      email: true,
-      username: true,
-    },
+    select: userWithProfile
   });
 };
 
-export const createResetToken = async (
-  email: string
-): Promise<string | null> => {
+export const createResetToken = async (email: string): Promise<string | null> => {
   const user = await findByEmail(email);
   if (!user) return null;
 
@@ -98,10 +77,7 @@ export const createResetToken = async (
   return resetToken;
 };
 
-export const resetPassword = async (
-  token: string,
-  newPassword: string
-): Promise<UserBasicDetails | null> => {
+export const resetPassword = async (token: string, newPassword: string) => {
   const user = await prisma.user.findFirst({
     where: {
       resetToken: token,
@@ -122,11 +98,7 @@ export const resetPassword = async (
       resetToken: null,
       resetTokenExpiry: null,
     },
-    select: {
-      id: true,
-      email: true,
-      username: true,
-    },
+    select: userWithProfile
   });
 };
 
