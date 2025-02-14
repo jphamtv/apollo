@@ -44,7 +44,7 @@ export const apiClient = {
     };
 
     if (data) {
-      config.body = JSON.stringify(data);
+      config.body = data instanceof FormData ? data : JSON.stringify(data);
     }
 
     try {
