@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { RegisterCredentials } from "../types/authTypes";
 import { apiClient } from "../utils/apiClient";
 import Button from "../components/ui/Button";
+import Input from "../components/ui/Input"
+import styles from './Register.module.css'
 
 export default function Register() {
   const [credentials, setCredentials] = useState<RegisterCredentials>({
@@ -29,79 +31,56 @@ export default function Register() {
   };
 
   return (
-    <div>
-      <div>
-        <h1>Create Account</h1>
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Create Account</h1>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className={styles.form}>
           {error && <div>{error}</div>}
 
-          <div>
-            <label
-              htmlFor="username"
-            >
-              Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              required
-              value={credentials.username}
-              onChange={(e) =>
+          <Input
+            label="Username"
+            type="text"
+            name="username"
+            value={credentials.username}
+            onChange={(e) =>
                 setCredentials((prev) => ({
                   ...prev,
                   username: e.target.value,
                 }))
               }
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="email"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              value={credentials.email}
-              onChange={(e) =>
+            required
+          />
+          <Input
+            label="Email"
+            type="email"
+            name="email"
+            value={credentials.email}
+            onChange={(e) =>
                 setCredentials((prev) => ({ ...prev, email: e.target.value }))
               }
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              value={credentials.password}
-              onChange={(e) =>
-                setCredentials((prev) => ({
-                  ...prev,
-                  password: e.target.value,
-                }))
+            required
+          />
+          <Input
+            label="Password"
+            type="password"
+            name="password"
+            value={credentials.password}
+            onChange={(e) =>
+                setCredentials((prev) => ({ ...prev, password: e.target.value }))
               }
-            />
-          </div>
+            required
+          />
 
           <Button type="submit">
             Create Account
           </Button>
         </form>
 
-        <p>
+        <p className={styles.footer}>
           Already have an account?{" "}
           <Link to="/login">
-            Sign in
+            <span className={styles.link}>Sign in</span>
           </Link>
         </p>
       </div>

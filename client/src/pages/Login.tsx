@@ -44,40 +44,42 @@ export default function Login() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1>Messages App</h1>
-      
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
-        <Input
-          label="Email"
-          type="email"
-          name="email"
-          value={values.email}
-          onChange={handleChange}
-          autoComplete="email"
-          required
-        />
-        <Input
-          label="Password"
-          type="password"
-          name="password"
-          value={values.password}
-          onChange={handleChange}
-          autoComplete="current-password"
-          required
-        />
-        {error && <p className={styles.errorMessage}>{error}</p>}
-        <Button type="submit" isLoading={isLoading}>
-          Log In
-        </Button>
-      </form>
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Messages App</h1>
+          
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <Input
+            label="Email"
+            type="email"
+            name="email"
+            value={values.email}
+            onChange={handleChange}
+            autoComplete="email"
+            required
+          />
+          <Input
+            label="Password"
+            type="password"
+            name="password"
+            value={values.password}
+            onChange={handleChange}
+            autoComplete="current-password"
+            required
+          />
+          {error && <p className={styles.errorMessage}>{error}</p>}
+          <Button type="submit" isLoading={isLoading}>
+            Log In
+          </Button>
+        </form>
 
-      <p>
-        Don't have an account?{" "}
-        <Link to="/register">
-          Create one
-        </Link>
-      </p>
+        <p className={styles.footer}>
+          Don't have an account?{" "}
+          <Link to="/register">
+            <span className={styles.link}>Create one</span>
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

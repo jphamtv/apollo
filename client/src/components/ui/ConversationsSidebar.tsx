@@ -13,11 +13,11 @@ export default function ConversationsSidebar() {
   return (
     <aside className={styles.container}>
       <header className={styles.header}>
-        <h2>Messages</h2>
-        <NewChatButton />
+        <h2>Messages App</h2>
       </header>
       
       <main className={styles.main}>
+        <NewChatButton />
         <ConversationItem />
         <ConversationItem />
         <ConversationItem />

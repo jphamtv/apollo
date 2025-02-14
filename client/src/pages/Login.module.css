@@ -1,7 +1,32 @@
+.wrapper {
+  height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .container {
   margin: 0 auto;
   max-width: 25rem;
+}
+
+.title,
+.footer {
+  text-align: center;
+}
+
+.form {
+  margin: 1rem 0;
   padding: 2rem;
   border: 1px solid var(--border-color);
-  border-radius: --border-radius;
+  border-radius: var(--border-radius);
+}
+
+.link {
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
+.errorMessage {
+  color: var(--error);
 }
