@@ -46,7 +46,15 @@ export const updateUserProfile = [
         imageUrl
       });
 
-      res.json(userProfile);
+      // Only send back safe user data
+      const safeUser = {
+        id: req.user.id,
+        username: req.user.username,
+        email: req.user.email,
+        profile: userProfile
+      };
+      
+      res.json({ user: safeUser });
     } catch (error) {
       console.error("Update error:", error);
       res.status(500).json({ message: "Error updating user's profile" });

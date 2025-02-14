@@ -8,28 +8,33 @@ export default function Settings() {
   const { user, updateProfile } = useAuth();
   const [displayName, setDisplayName] = useState(user?.profile?.displayName || '');
   const [bio, setBio] = useState(user?.profile?.bio || '');
-  const [image, setImage] = useState<File | null>(null);
+  // const [image, setImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
-    }
-  };
+  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     setImage(e.target.files[0]);
+  //   }
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const formData = new FormData();
-      formData.append('displayName', displayName);
-      formData.append('bio', bio);
-      if (image) {
-        formData.append('image', image);
-      }
+      // For now just send text fields - implement file upload later
+      await updateProfile({
+        displayName,
+        bio,
+      })
+      // const formData = new FormData();
+      // formData.append('displayName', displayName);
+      // formData.append('bio', bio);
+      // if (image) {
+      //   formData.append('image', image);
+      // }
 
-      await updateProfile(formData);
+      // await updateProfile(formData);
     } catch (error) {
       console.error('Failed to update profile:', error);
     } finally {
@@ -61,7 +66,7 @@ export default function Settings() {
               type="file"
               id="image"
               accept="image/*"
-              onChange={handleImageChange}
+              // onChange={handleImageChange}
               className={styles.fileInput}
             />
             <label htmlFor="image" className={styles.uploadButton}>

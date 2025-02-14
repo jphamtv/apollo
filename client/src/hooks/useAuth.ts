@@ -7,7 +7,13 @@ interface AuthContextType {
   isLoading: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
-  updateProfile: (formData: FormData) => Promise<void>;
+  updateProfile: (data: UpdateProfileData) => Promise<void>;
+}
+
+interface UpdateProfileData {
+  displayName: string;
+  bio?: string;
+  imageUrl?: string;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -62,12 +68,8 @@ export const useAuthProvider = () => {
     }
   };
 
-  const updateProfile = async (formData: FormData) => {
-    const response = await apiClient.put<AuthResponse>("/users/profile", formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+  const updateProfile = async (data: UpdateProfileData) => {
+    const response = await apiClient.put<AuthResponse>("/users/profile", data);
     setUser(response.user);
   };
 

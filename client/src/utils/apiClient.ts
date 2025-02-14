@@ -2,7 +2,8 @@ const API_BASE_URL =
   import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 interface RequestConfig extends RequestInit {
-  data?: any;
+  data?: unknown;
+  headers?: HeadersInit;
 }
 
 class ApiError extends Error {
@@ -22,17 +23,20 @@ export const apiClient = {
 
   removeToken: () => localStorage.removeItem("token"),
 
-  request: async (
+  request: async <T>(
     endpoint: string,
     { data, ...customConfig }: RequestConfig = {},
-  ) => {
+  ): Promise<T> => {
     const token = apiClient.getToken();
-    const headers: HeadersInit = {
-      "Content-Type": "application/json",
-    };
+    const headers: HeadersInit = {};
 
     if (token) {
       headers.Authorization = `Bearer ${token}`;
+    }
+
+    // Only set Content-Type for non-FormData requests
+    if (!(data instanceof FormData)) {
+      headers["Content-Type"] = "application/json";
     }
 
     const config: RequestConfig = {
@@ -44,6 +48,7 @@ export const apiClient = {
     };
 
     if (data) {
+      // Don't stringify FormData
       config.body = data instanceof FormData ? data : JSON.stringify(data);
     }
 
@@ -69,32 +74,32 @@ export const apiClient = {
 
   // Convenience methods
   get: <T>(endpoint: string, config: RequestConfig = {}) => {
-    return apiClient.request(endpoint, {
+    return apiClient.request<T>(endpoint, {
       ...config,
       method: "GET",
-    }) as Promise<T>;
+    });
   },
 
-  post: <T>(endpoint: string, data: any, config: RequestConfig = {}) => {
-    return apiClient.request(endpoint, {
+  post: <T, D = unknown>(endpoint: string, data: D, config: RequestConfig = {}) => {
+    return apiClient.request<T>(endpoint, {
       ...config,
       method: "POST",
       data,
-    }) as Promise<T>;
+    });
   },
 
-  put: <T>(endpoint: string, data: any, config: RequestConfig = {}) => {
-    return apiClient.request(endpoint, {
+  put: <T, D = unknown>(endpoint: string, data: D, config: RequestConfig = {}) => {
+    return apiClient.request<T>(endpoint, {
       ...config,
       method: "PUT",
       data,
-    }) as Promise<T>;
+    });
   },
 
   delete: <T>(endpoint: string, config: RequestConfig = {}) => {
-    return apiClient.request(endpoint, {
+    return apiClient.request<T>(endpoint, {
       ...config,
       method: "DELETE",
-    }) as Promise<T>;
+    });
   },
 };
