@@ -1,3 +1,4 @@
+/* NewConversationHeader.module.css */
 .header {
   padding: 1rem;
   border-bottom: 1px solid var(--border-color);
@@ -14,16 +15,22 @@
 
 .dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 4px);
   left: 0;
   right: 0;
   background-color: var(--bg-color);
   border: 1px solid var(--border-color);
   border-radius: 0.5rem;
-  margin-top: 0.5rem;
   max-height: 300px;
   overflow-y: auto;
   z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dropdownMessage {
+  padding: 0.75rem 1rem;
+  color: var(--text-secondary);
+  text-align: center;
 }
 
 .userItem {
@@ -32,6 +39,7 @@
   padding: 0.75rem 1rem;
   cursor: pointer;
   gap: 0.75rem;
+  transition: background-color 0.2s;
 }
 
 .userItem:hover {
@@ -39,15 +47,15 @@
 }
 
 .avatar {
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   object-fit: cover;
 }
 
 .avatarPlaceholder {
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   background-color: var(--primary-color);
   color: white;
@@ -56,4 +64,19 @@
   justify-content: center;
   font-weight: 500;
   text-transform: uppercase;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.displayName {
+  font-weight: 500;
+}
+
+.username {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
 }
