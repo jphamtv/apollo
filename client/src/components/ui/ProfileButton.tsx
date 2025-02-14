@@ -32,7 +32,7 @@ export default function ProfileButton({ user }: Props) {
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
       <button 
-        className={`${styles.container} ${isOpen ? styles.active : ''}`}
+        className={styles.container}
         onClick={handleToggle}
         type="button"
       >
