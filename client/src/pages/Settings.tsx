@@ -86,6 +86,7 @@ export default function Settings() {
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="Enter your display name"
+            className={styles.input}
           />
         </div>
 

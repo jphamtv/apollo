@@ -9,6 +9,6 @@ const router = express.Router();
 router.get("/:username", generalLimiter, getUserProfile as RequestHandler);
 
 // Protected routes
-router.put("/", authenticateJWT, updateUserProfile);
+router.put("/profile", authenticateJWT, updateUserProfile);
 
 export default router;

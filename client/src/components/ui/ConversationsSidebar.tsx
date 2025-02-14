@@ -1,4 +1,4 @@
-import styles from './ConversationSidebar.module.css';
+import styles from './ConversationsSidebar.module.css';
 import ConversationItem from './ConversationItem';
 import NewChatButton from './NewChatButton';
 import ProfileButton from './ProfileButton';

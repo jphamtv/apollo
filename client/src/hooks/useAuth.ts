@@ -63,7 +63,7 @@ export const useAuthProvider = () => {
   };
 
   const updateProfile = async (formData: FormData) => {
-    const response = await apiClient.put<AuthResponse>("/users", formData, {
+    const response = await apiClient.put<AuthResponse>("/users/profile", formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
