@@ -1,6 +1,7 @@
 .wrapper {
   position: relative;
   width: 100%;
+  z-index: 50;
 }
 
 .container {
@@ -12,6 +13,8 @@
   border-radius: 0.5rem;
   width: 100%;
   border: 1px solid var(--border-color);
+  background: var(--background-color);
+  transition: background-color 0.2s ease;
   box-sizing: border-box;
 }
 
@@ -48,4 +51,9 @@
 .chevron {
   color: var(--text-secondary);
   transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(0deg);
 }

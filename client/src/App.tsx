@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import MessagesLayout from './pages/MessagesLayout';
 import EmptyConversation from './components/ui/EmptyConversation';
 import ConversationView from './components/ui/ConversationView';
+import Settings from './pages/Settings';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='/' element={<MessagesLayout />}>
             <Route index element={<EmptyConversation />} />
             <Route path='/conversations/:id' element={<ConversationView />} />
+            <Route path='/settings' element={<Settings />} />
           </Route>
         </Route>
       </Routes>

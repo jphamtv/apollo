@@ -3,7 +3,7 @@
   flex-direction: column;
   width: 20rem;
   height: 100%;
-  border-right: 1px solid var(--border-primary);
+  border-right: 1px solid white;
   background: var(--bg-primary);
 }
 
@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border-primary);
+  border-bottom: 1px solid white;
 }
 
 .main {
@@ -27,5 +27,5 @@
   padding: 0 1rem;
   display: flex;
   align-items: center;
-  border-top: 1px solid var(--border-primary);
+  border-top: 1px solid white;
 }

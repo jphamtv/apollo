@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import styles from './ProfileMenu.module.css';
 
 interface ProfileMenuProps {
@@ -9,12 +10,24 @@ interface ProfileMenuProps {
       displayName?: string;
       imageUrl?: string;
     };
-  }
+  };
+  onClose: () => void;
 }
 
-export default function ProfileMenu({ user }: ProfileMenuProps) {
-  const [displayName, setDisplayName] = useState(user.profile?.displayName || '');
+export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const initial = user.profile?.displayName?.charAt(0).toUpperCase() || '';
+
+  const handleSettingsClick = () => {
+    navigate('/settings');
+    onClose();
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    onClose();
+  };
 
   return (
     <div className={styles.menu}>
@@ -33,34 +46,14 @@ export default function ProfileMenu({ user }: ProfileMenuProps) {
         </div>
       </div>
 
-      <div className={styles.section}>
-        {/* Display Name Form */}
-        <label htmlFor="displayName">Display name:</label>
-        <input
-          type="text"
-          id="displayName"
-          value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
-          className={styles.input}
-          placeholder={user.profile?.displayName || ''}
-        />
-        
-        {/* Image Upload */}
-        <label>Image Profile:</label>
-        <button className={styles.uploadButton}>
-          {user.profile?.imageUrl ? 'Replace Image' : 'Upload Image'}
+      <div className={styles.menuItems}>
+        <button onClick={handleSettingsClick} className={styles.menuItem}>
+          Settings
         </button>
-        {user.profile?.imageUrl && (
-          <button className={styles.removeButton}>
-            Remove Image
-          </button>
-        )}
+        <button onClick={handleLogout} className={styles.menuItem}>
+          Log Out
+        </button>
       </div>
-
-      {/* Logout */}
-      <button className={styles.logoutButton}>
-        Logout
-      </button>
     </div>
   );
 }
