@@ -4,7 +4,11 @@ import NewChatButton from './NewChatButton';
 import ProfileButton from './ProfileButton';
 import { useAuth } from '../../hooks/useAuth';
 
-export default function ConversationsSidebar() {
+interface Props {
+  onNewChat: () => void;
+}
+
+export default function ConversationsSidebar({ onNewChat }): Props {
   const { user } = useAuth();
   
   // Don't render until we have user with profile data
@@ -17,7 +21,8 @@ export default function ConversationsSidebar() {
       </header>
       
       <main className={styles.main}>
-        <NewChatButton />
+        <NewChatButton onClick={onNewChat} />
+        {/* TODO: Load conversations */}
         <ConversationItem />
         <ConversationItem />
         <ConversationItem />
