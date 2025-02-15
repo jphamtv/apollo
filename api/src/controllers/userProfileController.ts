@@ -1,6 +1,6 @@
 import { Request, Response, RequestHandler } from "express";
 import { body, validationResult } from "express-validator";
-import { findByUsername, findByUserId, update } from "../models/userProfileModel";
+import { findByUsername, findByUserId, findByQuery, update } from "../models/userProfileModel";
 import { AuthRequest } from "../types";
 
 const validateUserProfile = [
@@ -62,23 +62,43 @@ export const updateUserProfile = [
   },
 ] as RequestHandler[];
 
-export const getUserProfile = async (req: Request, res: Response) => {
-  try {
-    const userProfile = await findByUsername(req.params.username);
+export const getUserProfile = [
+  async (req: Request, res: Response) => {
+    try {
+      const userProfile = await findByUsername(req.params.username);
 
-    if (!userProfile) {
-      return res.status(404).json({
-        error: "NOT_FOUND",
-        message: "User's Profile not found"
+      if (!userProfile) {
+        return res.status(404).json({
+          error: "NOT_FOUND",
+          message: "User's Profile not found"
+        });
+      }
+
+      res.json(userProfile);
+    } catch (err) {
+      console.error("Fetching error: ", err);
+      res.status(500).json({
+        error: "SERVER_ERROR",
+        message: "Error getting user's profile"
       });
     }
-
-    res.json(userProfile);
-  } catch (err) {
-    console.error("Fetching error: ", err);
-    res.status(500).json({
-      error: "SERVER_ERROR",
-      message: "Error getting user's profile"
-    });
   }
-};
+] as RequestHandler[];
+
+export const searchUsers = [
+  async (req: AuthRequest, res: Response) => {
+    const query = req.query.q as string;
+
+    if (!query) {
+      return res.status(400).json({ message: "Search query is required" });
+    }
+
+    try {
+      const users = await findByQuery(query, req.user.id);
+      res.json({ users });
+    } catch (error) {
+      console.error('User search error:', error);
+      res.status(500).json({ message: "Error searching users" });
+    }
+  }
+] as unknown as RequestHandler[];

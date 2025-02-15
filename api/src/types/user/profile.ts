@@ -21,3 +21,16 @@ export type UserProfileDetails = Prisma.UserProfileGetPayload<{
     imageUrl: true;
   };
 }>;
+
+export type SearchUserResult = Prisma.UserGetPayload<{
+  select: {
+    id: true;
+    username: true;
+    profile: {
+      select: {
+        displayName: true;
+        imageUrl: true;
+      };
+    };
+  };
+}>;
