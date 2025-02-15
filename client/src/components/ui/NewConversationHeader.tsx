@@ -6,9 +6,10 @@ import { User } from '../../types/user';
 
 interface Props {
   onUserSelect: (user: User) => void;
+  disabled?: boolean;
 }
 
-export default function NewConversationHeader({ onUserSelect }: Props) {
+export default function NewConversationHeader({ onUserSelect, disabled = false }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const { users, isLoading, searchUsers } = useUserSearch();
@@ -26,6 +27,11 @@ export default function NewConversationHeader({ onUserSelect }: Props) {
   }, []);
 
   useEffect(() => {
+    if (disabled) {
+      setShowDropdown(false);
+      return;
+    }
+
     const timer = setTimeout(() => {
       if (searchQuery.trim()) {
         searchUsers(searchQuery);
@@ -33,14 +39,17 @@ export default function NewConversationHeader({ onUserSelect }: Props) {
     }, 300); // Debounce search
 
     return () => clearTimeout(timer);
-  }, [searchQuery, searchUsers]);
+  }, [searchQuery, searchUsers, disabled]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    setShowDropdown(true);
+    if (!disabled) {
+      setShowDropdown(true);
+    }
   };
 
   const handleSelectUser = (user: User) => {
+    if (disabled) return;
     onUserSelect(user);
     setSearchQuery(user.profile?.displayName || user.username);
     setShowDropdown(false);
@@ -51,13 +60,14 @@ export default function NewConversationHeader({ onUserSelect }: Props) {
       <div className={styles.searchContainer}>
         <Input
           type="text"
-          placeholder="Type a name..."
+          placeholder={disabled ? "Creating conversation..." : "Type a name..."}
           value={searchQuery}
           onChange={(e) => handleSearch(e.target.value)}
-          onFocus={() => setShowDropdown(true)}
+          onFocus={() => !disabled && setShowDropdown(true)}
           className={styles.searchInput}
+          disabled={disabled}
         />
-        {showDropdown && (searchQuery || users.length > 0) && (
+        {showDropdown && !disabled && (searchQuery || users.length > 0) && (
           <div ref={dropdownRef} className={styles.dropdown}>
             {isLoading ? (
               <div className={styles.dropdownMessage}>Searching...</div>
@@ -84,9 +94,6 @@ export default function NewConversationHeader({ onUserSelect }: Props) {
                     <div className={styles.displayName}>
                       {user.profile?.displayName || user.username}
                     </div>
-                    {user.profile?.displayName && (
-                      <div className={styles.username}>@{user.username}</div>
-                    )}
                   </div>
                 </div>
               ))

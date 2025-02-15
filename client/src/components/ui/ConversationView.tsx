@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
+import { useConversations } from '../../hooks/useConversations';
 import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
 import styles from './ConversationView.module.css';
@@ -27,27 +28,36 @@ interface Props {
 
 export default function ConversationView({ conversationId, onMessageSent }: Props) {
   const { user } = useAuth();
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const { createConversation, activeConversation } = useConversations();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isNewConversation, setIsNewConversation] = useState(!conversationId);
+  const [isCreatingConversation, setIsCreatingConversation] = useState(false);
 
-  const handleUserSelect = (selected: User) => {
-    setSelectedUser(selected);
-    // TODO: If user has existing conversation, load it
+  useEffect(() => {
+    // If conversationId changes, update isNewConversation
+    setIsNewConversation(!conversationId);
+  }, [conversationId]);
+
+  const handleUserSelect = async (selected: User) => {
+    if (isCreatingConversation) return;
+    
+    try {
+      setIsCreatingConversation(true);
+      await createConversation(selected.id);
+      setIsNewConversation(false);
+    } catch (error) {
+      console.error('Failed to create conversation:', error);
+    } finally {
+      setIsCreatingConversation(false);
+    }
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || !activeConversation) return;
 
     try {
-      // TODO: Send message API call
-      // If new conversation:
-      // 1. Create conversation
-      // 2. Send message
-      // If existing conversation:
-      // 1. Just send message
-
+      // TODO: Send message API call coming in next step
       setNewMessage('');
       onMessageSent?.();
     } catch (error) {
@@ -64,8 +74,15 @@ export default function ConversationView({ conversationId, onMessageSent }: Prop
 
   return (
     <div className={styles.container}>
-      {isNewConversation && (
-        <NewConversationHeader onUserSelect={handleUserSelect} />
+      {isNewConversation ? (
+        <NewConversationHeader 
+          onUserSelect={handleUserSelect} 
+          disabled={isCreatingConversation}
+        />
+      ) : (
+        <div className={styles.header}>
+          {/* TODO: Add conversation header with participant info */}
+        </div>
       )}
       
       <div className={styles.messagesContainer}>
@@ -91,8 +108,14 @@ export default function ConversationView({ conversationId, onMessageSent }: Prop
           placeholder="Type a message..."
           className={styles.messageInput}
           rows={1}
+          disabled={!activeConversation || isNewConversation}
         />
-        <Button onClick={handleSendMessage}>Send</Button>
+        <Button 
+          onClick={handleSendMessage}
+          disabled={!activeConversation || isNewConversation}
+        >
+          Send
+        </Button>
       </div>
     </div>
   );
