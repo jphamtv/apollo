@@ -20,7 +20,7 @@ export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
   const initial = user.profile?.displayName?.charAt(0).toUpperCase() || '';
 
   const handleSettingsClick = () => {
-    navigate('/settings');
+    navigate('settings');
     onClose();
   };
 
