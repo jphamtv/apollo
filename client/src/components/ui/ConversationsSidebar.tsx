@@ -16,7 +16,7 @@ interface Props {
 
 export default function ConversationsSidebar({ 
   onNewChat,
-  conversations = [], // Provide default empty array
+  conversations = [], 
   loadConversations,
   selectConversation,
   activeConversation
@@ -24,18 +24,11 @@ export default function ConversationsSidebar({
   const { user } = useAuth();
   
   useEffect(() => {
-    console.log('Loading conversations...');
     loadConversations();
   }, [loadConversations]);
 
   // Don't render until we have user with profile data
   if (!user?.profile) return null;
-
-  console.log('Rendering conversations:', {
-  isArray: Array.isArray(conversations),
-  length: conversations?.length,
-  data: conversations
-});
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -43,6 +36,10 @@ export default function ConversationsSidebar({
       hour: 'numeric', 
       minute: '2-digit'
     });
+  };
+  
+  const handleConversationClick = (conversation: Conversation) => {
+    selectConversation(conversation);
   };
   
   return (
@@ -64,14 +61,14 @@ export default function ConversationsSidebar({
           return (
             <ConversationItem
               key={conversation.id}
-              displayName={otherParticipant.profile?.displayName ?? otherParticipant.username}
+              displayName={otherParticipant.profile.displayName}
               lastMessage={conversation.lastMessage?.text ?? 'No messages yet'}
               timestamp={conversation.lastMessage ? 
                 formatTimestamp(conversation.lastMessage.createdAt) : 
                 formatTimestamp(conversation.createdAt)
               }
               isActive={activeConversation?.id === conversation.id}
-              onClick={() => selectConversation(conversation)}
+              onClick={() => handleConversationClick(conversation)}
             />
           );
         })}

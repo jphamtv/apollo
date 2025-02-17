@@ -92,14 +92,16 @@ export function useConversations() {
     } catch (err) {
       setError('Failed to load conversations');
       console.error('Load conversations error:', err);
-      setConversations([]); // Ensure we have an empty array on error
+      setConversations([]);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   const selectConversation = useCallback((conversation: Conversation) => {
+    console.log('Selecting conversation:', conversation);
     setActiveConversation(conversation);
+    console.log('Active conversation set to:', conversation);
   }, []);
 
   const sendMessage = useCallback(async (conversationId: string, text: string) => {

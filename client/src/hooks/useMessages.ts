@@ -40,16 +40,18 @@ export function useMessages() {
     setError(null);
 
     try {
-      const response = await apiClient.get<{ messages: Message[] }>(
+      const response = await apiClient.get<{ messages: { messages: Message[] } }>(
         `/conversations/${conversationId}/messages`
       );
       console.log('loadMessages response:', response);
-      if (!Array.isArray(response.messages)) {
-        console.error('Expected messages array, got:', response.messages);
+      
+      if (!Array.isArray(response.messages.messages)) {
+        console.error('Expected messages array, got:', response.messages.messages);
         setMessages([]);
         return;
       }
-      setMessages(response.messages);
+      
+      setMessages(response.messages.messages);
     } catch (err) {
       setMessages([]);
       setError('Failed to load messages');

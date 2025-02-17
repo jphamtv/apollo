@@ -1,4 +1,5 @@
-import { useMessages } from '../../hooks/useMessages';import { useState, useEffect } from 'react';
+import { useMessages } from '../../hooks/useMessages';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useConversations } from '../../hooks/useConversations';
 import NewConversationHeader from './NewConversationHeader';
@@ -16,15 +17,17 @@ interface User {
 
 interface Props {
   conversationId?: string;
+  conversationsData: ReturnType<typeof useConversations>;
 }
 
-export default function ConversationView({ conversationId }: Props) {
+export default function ConversationView({ conversationId, conversationsData }: Props) {
   const { user } = useAuth();
-  const { createConversation, activeConversation } = useConversations();
   const { messages, sendMessage, loadMessages } = useMessages();
   const [newMessage, setNewMessage] = useState('');
   const [isNewConversation, setIsNewConversation] = useState(!conversationId);
   const [isCreatingConversation, setIsCreatingConversation] = useState(false);
+  
+  const { activeConversation, createConversation } = conversationsData;
 
   useEffect(() => {
     if (activeConversation) {
