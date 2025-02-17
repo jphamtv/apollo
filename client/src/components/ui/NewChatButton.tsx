@@ -5,7 +5,7 @@ interface Props {
   onClick: () => void;
 }
 
-export default function NewChatButton({ onClick }): Props {
+export default function NewChatButton({ onClick }: Props) {
   return (
     <button className={styles.button} onClick={onClick}>
       <Plus size={16} />

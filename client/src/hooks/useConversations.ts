@@ -75,11 +75,21 @@ export function useConversations() {
     setError(null);
 
     try {
-      const response = await apiClient.get<{ conversations: Conversation[] }>('/conversations');
-      setConversations(response.conversations);
+      const response = await apiClient.get<Conversation[]>('/conversations');
+      console.log('Raw response from /conversations:', response);
+      
+      if (!Array.isArray(response)) {
+        console.error('Expected array, got:', typeof response);
+        setConversations([]);
+        return;
+      }
+      
+      setConversations(response);
+      console.log('Set conversations to:', response);
     } catch (err) {
       setError('Failed to load conversations');
       console.error('Load conversations error:', err);
+      setConversations([]); // Ensure we have an empty array on error
     } finally {
       setIsLoading(false);
     }

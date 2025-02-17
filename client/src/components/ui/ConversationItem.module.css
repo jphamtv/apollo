@@ -10,6 +10,15 @@
   border-radius: 0.5rem;
 }
 
+.active {
+  background: var(--bg-tertiary);
+  border-radius: 0.5rem;
+}
+
+.active:hover {
+  background: var(--bg-tertiary);
+}
+
 .avatar {
   width: 3rem;
   height: 3rem;

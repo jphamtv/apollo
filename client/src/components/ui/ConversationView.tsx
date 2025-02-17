@@ -5,13 +5,6 @@ import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
 import styles from './ConversationView.module.css';
 
-interface Message {
-  id: string;
-  text: string;
-  senderId: string;
-  createdAt: string;
-}
-
 interface User {
   id: string;
   username: string;
@@ -23,10 +16,9 @@ interface User {
 
 interface Props {
   conversationId?: string;
-  onMessageSent?: () => void;
 }
 
-export default function ConversationView({ conversationId, onMessageSent }: Props) {
+export default function ConversationView({ conversationId }: Props) {
   const { user } = useAuth();
   const { createConversation, activeConversation } = useConversations();
   const { messages, sendMessage, loadMessages } = useMessages();
@@ -80,7 +72,6 @@ export default function ConversationView({ conversationId, onMessageSent }: Prop
     try {
       await sendMessage(activeConversation.id, newMessage.trim());
       setNewMessage('');
-      // Don't call onMessageSent which might be resetting state
     } catch (error) {
       console.error('Failed to send message:', error);
     }
@@ -130,8 +121,6 @@ export default function ConversationView({ conversationId, onMessageSent }: Prop
       </div>
 
       <div className={styles.inputContainer}>
-        {/* Debug logging for disabled state */}
-        {console.log('Input disabled state:', isNewConversation || isCreatingConversation)}
         <textarea
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}

@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import styles from './Settings.module.css';
+import { User as UserIcon } from 'lucide-react';
 
 export default function Settings() {
   const { user, updateProfile } = useAuth();
@@ -56,8 +57,7 @@ export default function Settings() {
               />
             ) : (
               <div className={styles.avatarPlaceholder}>
-                {user?.profile?.displayName?.charAt(0).toUpperCase() || 
-                 user?.username?.charAt(0).toUpperCase()}
+                <UserIcon size={40} />
               </div>
             )}
           </div>

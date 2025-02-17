@@ -1,15 +1,19 @@
 import styles from './ConversationItem.module.css';
 
 interface Props {
-  displayName?: string;
-  lastMessage?: string;
-  timestamp?: string;
+  displayName: string;
+  lastMessage: string;
+  timestamp: string;
+  isActive?: boolean;
+  onClick?: () => void;
 }
 
 export default function ConversationItem({ 
-  displayName = "User Name", 
-  lastMessage = "No messages yet",
-  timestamp = "12:00 PM"
+  displayName, 
+  lastMessage,
+  timestamp,
+  isActive = false,
+  onClick
 }: Props) {
   const initials = displayName
     .split(' ')
@@ -18,7 +22,10 @@ export default function ConversationItem({
     .toUpperCase();
 
   return (
-    <div className={styles.container}>
+    <div 
+      className={`${styles.container} ${isActive ? styles.active : ''}`}
+      onClick={onClick}
+    >
       <div className={styles.avatar}>
         {initials}
       </div>

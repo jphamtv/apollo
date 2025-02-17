@@ -3,16 +3,47 @@ import ConversationItem from './ConversationItem';
 import NewChatButton from './NewChatButton';
 import ProfileButton from './ProfileButton';
 import { useAuth } from '../../hooks/useAuth';
+import { useEffect } from 'react';
+import { Conversation } from '../../types/conversation';
 
 interface Props {
   onNewChat: () => void;
+  conversations: Conversation[];
+  loadConversations: () => Promise<void>;
+  selectConversation: (conversation: Conversation) => void;
+  activeConversation: Conversation | null;
 }
 
-export default function ConversationsSidebar({ onNewChat }): Props {
+export default function ConversationsSidebar({ 
+  onNewChat,
+  conversations = [], // Provide default empty array
+  loadConversations,
+  selectConversation,
+  activeConversation
+}: Props) {
   const { user } = useAuth();
   
+  useEffect(() => {
+    console.log('Loading conversations...');
+    loadConversations();
+  }, [loadConversations]);
+
   // Don't render until we have user with profile data
   if (!user?.profile) return null;
+
+  console.log('Rendering conversations:', {
+  isArray: Array.isArray(conversations),
+  length: conversations?.length,
+  data: conversations
+});
+
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { 
+      hour: 'numeric', 
+      minute: '2-digit'
+    });
+  };
   
   return (
     <aside className={styles.container}>
@@ -22,10 +53,28 @@ export default function ConversationsSidebar({ onNewChat }): Props {
       
       <main className={styles.main}>
         <NewChatButton onClick={onNewChat} />
-        {/* TODO: Load conversations */}
-        <ConversationItem />
-        <ConversationItem />
-        <ConversationItem />
+        {conversations?.map(conversation => {
+          // Find the other participant (for 1:1 chats)
+          const otherParticipant = conversation.participants.find(
+            p => p.user.id !== user.id
+          )?.user;
+
+          if (!otherParticipant) return null;
+
+          return (
+            <ConversationItem
+              key={conversation.id}
+              displayName={otherParticipant.profile?.displayName ?? otherParticipant.username}
+              lastMessage={conversation.lastMessage?.text ?? 'No messages yet'}
+              timestamp={conversation.lastMessage ? 
+                formatTimestamp(conversation.lastMessage.createdAt) : 
+                formatTimestamp(conversation.createdAt)
+              }
+              isActive={activeConversation?.id === conversation.id}
+              onClick={() => selectConversation(conversation)}
+            />
+          );
+        })}
       </main>
       
       <footer className={styles.footer}>

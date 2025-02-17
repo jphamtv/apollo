@@ -1,28 +1,27 @@
 import { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import ConversationsSidebar from "../components/ui/ConversationsSidebar";
 import ConversationView from "../components/ui/ConversationView";
 import styles from './MessagesLayout.module.css';
+import { useConversations } from "../hooks/useConversations";
 
 export default function MessagesLayout() {
-  const navigate = useNavigate();
   const [isNewConversation, setIsNewConversation] = useState(false);
+  const conversationsData = useConversations();
 
   const handleNewChat = () => {
     setIsNewConversation(true);
   };
 
-  const handleMessageSent = (conversationId: string) => {
-    setIsNewConversation(false);
-    navigate(`/conversations/${conversationId}`);
-  };
-
   return (
     <div className={styles.container}>
-      <ConversationsSidebar onNewChat={handleNewChat} />
+      <ConversationsSidebar 
+        onNewChat={handleNewChat} 
+        {...conversationsData} 
+      />
       <main className={styles.main}>
         {isNewConversation ? (
-          <ConversationView onMessageSent={handleMessageSent} />
+          <ConversationView />
         ) : (
           <Outlet />            
         )}

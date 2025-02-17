@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { apiClient } from '../utils/apiClient';
-import { Message, MessageCreate } from '../types/message';
+import { Message } from '../types/message';
 
 export function useMessages() {
   const [messages, setMessages] = useState<Message[]>([]);
