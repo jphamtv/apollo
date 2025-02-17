@@ -78,14 +78,17 @@ export function useConversations() {
       const response = await apiClient.get<Conversation[]>('/conversations');
       console.log('Raw response from /conversations:', response);
       
-      if (!Array.isArray(response)) {
-        console.error('Expected array, got:', typeof response);
-        setConversations([]);
-        return;
-      }
+      // Transform the response to include lastMessage
+      const transformedConversations = response.map(conversation => ({
+        ...conversation,
+        lastMessage: conversation.messages[0] ? {
+          text: conversation.messages[0].text,
+          createdAt: conversation.messages[0].createdAt
+        } : undefined
+      }));
       
-      setConversations(response);
-      console.log('Set conversations to:', response);
+      setConversations(transformedConversations);
+      console.log('Set conversations to:', transformedConversations);
     } catch (err) {
       setError('Failed to load conversations');
       console.error('Load conversations error:', err);
