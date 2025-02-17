@@ -1,17 +1,32 @@
 import { useState, useCallback } from 'react';
 import { apiClient } from '../utils/apiClient';
 import { User } from '../types/user';
+import { Message } from '../types/message';
+
+interface Participant {
+  id: string;
+  userId: string;
+  conversationId: string;
+  joinedAt: string;
+  leftAt: string | null;
+  user: User;
+}
 
 interface Conversation {
   id: string;
-  participants: User[];
+  name: string | null;
+  isGroup: boolean;
+  participants: Participant[];
   lastMessage?: {
     text: string;
     createdAt: string;
   };
+  messages: Message[];
+  createdAt: string;
+  updatedAt: string;
 }
 
-interface ConversationResponse {
+interface ConversationCreate {
   conversation: Conversation;
 }
 
@@ -26,11 +41,15 @@ export function useConversations() {
     setError(null);
 
     try {
-      const response = await apiClient.post<ConversationResponse>('/conversations', {
-        participantId: userId
+      console.log('Creating conversation with data:', { participantIds: [userId], isGroup: false });
+      const response = await apiClient.post<ConversationCreate, { participantIds: string[]; isGroup: boolean }>('/conversations', {
+        participantIds: [userId],
+        isGroup: false
       });
 
+      console.log('Received response:', response);
       const newConversation = response.conversation;
+      console.log('New conversation:', newConversation);
       
       setConversations(prev => {
         // Check if conversation already exists
@@ -39,6 +58,7 @@ export function useConversations() {
         return [newConversation, ...prev];
       });
       
+      console.log('Setting active conversation:', newConversation);
       setActiveConversation(newConversation);
       return newConversation;
     } catch (err) {
@@ -69,6 +89,44 @@ export function useConversations() {
     setActiveConversation(conversation);
   }, []);
 
+  const sendMessage = useCallback(async (conversationId: string, text: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await apiClient.post<{ message: Message }>(
+        `/conversations/${conversationId}/messages`,
+        { text }
+      );
+
+      const newMessage = response.message;
+      
+      setConversations(prev => {
+        return prev.map(conv => {
+          if (conv.id === conversationId) {
+            return {
+              ...conv,
+              messages: [...(conv.messages || []), newMessage],
+              lastMessage: {
+                text: newMessage.text,
+                createdAt: newMessage.createdAt
+              }
+            };
+          }
+          return conv;
+        });
+      });
+
+      return newMessage;
+    } catch (err) {
+      setError('Failed to send message');
+      console.error('Send message error:', err);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return {
     conversations,
     activeConversation,
@@ -76,6 +134,7 @@ export function useConversations() {
     error,
     createConversation,
     loadConversations,
-    selectConversation
+    selectConversation,
+    sendMessage
   };
 }

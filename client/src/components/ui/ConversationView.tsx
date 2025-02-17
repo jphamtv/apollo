@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMessages } from '../../hooks/useMessages';import { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useConversations } from '../../hooks/useConversations';
 import NewConversationHeader from './NewConversationHeader';
@@ -29,15 +29,30 @@ interface Props {
 export default function ConversationView({ conversationId, onMessageSent }: Props) {
   const { user } = useAuth();
   const { createConversation, activeConversation } = useConversations();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const { messages, sendMessage, loadMessages } = useMessages();
   const [newMessage, setNewMessage] = useState('');
   const [isNewConversation, setIsNewConversation] = useState(!conversationId);
   const [isCreatingConversation, setIsCreatingConversation] = useState(false);
 
   useEffect(() => {
-    // If conversationId changes, update isNewConversation
-    setIsNewConversation(!conversationId);
-  }, [conversationId]);
+    if (activeConversation) {
+      loadMessages(activeConversation.id);
+    }
+  }, [activeConversation, loadMessages]);
+
+  useEffect(() => {
+    console.log('State change - activeConversation:', activeConversation);
+    console.log('State change - isNewConversation:', isNewConversation);
+    console.log('State change - isCreatingConversation:', isCreatingConversation);
+    // If we have an active conversation, we're no longer in new conversation mode
+    if (activeConversation) {
+      setIsNewConversation(false);
+    } else if (conversationId) {
+      setIsNewConversation(false);
+    } else {
+      setIsNewConversation(true);
+    }
+  }, [conversationId, activeConversation]);
 
   const handleUserSelect = async (selected: User) => {
     if (isCreatingConversation) return;
@@ -53,13 +68,19 @@ export default function ConversationView({ conversationId, onMessageSent }: Prop
     }
   };
 
+  const getOtherParticipant = () => {
+    if (!activeConversation || !user) return null;
+    return activeConversation.participants
+      .find(p => p.userId !== user.id)?.user;
+  };
+
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !activeConversation) return;
 
     try {
-      // TODO: Send message API call coming in next step
+      await sendMessage(activeConversation.id, newMessage.trim());
       setNewMessage('');
-      onMessageSent?.();
+      // Don't call onMessageSent which might be resetting state
     } catch (error) {
       console.error('Failed to send message:', error);
     }
@@ -81,12 +102,20 @@ export default function ConversationView({ conversationId, onMessageSent }: Prop
         />
       ) : (
         <div className={styles.header}>
-          {/* TODO: Add conversation header with participant info */}
+          {activeConversation && (
+            <div className={styles.participantInfo}>
+              <h3>
+                {getOtherParticipant()?.profile?.displayName || 
+                 getOtherParticipant()?.username || 
+                 'Unknown User'}
+              </h3>
+            </div>
+          )}
         </div>
       )}
       
       <div className={styles.messagesContainer}>
-        {messages.map(message => (
+        {Array.isArray(messages) && messages.map(message => (
           <div 
             key={message.id}
             className={`${styles.message} ${
@@ -101,6 +130,8 @@ export default function ConversationView({ conversationId, onMessageSent }: Prop
       </div>
 
       <div className={styles.inputContainer}>
+        {/* Debug logging for disabled state */}
+        {console.log('Input disabled state:', isNewConversation || isCreatingConversation)}
         <textarea
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
@@ -108,11 +139,11 @@ export default function ConversationView({ conversationId, onMessageSent }: Prop
           placeholder="Type a message..."
           className={styles.messageInput}
           rows={1}
-          disabled={!activeConversation || isNewConversation}
+          disabled={isNewConversation || isCreatingConversation}
         />
         <Button 
           onClick={handleSendMessage}
-          disabled={!activeConversation || isNewConversation}
+          disabled={isNewConversation || isCreatingConversation}
         >
           Send
         </Button>

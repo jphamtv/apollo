@@ -38,7 +38,8 @@ export const createConversation = [
       };
 
       const conversation = await create(data);
-      res.json(conversation);
+      console.log('Created conversation:', conversation);
+      res.json({ conversation });
     } catch (err) {
       console.error("Create conversation error: ", err);
       res.status(500).json({ message: "Error creating conversation" });
