@@ -61,7 +61,7 @@ export default function ConversationsSidebar({
           return (
             <ConversationItem
               key={conversation.id}
-              displayName={otherParticipant.profile.displayName}
+              displayName={otherParticipant.profile?.displayName ?? otherParticipant.username}
               lastMessage={conversation.lastMessage?.text ?? 'No messages yet'}
               timestamp={conversation.lastMessage ? 
                 formatTimestamp(conversation.lastMessage.createdAt) : 
