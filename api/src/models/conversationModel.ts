@@ -42,6 +42,12 @@ export const findConversationsByUserId = async (userId: string) => {
             select: {
               id: true,
               username: true,
+              profile: {
+                select: {
+                  displayName: true,
+                  imageUrl: true
+                }
+              }
             },
           },
         },
