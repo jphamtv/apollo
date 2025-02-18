@@ -23,6 +23,7 @@ export default function SettingsModal() {
         displayName,
         bio,
       });
+      closeSettings();
     } catch (error) {
       console.error('Failed to update profile:', error);
     } finally {
