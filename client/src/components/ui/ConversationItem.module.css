@@ -5,18 +5,9 @@
   cursor: pointer;
 }
 
-.container:hover {
+.active {
   background: var(--bg-secondary);
   border-radius: 0.5rem;
-}
-
-.active {
-  background: var(--bg-tertiary);
-  border-radius: 0.5rem;
-}
-
-.active:hover {
-  background: var(--bg-tertiary);
 }
 
 .avatar {
