@@ -33,6 +33,13 @@ interface ConversationCreate {
 export function useConversations() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
+
+  const findConversationByParticipant = useCallback((userId: string) => {
+    return conversations.find(conv => 
+      !conv.isGroup && 
+      conv.participants.some(p => p.user.id === userId)
+    );
+  }, [conversations]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,24 +48,24 @@ export function useConversations() {
     setError(null);
 
     try {
-      console.log('Creating conversation with data:', { participantIds: [userId], isGroup: false });
+      // Check for existing conversation
+      const existingConversation = findConversationByParticipant(userId);
+      if (existingConversation) {
+        console.log('Found existing conversation:', existingConversation);
+        setActiveConversation(existingConversation);
+        return existingConversation;
+      }
+
+      console.log('Creating new conversation with:', userId);
       const response = await apiClient.post<ConversationCreate, { participantIds: string[]; isGroup: boolean }>('/conversations', {
         participantIds: [userId],
         isGroup: false
       });
 
-      console.log('Received response:', response);
       const newConversation = response.conversation;
-      console.log('New conversation:', newConversation);
+      console.log('Created new conversation:', newConversation);
       
-      setConversations(prev => {
-        // Check if conversation already exists
-        const exists = prev.some(conv => conv.id === newConversation.id);
-        if (exists) return prev;
-        return [newConversation, ...prev];
-      });
-      
-      console.log('Setting active conversation:', newConversation);
+      setConversations(prev => [newConversation, ...prev]);
       setActiveConversation(newConversation);
       return newConversation;
     } catch (err) {
@@ -68,7 +75,7 @@ export function useConversations() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [findConversationByParticipant]);
 
   const loadConversations = useCallback(async () => {
     setIsLoading(true);
@@ -150,6 +157,7 @@ export function useConversations() {
     createConversation,
     loadConversations,
     selectConversation,
-    sendMessage
+    sendMessage,
+    findConversationByParticipant
   };
 }

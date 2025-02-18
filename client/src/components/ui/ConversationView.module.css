@@ -33,13 +33,13 @@
 }
 
 .sent .messageContent {
-  background-color: var(--primary-color);
+  background-color: rgb(255, 255, 255, 0.35);
   color: white;
   border-top-right-radius: 0.25rem;
 }
 
 .received .messageContent {
-  background-color: var(--message-bg);
+  background-color: rgb(255, 255, 255, 0.15);
   border-top-left-radius: 0.25rem;
 }
 
