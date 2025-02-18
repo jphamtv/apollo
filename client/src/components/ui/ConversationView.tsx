@@ -2,60 +2,38 @@ import { useMessages } from '../../hooks/useMessages';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useConversations } from '../../hooks/useConversations';
+import { useNavigation } from '../../contexts/NavigationContext';
 import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
 import styles from './ConversationView.module.css';
-
-interface User {
-  id: string;
-  username: string;
-  profile?: {
-    displayName: string;
-    imageUrl?: string;
-  };
-}
+import { User } from '../../types/user';
+import { Conversation } from '../../types/conversation';
 
 interface Props {
-  conversationId?: string;
-  conversationsData: ReturnType<typeof useConversations>;
+  conversation?: Conversation;
 }
 
-export default function ConversationView({ conversationId, conversationsData }: Props) {
+export default function ConversationView({ conversation }: Props) {
   const { user } = useAuth();
   const { messages, sendMessage, loadMessages } = useMessages();
   const [newMessage, setNewMessage] = useState('');
-  const [isNewConversation, setIsNewConversation] = useState(!conversationId);
   const [isCreatingConversation, setIsCreatingConversation] = useState(false);
-  
-  const { activeConversation, createConversation } = conversationsData;
+  const { createConversation } = useConversations();
+  const { isNewConversation, navigateToConversation } = useNavigation();
 
   useEffect(() => {
-    if (activeConversation) {
-      loadMessages(activeConversation.id);
+    if (conversation) {
+      loadMessages(conversation.id);
     }
-  }, [activeConversation, loadMessages]);
-
-  useEffect(() => {
-    console.log('State change - activeConversation:', activeConversation);
-    console.log('State change - isNewConversation:', isNewConversation);
-    console.log('State change - isCreatingConversation:', isCreatingConversation);
-    // If we have an active conversation, we're no longer in new conversation mode
-    if (activeConversation) {
-      setIsNewConversation(false);
-    } else if (conversationId) {
-      setIsNewConversation(false);
-    } else {
-      setIsNewConversation(true);
-    }
-  }, [conversationId, activeConversation]);
+  }, [conversation, loadMessages]);
 
   const handleUserSelect = async (selected: User) => {
     if (isCreatingConversation) return;
     
     try {
       setIsCreatingConversation(true);
-      await createConversation(selected.id);
-      setIsNewConversation(false);
+      const newConversation = await createConversation(selected.id);
+      navigateToConversation(newConversation);
     } catch (error) {
       console.error('Failed to create conversation:', error);
     } finally {
@@ -64,16 +42,16 @@ export default function ConversationView({ conversationId, conversationsData }: 
   };
 
   const getOtherParticipant = () => {
-    if (!activeConversation || !user) return null;
-    return activeConversation.participants
+    if (!conversation || !user) return null;
+    return conversation.participants
       .find(p => p.userId !== user.id)?.user;
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !activeConversation) return;
+    if (!newMessage.trim() || !conversation) return;
 
     try {
-      await sendMessage(activeConversation.id, newMessage.trim());
+      await sendMessage(conversation.id, newMessage.trim());
       setNewMessage('');
     } catch (error) {
       console.error('Failed to send message:', error);
@@ -96,7 +74,7 @@ export default function ConversationView({ conversationId, conversationsData }: 
         />
       ) : (
         <div className={styles.header}>
-          {activeConversation && (
+          {conversation && (
             <div className={styles.participantInfo}>
               <h3>
                 {getOtherParticipant()?.profile?.displayName || 

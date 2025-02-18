@@ -1,45 +1,43 @@
-import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { useEffect } from "react";
 import ConversationsSidebar from "../components/ui/ConversationsSidebar";
 import ConversationView from "../components/ui/ConversationView";
+import Settings from "./Settings";
+import EmptyConversation from "../components/ui/EmptyConversation";
 import { useConversations } from "../hooks/useConversations";
+import { useNavigation } from "../contexts/NavigationContext";
 import styles from './MessagesLayout.module.css';
 
 export default function MessagesLayout() {
-  const [isNewConversation, setIsNewConversation] = useState(false);
-  const conversationsData = useConversations();
+  const { conversations, loadConversations } = useConversations();
+  const { view, activeConversation, isNewConversation } = useNavigation();
 
-  const handleNewChat = () => {
-    setIsNewConversation(true);
-  };
+  useEffect(() => {
+    loadConversations();
+  }, [loadConversations]);
 
-  const handleConversationSelect = () => {
-    setIsNewConversation(false);
+  const renderMainContent = () => {
+    if (view === 'settings') {
+      return <Settings />;
+    }
+
+    if (isNewConversation) {
+      return <ConversationView />;
+    }
+
+    if (activeConversation) {
+      return <ConversationView conversation={activeConversation} />;
+    }
+
+    return <EmptyConversation />;
   };
 
   return (
     <div className={styles.container}>
       <ConversationsSidebar 
-        onNewChat={handleNewChat} 
-        conversations={conversationsData.conversations}
-        loadConversations={conversationsData.loadConversations}
-        selectConversation={(conversation) => {
-          conversationsData.selectConversation(conversation);
-          handleConversationSelect();
-        }}
-        activeConversation={conversationsData.activeConversation}
+        conversations={conversations}
       />
       <main className={styles.main}>
-        {isNewConversation ? (
-          <ConversationView conversationsData={conversationsData} />
-        ) : conversationsData.activeConversation ? (
-          <ConversationView 
-            conversationsData={conversationsData}
-            conversationId={conversationsData.activeConversation.id} 
-          />
-        ) : (
-          <Outlet />            
-        )}
+        {renderMainContent()}
       </main>
     </div>
   );

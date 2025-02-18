@@ -3,31 +3,21 @@ import ConversationItem from './ConversationItem';
 import NewChatButton from './NewChatButton';
 import ProfileButton from './ProfileButton';
 import { useAuth } from '../../hooks/useAuth';
-import { useEffect } from 'react';
+import { useNavigation } from '../../contexts/NavigationContext';
 import { Conversation } from '../../types/conversation';
 
 interface Props {
-  onNewChat: () => void;
   conversations: Conversation[];
-  loadConversations: () => Promise<void>;
-  selectConversation: (conversation: Conversation) => void;
-  activeConversation: Conversation | null;
 }
 
-export default function ConversationsSidebar({ 
-  onNewChat,
-  conversations = [], 
-  loadConversations,
-  selectConversation,
-  activeConversation
-}: Props) {
+export default function ConversationsSidebar({ conversations = [] }: Props) {
   const { user } = useAuth();
-  
-  useEffect(() => {
-    loadConversations();
-  }, [loadConversations]);
+  const { 
+    activeConversation, 
+    navigateToConversation,
+    startNewConversation
+  } = useNavigation();
 
-  // Don't render until we have user with profile data
   if (!user?.profile) return null;
 
   const formatTimestamp = (timestamp: string) => {
@@ -38,10 +28,6 @@ export default function ConversationsSidebar({
     });
   };
   
-  const handleConversationClick = (conversation: Conversation) => {
-    selectConversation(conversation);
-  };
-  
   return (
     <aside className={styles.container}>
       <header className={styles.header}>
@@ -49,9 +35,8 @@ export default function ConversationsSidebar({
       </header>
       
       <main className={styles.main}>
-        <NewChatButton onClick={onNewChat} />
+        <NewChatButton onClick={startNewConversation} />
         {conversations?.map(conversation => {
-          // Find the other participant (for 1:1 chats)
           const otherParticipant = conversation.participants.find(
             p => p.user.id !== user.id
           )?.user;
@@ -68,7 +53,7 @@ export default function ConversationsSidebar({
                 formatTimestamp(conversation.createdAt)
               }
               isActive={activeConversation?.id === conversation.id}
-              onClick={() => handleConversationClick(conversation)}
+              onClick={() => navigateToConversation(conversation)}
             />
           );
         })}

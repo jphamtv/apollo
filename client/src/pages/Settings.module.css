@@ -4,10 +4,34 @@
   margin: 0 auto;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.backButton:hover {
+  background: var(--hover-color);
+}
+
 .title {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 24px;
+  flex-grow: 1;
 }
 
 .form {

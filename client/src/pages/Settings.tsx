@@ -1,41 +1,27 @@
 import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useNavigation } from '../contexts/NavigationContext';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import styles from './Settings.module.css';
-import { User as UserIcon } from 'lucide-react';
+import { User as UserIcon, ChevronLeft } from 'lucide-react';
 
 export default function Settings() {
   const { user, updateProfile } = useAuth();
+  const { navigateToMessages } = useNavigation();
   const [displayName, setDisplayName] = useState(user?.profile?.displayName || '');
   const [bio, setBio] = useState(user?.profile?.bio || '');
-  // const [image, setImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files[0]) {
-  //     setImage(e.target.files[0]);
-  //   }
-  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // For now just send text fields - implement file upload later
       await updateProfile({
         displayName,
         bio,
-      })
-      // const formData = new FormData();
-      // formData.append('displayName', displayName);
-      // formData.append('bio', bio);
-      // if (image) {
-      //   formData.append('image', image);
-      // }
-
-      // await updateProfile(formData);
+      });
     } catch (error) {
       console.error('Failed to update profile:', error);
     } finally {
@@ -45,7 +31,17 @@ export default function Settings() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Profile Settings</h1>
+      <header className={styles.header}>
+        <button 
+          onClick={navigateToMessages}
+          className={styles.backButton}
+        >
+          <ChevronLeft size={24} />
+          <span>Back</span>
+        </button>
+        <h1 className={styles.title}>Profile Settings</h1>
+      </header>
+
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.imageSection}>
           <div className={styles.avatar}>
@@ -66,7 +62,6 @@ export default function Settings() {
               type="file"
               id="image"
               accept="image/*"
-              // onChange={handleImageChange}
               className={styles.fileInput}
             />
             <label htmlFor="image" className={styles.uploadButton}>

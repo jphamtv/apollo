@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useNavigation } from '../../contexts/NavigationContext';
 import styles from './ProfileMenu.module.css';
 
 interface ProfileMenuProps {
@@ -15,12 +15,12 @@ interface ProfileMenuProps {
 }
 
 export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
-  const navigate = useNavigate();
   const { logout } = useAuth();
+  const { navigateToSettings } = useNavigation();
   const initial = user.profile?.displayName?.charAt(0).toUpperCase() || '';
 
   const handleSettingsClick = () => {
-    navigate('settings');
+    navigateToSettings();
     onClose();
   };
 
@@ -31,7 +31,6 @@ export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
 
   return (
     <div className={styles.menu}>
-      {/* User Info */}
       <div className={styles.userInfo}>
         <div className={styles.avatar}>
           {user.profile?.imageUrl ? (
