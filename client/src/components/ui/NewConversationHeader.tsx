@@ -66,6 +66,7 @@ export default function NewConversationHeader({ onUserSelect, disabled = false }
           onFocus={() => !disabled && setShowDropdown(true)}
           className={styles.searchInput}
           disabled={disabled}
+          autoFocus
         />
         {showDropdown && !disabled && (searchQuery || users.length > 0) && (
           <div ref={dropdownRef} className={styles.dropdown}>

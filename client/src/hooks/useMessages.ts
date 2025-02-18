@@ -4,9 +4,12 @@ import { Message } from '../types/message';
 
 export function useMessages() {
   const [messages, setMessages] = useState<Message[]>([]);
-  console.log('useMessages hook state:', messages);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const clearMessages = useCallback(() => {
+    setMessages([]);
+  }, []);
 
   const sendMessage = useCallback(async (conversationId: string, text: string) => {
     setIsLoading(true);
@@ -66,6 +69,7 @@ export function useMessages() {
     isLoading,
     error,
     sendMessage,
-    loadMessages
+    loadMessages,
+    clearMessages
   };
 }

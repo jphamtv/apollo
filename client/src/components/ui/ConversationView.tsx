@@ -15,11 +15,19 @@ interface Props {
 
 export default function ConversationView({ conversation }: Props) {
   const { user } = useAuth();
-  const { messages, sendMessage, loadMessages } = useMessages();
+  const { messages, sendMessage, loadMessages, clearMessages } = useMessages();
   const [newMessage, setNewMessage] = useState('');
   const [isCreatingConversation, setIsCreatingConversation] = useState(false);
   const { createConversation } = useConversations();
   const { isNewConversation, navigateToConversation } = useNavigation();
+
+  useEffect(() => {
+    if (isNewConversation) {
+      clearMessages();
+    } else if (conversation) {
+      loadMessages(conversation.id);
+    }
+  }, [conversation, isNewConversation, loadMessages, clearMessages]);
 
   useEffect(() => {
     if (conversation) {
