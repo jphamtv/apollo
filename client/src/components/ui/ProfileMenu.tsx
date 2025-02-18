@@ -16,11 +16,11 @@ interface ProfileMenuProps {
 
 export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
   const { logout } = useAuth();
-  const { navigateToSettings } = useNavigation();
+  const { openSettings } = useNavigation();
   const initial = user.profile?.displayName?.charAt(0).toUpperCase() || '';
 
   const handleSettingsClick = () => {
-    navigateToSettings();
+    openSettings();
     onClose();
   };
 
