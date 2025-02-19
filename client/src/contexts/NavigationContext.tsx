@@ -13,7 +13,8 @@ type NavigationAction =
   | { type: 'NAVIGATE_TO_CONVERSATION'; conversation: Conversation }
   | { type: 'NAVIGATE_TO_MESSAGES' }
   | { type: 'OPEN_SETTINGS' }
-  | { type: 'CLOSE_SETTINGS' };
+  | { type: 'CLOSE_SETTINGS' }
+  | { type: 'RESET' };
 
 function navigationReducer(state: NavigationState, action: NavigationAction): NavigationState {
   switch (action.type) {
@@ -41,6 +42,13 @@ function navigationReducer(state: NavigationState, action: NavigationAction): Na
       return { ...state, isSettingsOpen: true };
     case 'CLOSE_SETTINGS':
       return { ...state, isSettingsOpen: false };
+    case 'RESET':
+      return {
+        view: 'messages',
+        activeConversation: null,
+        isNewConversation: false,
+        isSettingsOpen: false
+      };
     default:
       return state;
   }
@@ -81,6 +89,7 @@ export function useNavigation() {
       dispatch({ type: 'NAVIGATE_TO_CONVERSATION', conversation }),
     navigateToMessages: () => dispatch({ type: 'NAVIGATE_TO_MESSAGES' }),
     openSettings: () => dispatch({ type: 'OPEN_SETTINGS' }),
-    closeSettings: () => dispatch({ type: 'CLOSE_SETTINGS' })
+    closeSettings: () => dispatch({ type: 'CLOSE_SETTINGS' }),
+    reset: () => dispatch({ type: 'RESET' })
   };
 }

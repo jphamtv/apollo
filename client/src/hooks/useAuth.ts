@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { User, LoginCredentials, AuthResponse } from "../types/user";
 import { apiClient } from "../utils/apiClient";
+import { useNavigation } from "../contexts/NavigationContext";
 
 interface AuthContextType {
   user: User | null;
@@ -29,6 +30,7 @@ export const useAuth = () => {
 export const useAuthProvider = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { reset } = useNavigation();
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -65,6 +67,7 @@ export const useAuthProvider = () => {
     } finally {
       apiClient.removeToken();
       setUser(null);
+      reset();
     }
   };
 
