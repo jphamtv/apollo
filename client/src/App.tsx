@@ -7,8 +7,8 @@ import MessagesLayout from './pages/MessagesLayout';
 
 function App() {
   return (
-    <AuthProvider>
-      <NavigationProvider>
+    <NavigationProvider>
+      <AuthProvider>
         <Routes>
         {/* Public routes */}
         <Route path='/login' element={<Login />} />
@@ -19,8 +19,8 @@ function App() {
           <Route path='/*' element={<MessagesLayout />} />
         </Route>
       </Routes>
-        </NavigationProvider>
     </AuthProvider>
+        </NavigationProvider>
   )
 }
 
