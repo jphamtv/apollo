@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { useNavigation } from '../../contexts/NavigationContext';
+import { useNavigation } from '../../hooks/useNavigationContext';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Modal from './Modal';

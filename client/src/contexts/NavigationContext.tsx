@@ -1,14 +1,14 @@
-import { createContext, useContext, useReducer, ReactNode } from 'react';
+import { createContext, useReducer, ReactNode } from 'react';
 import { Conversation } from '../types/conversation';
 
-type NavigationState = {
+export type NavigationState = {
   view: 'messages';
   activeConversation: Conversation | null;
   isNewConversation: boolean;
   isSettingsOpen: boolean;
 };
 
-type NavigationAction = 
+export type NavigationAction = 
   | { type: 'START_NEW_CONVERSATION' }
   | { type: 'NAVIGATE_TO_CONVERSATION'; conversation: Conversation }
   | { type: 'NAVIGATE_TO_MESSAGES' }
@@ -54,7 +54,7 @@ function navigationReducer(state: NavigationState, action: NavigationAction): Na
   }
 }
 
-const NavigationContext = createContext<{
+export const NavigationContext = createContext<{
   state: NavigationState;
   dispatch: React.Dispatch<NavigationAction>;
 } | null>(null);
@@ -72,24 +72,4 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
       {children}
     </NavigationContext.Provider>
   );
-}
-
-export function useNavigation() {
-  const context = useContext(NavigationContext);
-  if (!context) {
-    throw new Error('useNavigation must be used within NavigationProvider');
-  }
-
-  const { state, dispatch } = context;
-
-  return {
-    ...state,
-    startNewConversation: () => dispatch({ type: 'START_NEW_CONVERSATION' }),
-    navigateToConversation: (conversation: Conversation) => 
-      dispatch({ type: 'NAVIGATE_TO_CONVERSATION', conversation }),
-    navigateToMessages: () => dispatch({ type: 'NAVIGATE_TO_MESSAGES' }),
-    openSettings: () => dispatch({ type: 'OPEN_SETTINGS' }),
-    closeSettings: () => dispatch({ type: 'CLOSE_SETTINGS' }),
-    reset: () => dispatch({ type: 'RESET' })
-  };
 }
