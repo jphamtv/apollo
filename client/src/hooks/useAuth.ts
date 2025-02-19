@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { User, LoginCredentials, AuthResponse } from "../types/user";
 import { apiClient } from "../utils/apiClient";
-import { useNavigation } from '../hooks/useNavigationContext';
+import { useNavigation } from '../hooks/useNavigation';
 
 interface AuthContextType {
   user: User | null;

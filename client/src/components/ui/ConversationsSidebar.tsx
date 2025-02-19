@@ -3,7 +3,7 @@ import ConversationItem from './ConversationItem';
 import NewChatButton from './NewChatButton';
 import ProfileButton from './ProfileButton';
 import { useAuth } from '../../hooks/useAuth';
-import { useNavigation } from '../../hooks/useNavigationContext';
+import { useNavigation } from '../../hooks/useNavigation';
 import { Conversation } from '../../types/conversation';
 
 interface Props {

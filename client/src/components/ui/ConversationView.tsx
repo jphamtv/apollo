@@ -2,7 +2,7 @@ import { useMessages } from '../../hooks/useMessages';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useConversations } from '../../hooks/useConversations';
-import { useNavigation } from '../../hooks/useNavigationContext';
+import { useNavigation } from '../../hooks/useNavigation';
 import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
 import styles from './ConversationView.module.css';

@@ -4,7 +4,7 @@ import ConversationView from "../components/ui/ConversationView";
 import SettingsModal from "../components/ui/SettingsModal";
 import EmptyConversation from "../components/ui/EmptyConversation";
 import { useConversations } from "../hooks/useConversations";
-import { useNavigation } from '../hooks/useNavigationContext';
+import { useNavigation } from '../hooks/useNavigation';
 import styles from './MessagesLayout.module.css';
 
 export default function MessagesLayout() {

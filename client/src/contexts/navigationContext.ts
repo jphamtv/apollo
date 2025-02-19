@@ -1,4 +1,4 @@
-import { createContext, useReducer, ReactNode } from 'react';
+import { createContext } from 'react';
 import { Conversation } from '../types/conversation';
 
 export type NavigationState = {
@@ -16,7 +16,7 @@ export type NavigationAction =
   | { type: 'CLOSE_SETTINGS' }
   | { type: 'RESET' };
 
-function navigationReducer(state: NavigationState, action: NavigationAction): NavigationState {
+export function navigationReducer(state: NavigationState, action: NavigationAction): NavigationState {
   switch (action.type) {
     case 'START_NEW_CONVERSATION':
       return {
@@ -58,18 +58,3 @@ export const NavigationContext = createContext<{
   state: NavigationState;
   dispatch: React.Dispatch<NavigationAction>;
 } | null>(null);
-
-export function NavigationProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(navigationReducer, {
-    view: 'messages',
-    activeConversation: null,
-    isNewConversation: false,
-    isSettingsOpen: false
-  });
-
-  return (
-    <NavigationContext.Provider value={{ state, dispatch }}>
-      {children}
-    </NavigationContext.Provider>
-  );
-}
