@@ -11,8 +11,25 @@ import { AuthRequest } from "../types";
 export const getConversationMessages = [
   async (req: AuthRequest, res: Response) => {
     try {
-      const messages = await findById(req.params.conversationId);
-      res.json({ messages });
+      const conversation = await findById(req.params.conversationId);
+      
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+
+      // Authorization check
+      const isParticipant = conversation.participants.some(
+        p => p.userId === req.user.id
+      );
+      
+      if (!isParticipant) {
+        return res.status(403).json({
+          error: "FORBIDDEN",
+          message: "Not authorized to view these messages"
+        });
+      }
+
+      res.json({ messages: conversation.messages });
     } catch (err) {
       console.error('Get messages error:', err);
       res.status(500).json({ message: 'Error getting messages' });
