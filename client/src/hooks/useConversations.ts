@@ -48,21 +48,30 @@ export function useConversations() {
     setError(null);
 
     try {
-      // Check for existing conversation
-      const existingConversation = findConversationByParticipant(userId);
-      if (existingConversation) {
-        setActiveConversation(existingConversation);
-        return existingConversation;
+      // First, check locally for existing conversation
+      const existingLocalConversation = findConversationByParticipant(userId);
+      if (existingLocalConversation) {
+        setActiveConversation(existingLocalConversation);
+        return existingLocalConversation;
       }
 
+      // Always make a server request, which returns existing or 
+      // creates a new conversation if needed
       const response = await apiClient.post<ConversationCreate, { participantIds: string[]; isGroup: boolean }>('/conversations', {
         participantIds: [userId],
         isGroup: false
       });
 
       const newConversation = response.conversation;
+
+      // Check if this conversation already exists in our local state
+      const conversationExists = conversations.some(c => c.id === newConversation.id);
+
+      if (!conversationExists) {
+        // Only add it if it's truly new
+        setConversations(prev => [newConversation, ...prev]);        
+      }
       
-      setConversations(prev => [newConversation, ...prev]);
       setActiveConversation(newConversation);
       return newConversation;
     } catch (err) {
@@ -72,7 +81,7 @@ export function useConversations() {
     } finally {
       setIsLoading(false);
     }
-  }, [findConversationByParticipant]);
+  }, [findConversationByParticipant, conversations]);
 
   const loadConversations = useCallback(async () => {
     setIsLoading(true);

@@ -81,24 +81,61 @@ export const findById = async (id: string): Promise<ConversationWithDetails | nu
 };
 
 export const findExistingConversationByParticipants = async (participantIds: string[]) => {
-  const isGroup = participantIds.length > 1;
-
+  // Special case for direct (non-group) conversations
+  if (participantIds.length === 2) {
+    return prisma.conversation.findFirst({
+      where: {
+        isGroup: false,
+        AND: [
+          // Both participants must be in this conversation
+          { participants: { some: { userId: participantIds[0] } } },
+          { participants: { some: { userId: participantIds[1] } } },
+          // Total participant count must be exactly 2
+          { participants: { none: { userId: { notIn: participantIds } } } }
+        ]
+      },
+      include: {
+        messages: {
+          take: 1,
+          orderBy: { createdAt: 'desc' }
+        },
+        participants: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                profile: {
+                  select: {
+                    displayName: true,
+                    imageUrl: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  
+  // For group conversations 
   return prisma.conversation.findFirst({
     where: {
-      isGroup,
+      isGroup: true,
       // All specified participants must be in the conversation
       AND: [
         ...participantIds.map(id => ({
           participants: { some: { userId: id } }
         })),
         // For groups, ensure ONLY these participants exist
-        isGroup ? {
+        {
           participants: {
             none: {
               userId: { notIn: participantIds }
             }
           }
-        } : {}
+        }
       ]
     },
     include: {
