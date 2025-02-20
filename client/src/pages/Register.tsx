@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { RegisterCredentials } from "../types/authTypes";
+import { RegisterCredentials } from "../types/user";
 import { apiClient } from "../utils/apiClient";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input"

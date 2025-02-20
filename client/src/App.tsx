@@ -1,6 +1,6 @@
 import { NavigationProvider } from './contexts/NavigationProvider';
 import { Routes, Route } from 'react-router-dom';
-import AuthProvider from './components/auth/AuthProvider';
+import { AuthProvider } from './contexts/AuthProvider';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
