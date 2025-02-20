@@ -21,7 +21,6 @@ export function useMessages() {
         { text }
       );
 
-      console.log('sending message response:', response);
       if (!response.message) {
         throw new Error('No message in response');
       }
@@ -46,7 +45,6 @@ export function useMessages() {
       const response = await apiClient.get<{ messages: Message[] }>(
         `/conversations/${conversationId}/messages`
       );
-      console.log('loadMessages response:', response);
       
       if (!Array.isArray(response.messages)) {
         console.error('Expected messages array, got:', response.messages);

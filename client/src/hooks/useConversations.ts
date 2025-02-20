@@ -51,19 +51,16 @@ export function useConversations() {
       // Check for existing conversation
       const existingConversation = findConversationByParticipant(userId);
       if (existingConversation) {
-        console.log('Found existing conversation:', existingConversation);
         setActiveConversation(existingConversation);
         return existingConversation;
       }
 
-      console.log('Creating new conversation with:', userId);
       const response = await apiClient.post<ConversationCreate, { participantIds: string[]; isGroup: boolean }>('/conversations', {
         participantIds: [userId],
         isGroup: false
       });
 
       const newConversation = response.conversation;
-      console.log('Created new conversation:', newConversation);
       
       setConversations(prev => [newConversation, ...prev]);
       setActiveConversation(newConversation);
@@ -83,7 +80,6 @@ export function useConversations() {
 
     try {
       const response = await apiClient.get<Conversation[]>('/conversations');
-      console.log('Raw response from /conversations:', response);
       
       // Transform the response to include lastMessage
       const transformedConversations = response.map(conversation => ({
@@ -95,7 +91,6 @@ export function useConversations() {
       }));
       
       setConversations(transformedConversations);
-      console.log('Set conversations to:', transformedConversations);
     } catch (err) {
       setError('Failed to load conversations');
       console.error('Load conversations error:', err);
@@ -106,9 +101,7 @@ export function useConversations() {
   }, []);
 
   const selectConversation = useCallback((conversation: Conversation) => {
-    console.log('Selecting conversation:', conversation);
     setActiveConversation(conversation);
-    console.log('Active conversation set to:', conversation);
   }, []);
 
   const sendMessage = useCallback(async (conversationId: string, text: string) => {

@@ -7,6 +7,7 @@ import {
   addParticipant,
   removeParticipant,
   findConversationsByUserId,
+  findExistingConversationByParticipants,
   deleteById,
 } from "../models/conversationModel";
 import { AuthRequest } from "../types";
@@ -25,7 +26,15 @@ export const createConversation = [
     try {
       const { name, isGroup, participantIds } = req.body;  
 
-      // Add creator automatically
+      // Include the creator in participant check
+      const allParticipantIds = [req.user.id, ...participantIds];
+
+      const existingConversation = await findExistingConversationByParticipants(allParticipantIds);
+      if (existingConversation) {
+        return res.json({ conversation: existingConversation });
+      }
+
+      // Create new if none exists, add creator automatically
       const data = {
         name,
         isGroup,
@@ -38,7 +47,6 @@ export const createConversation = [
       };
 
       const conversation = await create(data);
-      console.log('Created conversation:', conversation);
       res.json({ conversation });
     } catch (err) {
       console.error("Create conversation error: ", err);

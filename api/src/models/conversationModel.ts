@@ -80,6 +80,52 @@ export const findById = async (id: string): Promise<ConversationWithDetails | nu
   });
 };
 
+export const findExistingConversationByParticipants = async (participantIds: string[]) => {
+  const isGroup = participantIds.length > 1;
+
+  return prisma.conversation.findFirst({
+    where: {
+      isGroup,
+      // All specified participants must be in the conversation
+      AND: [
+        ...participantIds.map(id => ({
+          participants: { some: { userId: id } }
+        })),
+        // For groups, ensure ONLY these participants exist
+        isGroup ? {
+          participants: {
+            none: {
+              userId: { notIn: participantIds }
+            }
+          }
+        } : {}
+      ]
+    },
+    include: {
+      messages: {
+        take: 1,
+        orderBy: { createdAt: 'desc' }
+      },
+      participants: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              profile: {
+                select: {
+                  displayName: true,
+                  imageUrl: true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+};
+
 export const update = async (
   id: string,
   data: Prisma.ConversationUpdateInput
@@ -163,6 +209,7 @@ export default {
   create,
   findById,
   findConversationsByUserId,
+  findExistingConversationByParticipants,
   update,
   addParticipant,
   removeParticipant,
