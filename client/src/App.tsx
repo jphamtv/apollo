@@ -1,4 +1,5 @@
 import { NavigationProvider } from './contexts/NavigationProvider';
+import { MessageProvider } from './contexts/MessageProvider';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthProvider';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -10,6 +11,7 @@ function App() {
   return (
     <NavigationProvider>
       <AuthProvider>
+        <MessageProvider>
         <Routes>
           {/* Public routes */}
           <Route path='/login' element={<Login />} />
@@ -20,6 +22,7 @@ function App() {
             <Route path='/*' element={<MessagesLayout />} />
           </Route>
         </Routes>
+      </MessageProvider>
       </AuthProvider>
     </NavigationProvider>
   )

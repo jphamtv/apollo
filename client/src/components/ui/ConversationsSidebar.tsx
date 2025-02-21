@@ -4,19 +4,16 @@ import NewChatButton from './NewChatButton';
 import ProfileButton from './ProfileButton';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigation } from '../../hooks/useNavigation';
-import { Conversation } from '../../types/conversation';
+import { useMessaging } from '../../hooks/useMessaging';
 
-interface Props {
-  conversations: Conversation[];
-}
-
-export default function ConversationsSidebar({ conversations = [] }: Props) {
+export default function ConversationsSidebar() {
   const { user } = useAuth();
   const { 
     activeConversation, 
     navigateToConversation,
     startNewConversation
   } = useNavigation();
+  const { conversations } = useMessaging();
 
   if (!user?.profile) return null;
 

@@ -3,12 +3,12 @@ import ConversationsSidebar from "../components/ui/ConversationsSidebar";
 import ConversationView from "../components/ui/ConversationView";
 import SettingsModal from "../components/ui/SettingsModal";
 import EmptyConversation from "../components/ui/EmptyConversation";
-import { useConversations } from "../hooks/useConversations";
+import { useMessaging } from "../hooks/useMessaging";
 import { useNavigation } from '../hooks/useNavigation';
 import styles from './MessagesLayout.module.css';
 
 export default function MessagesLayout() {
-  const { conversations, loadConversations } = useConversations();
+  const { loadConversations } = useMessaging();
   const { activeConversation, isNewConversation } = useNavigation();
 
   useEffect(() => {
@@ -29,9 +29,7 @@ export default function MessagesLayout() {
 
   return (
     <div className={styles.container}>
-      <ConversationsSidebar 
-        conversations={conversations}
-      />
+      <ConversationsSidebar />
       <main className={styles.main}>
         {renderMainContent()}
       </main>

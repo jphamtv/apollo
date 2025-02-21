@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { AuthContext, AuthContextType } from "./authContext";
 import { User, AuthResponse, LoginCredentials } from "../types/user";
 import { apiClient } from "../utils/apiClient";
-import { useNavigation } from '../hooks/useNavigation';
+import { useSafeNavigation } from '../hooks/useSafeNavigation';
 import type { UpdateProfileData } from "./authContext";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { reset } = useNavigation();
+  const { reset } = useSafeNavigation();
 
   useEffect(() => {
     const initializeAuth = async () => {

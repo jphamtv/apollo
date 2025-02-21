@@ -1,21 +1,35 @@
 import { useContext } from 'react';
 import { NavigationContext } from '../contexts/navigationContext';
 import { Conversation } from '../types/conversation';
-// Import the context directly to avoid circular dependency
 import { MessageContext } from '../contexts/messageContext';
 
-export function useNavigation() {
-  const context = useContext(NavigationContext);
-  if (!context) {
-    throw new Error('useNavigation must be used within NavigationProvider');
-  }
-
-  const { state, dispatch } = context;
-
-  // Get the message context directly to avoid circular dependency
+/**
+ * A safer version of useNavigation that doesn't throw errors when 
+ * used outside the navigation provider. Used primarily by AuthProvider.
+ */
+export function useSafeNavigation() {
+  const navContext = useContext(NavigationContext);
   const messageContext = useContext(MessageContext);
   
-  // Handle the case where MessageContext is not available yet
+  // If the context is not available, provide default/noop functions
+  if (!navContext) {
+    return {
+      view: 'messages' as const,
+      activeConversation: null,
+      isNewConversation: false,
+      isSettingsOpen: false,
+      startNewConversation: () => {},
+      navigateToConversation: () => {},
+      navigateToMessages: () => {},
+      openSettings: () => {},
+      closeSettings: () => {},
+      reset: () => {}
+    };
+  }
+
+  const { state, dispatch } = navContext;
+  
+  // Get the message context directly to avoid circular dependency
   const setActiveConversation = messageContext?.setActiveConversation;
   const clearActiveConversation = messageContext?.clearActiveConversation;
   

@@ -1,16 +1,14 @@
 import { createContext } from 'react';
-import { Conversation } from '../types/conversation';
 
 export type NavigationState = {
   view: 'messages';
-  activeConversation: Conversation | null;
   isNewConversation: boolean;
   isSettingsOpen: boolean;
 };
 
 export type NavigationAction = 
   | { type: 'START_NEW_CONVERSATION' }
-  | { type: 'NAVIGATE_TO_CONVERSATION'; conversation: Conversation }
+  | { type: 'NAVIGATE_TO_CONVERSATION' }
   | { type: 'NAVIGATE_TO_MESSAGES' }
   | { type: 'OPEN_SETTINGS' }
   | { type: 'CLOSE_SETTINGS' }
@@ -22,14 +20,12 @@ export function navigationReducer(state: NavigationState, action: NavigationActi
       return {
         ...state,
         view: 'messages',
-        isNewConversation: true,
-        activeConversation: null
+        isNewConversation: true
       };
     case 'NAVIGATE_TO_CONVERSATION':
       return {
         ...state,
         view: 'messages',
-        activeConversation: action.conversation,
         isNewConversation: false
       };
     case 'NAVIGATE_TO_MESSAGES':
@@ -45,7 +41,6 @@ export function navigationReducer(state: NavigationState, action: NavigationActi
     case 'RESET':
       return {
         view: 'messages',
-        activeConversation: null,
         isNewConversation: false,
         isSettingsOpen: false
       };

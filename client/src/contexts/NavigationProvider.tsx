@@ -4,7 +4,6 @@ import { NavigationContext, navigationReducer } from './navigationContext';
 export function NavigationProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(navigationReducer, {
     view: 'messages',
-    activeConversation: null,
     isNewConversation: false,
     isSettingsOpen: false
   });

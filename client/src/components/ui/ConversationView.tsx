@@ -1,8 +1,7 @@
-import { useMessages } from '../../hooks/useMessages';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { useConversations } from '../../hooks/useConversations';
 import { useNavigation } from '../../hooks/useNavigation';
+import { useMessaging } from '../../hooks/useMessaging';
 import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
 import styles from './ConversationView.module.css';
@@ -15,10 +14,8 @@ interface Props {
 
 export default function ConversationView({ conversation }: Props) {
   const { user } = useAuth();
-  const { messages, sendMessage, loadMessages, clearMessages } = useMessages();
+  const { messages, sendMessage, loadMessages, clearMessages, createConversation, isCreatingConversation } = useMessaging();
   const [newMessage, setNewMessage] = useState('');
-  const [isCreatingConversation, setIsCreatingConversation] = useState(false);
-  const { createConversation } = useConversations();
   const { isNewConversation, navigateToConversation } = useNavigation();
 
   useEffect(() => {
@@ -39,13 +36,10 @@ export default function ConversationView({ conversation }: Props) {
     if (isCreatingConversation) return;
     
     try {
-      setIsCreatingConversation(true);
       const newConversation = await createConversation(selected.id);
       navigateToConversation(newConversation);
     } catch (error) {
       console.error('Failed to create conversation:', error);
-    } finally {
-      setIsCreatingConversation(false);
     }
   };
 
@@ -78,7 +72,7 @@ export default function ConversationView({ conversation }: Props) {
       {isNewConversation ? (
         <NewConversationHeader 
           onUserSelect={handleUserSelect} 
-          disabled={isCreatingConversation}
+          disabled={isCreatingConversation || false}
         />
       ) : (
         <div className={styles.header}>
@@ -117,11 +111,11 @@ export default function ConversationView({ conversation }: Props) {
           placeholder="Type a message..."
           className={styles.messageInput}
           rows={1}
-          disabled={isNewConversation || isCreatingConversation}
+          disabled={isNewConversation || (isCreatingConversation || false)}
         />
         <Button 
           onClick={handleSendMessage}
-          disabled={isNewConversation || isCreatingConversation}
+          disabled={isNewConversation || (isCreatingConversation || false)}
         >
           Send
         </Button>
