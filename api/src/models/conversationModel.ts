@@ -3,6 +3,17 @@ import { ConversationWithDetails } from "../types";
 
 const prisma = new PrismaClient();
 
+const userSelect = {
+  id: true,
+  username: true,
+  profile: {
+    select: {
+      displayName: true,
+      imageUrl: true
+    }
+  }
+}
+
 export const create = async (data: Prisma.ConversationCreateInput): Promise<ConversationWithDetails> => {
   return prisma.conversation.create({
     data,
@@ -11,10 +22,7 @@ export const create = async (data: Prisma.ConversationCreateInput): Promise<Conv
       participants: {
         include: {
           user: {
-            select: {
-              id: true,
-              username: true,
-            },
+            select: userSelect,
           },
         },
       },
@@ -39,16 +47,7 @@ export const findConversationsByUserId = async (userId: string) => {
       participants: {
         include: {
           user: {
-            select: {
-              id: true,
-              username: true,
-              profile: {
-                select: {
-                  displayName: true,
-                  imageUrl: true
-                }
-              }
-            },
+            select: userSelect,
           },
         },
       },
@@ -69,10 +68,7 @@ export const findById = async (id: string): Promise<ConversationWithDetails | nu
       participants: {
         include: {
           user: {
-            select: {
-              id: true,
-              username: true,
-            },
+            select: userSelect,
           },
         },
       },
@@ -102,22 +98,13 @@ export const findExistingConversationByParticipants = async (participantIds: str
         participants: {
           include: {
             user: {
-              select: {
-                id: true,
-                username: true,
-                profile: {
-                  select: {
-                    displayName: true,
-                    imageUrl: true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+              select: userSelect,
+            },
+          },
+        },
+      },
     });
-  }
+  };
   
   // For group conversations 
   return prisma.conversation.findFirst({
@@ -146,20 +133,11 @@ export const findExistingConversationByParticipants = async (participantIds: str
       participants: {
         include: {
           user: {
-            select: {
-              id: true,
-              username: true,
-              profile: {
-                select: {
-                  displayName: true,
-                  imageUrl: true
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+            select: userSelect,
+          },
+        },
+      },
+    },
   });
 };
 
@@ -175,10 +153,7 @@ export const update = async (
       participants: {
         include: {
           user: {
-            select: {
-              id: true,
-              username: true,
-            },
+            select: userSelect,
           },
         },
       },
