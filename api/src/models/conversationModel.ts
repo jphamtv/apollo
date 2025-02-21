@@ -57,6 +57,10 @@ export const findConversationsByUserId = async (userId: string) => {
         },
       },
     },
+    // Sort conversations by the most recent update
+    orderBy: {
+      updatedAt: 'desc',
+    },
   });
 };
 

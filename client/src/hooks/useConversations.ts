@@ -98,8 +98,15 @@ export function useConversations() {
           createdAt: conversation.messages[0].createdAt
         } : undefined
       }));
+
+      // Sort conversations by most recent activity (newest first)
+      const sortedConversations = transformedConversations.sort((a, b) => {
+        const aTime = a.lastMessage?.createdAt || a.createdAt;
+        const bTime = b.lastMessage?.createdAt || b.createdAt;
+        return new Date(bTime).getTime() - new Date(aTime).getTime();
+      });
       
-      setConversations(transformedConversations);
+      setConversations(sortedConversations);
     } catch (err) {
       setError('Failed to load conversations');
       console.error('Load conversations error:', err);
@@ -126,20 +133,29 @@ export function useConversations() {
       const newMessage = response.message;
       
       setConversations(prev => {
-        return prev.map(conv => {
-          if (conv.id === conversationId) {
-            return {
-              ...conv,
-              messages: [...(conv.messages || []), newMessage],
-              lastMessage: {
-                text: newMessage.text,
-                createdAt: newMessage.createdAt
-              }
-            };
-          }
-          return conv;
-        });
-      });
+      // Find the conversation to update
+      const updatedConversation = prev.find(c => c.id === conversationId);
+      
+      if (!updatedConversation) {
+        return prev;
+      }
+      
+      // Create updated conversation with new message
+      const conversationWithNewMessage = {
+        ...updatedConversation,
+        messages: [...(updatedConversation.messages || []), newMessage],
+        lastMessage: {
+          text: newMessage.text,
+          createdAt: newMessage.createdAt
+        }
+      };
+      
+      // Remove the conversation from the current array
+      const filteredConversations = prev.filter(c => c.id !== conversationId);
+      
+      // Add the updated conversation to the beginning of the array
+      return [conversationWithNewMessage, ...filteredConversations];
+    });
 
       return newMessage;
     } catch (err) {
