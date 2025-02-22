@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigation } from '../../hooks/useNavigation';
 import { useMessaging } from '../../hooks/useMessaging';
@@ -17,6 +17,11 @@ export default function ConversationView({ conversation }: Props) {
   const { messages, sendMessage, loadMessages, clearMessages, createConversation, isCreatingConversation } = useMessaging();
   const [newMessage, setNewMessage] = useState('');
   const { isNewConversation, navigateToConversation } = useNavigation();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView();
+  }, [messages]);
 
   useEffect(() => {
     if (isNewConversation) {
@@ -101,6 +106,7 @@ export default function ConversationView({ conversation }: Props) {
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className={styles.inputContainer}>
