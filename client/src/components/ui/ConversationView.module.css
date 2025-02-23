@@ -73,6 +73,6 @@
   border-color: var(--primary-color);
 }
 
-.field {
+.label {
   color: var(--text-secondary);
 }

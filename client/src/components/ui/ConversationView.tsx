@@ -75,21 +75,19 @@ export default function ConversationView({ conversation }: Props) {
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
-        <div className={styles.field}>To:</div>
+        <div className={styles.label}>To:</div>
         {isNewConversation ? (
           <NewConversationHeader 
             onUserSelect={handleUserSelect} 
             disabled={isCreatingConversation || false}
           />
         ) : (
-          <div className={styles.header}>
+          <div>
             {conversation && (
-              <div className={styles.participantInfo}>
-                <div>
-                  {getOtherParticipant()?.profile?.displayName || 
-                  getOtherParticipant()?.username || 
-                  'Unknown User'}
-                </div>
+              <div>
+                {getOtherParticipant()?.profile?.displayName || 
+                getOtherParticipant()?.username || 
+                'Unknown User'}
               </div>
             )}
           </div>

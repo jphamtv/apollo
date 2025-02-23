@@ -56,7 +56,7 @@ export default function NewConversationHeader({ onUserSelect, disabled = false }
   };
 
   return (
-    <div className={styles.header}>
+    <div>
       <div className={styles.searchContainer}>
         <Input
           type="text"
