@@ -4,7 +4,10 @@
   height: 100%;
 }
 
-.header {
+.wrapper {
+  display: grid;
+  grid-template-columns: 2rem auto;
+  align-items: center;
   padding: 1rem;
   border-bottom: 1px solid var(--border-color);
 }
@@ -68,4 +71,8 @@
 .messageInput:focus {
   outline: none;
   border-color: var(--primary-color);
+}
+
+.field {
+  color: var(--text-secondary);
 }

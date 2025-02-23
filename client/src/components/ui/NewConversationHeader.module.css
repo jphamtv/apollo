@@ -1,21 +1,19 @@
-.header {
-  padding: 1rem;
-  border-bottom: 1px solid var(--border-color);
-}
-
 .searchContainer {
   position: relative;
   width: 100%;
+  margin: 0;
 }
 
 .searchInput {
   width: 100%;
+  border: none;
+  padding: 0;
 }
 
 .dropdown {
   position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
+  top: calc(100% + 1.5rem);
+  left: -10px;
   right: 0;
   background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
@@ -42,7 +40,7 @@
 }
 
 .userItem:hover {
-  background-color: var(--hover-bg);
+  background-color: var(--bg-secondary);
 }
 
 .avatar {
