@@ -9,22 +9,22 @@ import MessagesLayout from './pages/MessagesLayout';
 
 function App() {
   return (
-    <NavigationProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <NavigationProvider>
         <MessageProvider>
-        <Routes>
-          {/* Public routes */}
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
+          <Routes>
+            {/* Public routes */}
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
 
-          {/* Protected routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path='/*' element={<MessagesLayout />} />
-          </Route>
-        </Routes>
-      </MessageProvider>
-      </AuthProvider>
-    </NavigationProvider>
+            {/* Protected routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path='/*' element={<MessagesLayout />} />
+            </Route>
+          </Routes>
+        </MessageProvider>
+      </NavigationProvider>
+    </AuthProvider>
   )
 }
 
