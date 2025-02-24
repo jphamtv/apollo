@@ -74,7 +74,7 @@ export default function ConversationView({ conversation }: Props) {
 
   return (
     <div className={styles.container}>
-      <div className={styles.wrapper}>
+      <div className={styles.headerWrapper}>
         <div className={styles.label}>To:</div>
         {isNewConversation ? (
           <NewConversationHeader 
@@ -94,7 +94,7 @@ export default function ConversationView({ conversation }: Props) {
         )}
       </div>
       
-      <div className={styles.messagesContainer}>
+      <div className={styles.messagesContainer}>  
         {Array.isArray(messages) && messages.map(message => (
           <div 
             key={message.id}
