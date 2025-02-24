@@ -1,7 +1,6 @@
 import { createContext } from 'react';
 import { Conversation } from '../types/conversation';
 import { Message } from '../types/message';
-import { User } from '../types/user';
 
 // Define the Message Context State
 export interface MessageState {

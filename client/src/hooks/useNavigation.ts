@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { NavigationContext } from '../contexts/navigationContext';
 import { Conversation } from '../types/conversation';
-// Import the context directly to avoid circular dependency
 import { MessageContext } from '../contexts/messageContext';
 
 export function useNavigation() {
@@ -11,38 +10,30 @@ export function useNavigation() {
   }
 
   const { state, dispatch } = context;
-
-  // Get the message context directly to avoid circular dependency
   const messageContext = useContext(MessageContext);
-  
-  // Handle the case where MessageContext is not available yet
-  const setActiveConversation = messageContext?.setActiveConversation;
-  const clearActiveConversation = messageContext?.clearActiveConversation;
-  
+
   return {
-    ...state,
-    // Add activeConversation from MessageContext if available
+    view: state.view,
+    isNewConversation: state.isNewConversation,
+    isSettingsOpen: state.isSettingsOpen,
     activeConversation: messageContext?.state.activeConversation || null,
+
     startNewConversation: () => {
-      if (clearActiveConversation) {
-        clearActiveConversation();
+      if (messageContext) {
+        messageContext.clearActiveConversation();
       }
       dispatch({ type: 'START_NEW_CONVERSATION' });
     },
+
     navigateToConversation: (conversation: Conversation) => {
-      if (setActiveConversation) {
-        setActiveConversation(conversation);
+      if (messageContext) {
+        messageContext.setActiveConversation(conversation);
       }
       dispatch({ type: 'NAVIGATE_TO_CONVERSATION' });
     },
+
     navigateToMessages: () => dispatch({ type: 'NAVIGATE_TO_MESSAGES' }),
     openSettings: () => dispatch({ type: 'OPEN_SETTINGS' }),
     closeSettings: () => dispatch({ type: 'CLOSE_SETTINGS' }),
-    reset: () => {
-      if (clearActiveConversation) {
-        clearActiveConversation();
-      }
-      dispatch({ type: 'RESET' });
-    }
   };
 }

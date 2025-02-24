@@ -15,7 +15,7 @@ interface MessageProviderProps {
 
 export function MessageProvider({ children }: MessageProviderProps) {
   const [state, dispatch] = useReducer(messageReducer, initialMessageState);
-  const { user } = useAuth(); // Get the authentication state
+  const { user } = useAuth(); 
 
   // Load all conversations
   const loadConversations = useCallback(async () => {
@@ -61,7 +61,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
       // Reset state when user logs out
       dispatch({ type: 'RESET_STATE' });
     }
-  }, [user, loadConversations]); // Re-run when user changes
+  }, [user, loadConversations]); 
 
   // Load messages for a specific conversation
   const loadMessages = useCallback(async (conversationId: string) => {
