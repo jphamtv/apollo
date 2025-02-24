@@ -94,7 +94,6 @@ export function MessageProvider({ children }: MessageProviderProps) {
     }
   }, []);
 
-  // Send a message in a conversation
   const sendMessage = useCallback(async (conversationId: string, text: string): Promise<Message> => {
     dispatch({ type: 'SEND_MESSAGE_REQUEST' });
 
@@ -125,7 +124,13 @@ export function MessageProvider({ children }: MessageProviderProps) {
     }
   }, []);
 
-  // Create a new conversation with a user
+  const findConversationByParticipant = useCallback((userId: string) => {
+    return state.conversations.find(conv => 
+      !conv.isGroup && 
+      conv.participants.some(p => p.user.id === userId)
+    );
+  }, [state.conversations]);
+
   const createConversation = useCallback(async (userId: string): Promise<Conversation> => {
     // First, check locally for existing conversation
     const existingConversation = findConversationByParticipant(userId);
@@ -167,9 +172,8 @@ export function MessageProvider({ children }: MessageProviderProps) {
       });
       throw new Error(errorMessage);
     }
-  }, [state.conversations]);
+  }, [findConversationByParticipant, dispatch]);
 
-  // Set active conversation
   const setActiveConversation = useCallback((conversation: Conversation) => {
     dispatch({ 
       type: 'SET_ACTIVE_CONVERSATION', 
@@ -177,25 +181,14 @@ export function MessageProvider({ children }: MessageProviderProps) {
     });
   }, []);
 
-  // Clear active conversation
   const clearActiveConversation = useCallback(() => {
     dispatch({ type: 'CLEAR_ACTIVE_CONVERSATION' });
   }, []);
 
-  // Clear messages
   const clearMessages = useCallback(() => {
     dispatch({ type: 'CLEAR_MESSAGES' });
   }, []);
 
-  // Find conversation by participant
-  const findConversationByParticipant = useCallback((userId: string) => {
-    return state.conversations.find(conv => 
-      !conv.isGroup && 
-      conv.participants.some(p => p.user.id === userId)
-    );
-  }, [state.conversations]);
-
-  // Create the context value with state and all helper methods
   const contextValue = {
     state,
     dispatch,
