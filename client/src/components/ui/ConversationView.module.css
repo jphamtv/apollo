@@ -14,7 +14,7 @@
 
 .messagesContainer {
   flex: 1;
-  padding: 1rem;
+  padding: 1rem 2rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -53,7 +53,13 @@
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
+  margin: 0 1rem;
+  background-color: var(--bg-primary);
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
   border-top: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
 }
 
 .messageInput {

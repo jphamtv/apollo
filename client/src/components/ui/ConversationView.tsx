@@ -4,6 +4,7 @@ import { useNavigation } from '../../hooks/useNavigation';
 import { useMessaging } from '../../hooks/useMessaging';
 import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
+import { ArrowUp } from 'lucide-react';
 import styles from './ConversationView.module.css';
 import { User } from '../../types/user';
 import { Conversation } from '../../types/conversation';
@@ -123,8 +124,9 @@ export default function ConversationView({ conversation }: Props) {
         <Button 
           onClick={handleSendMessage}
           disabled={isNewConversation || (isCreatingConversation || false)}
+          size='small'
         >
-          Send
+          <ArrowUp size={24} />
         </Button>
       </div>
     </div>
