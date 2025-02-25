@@ -11,7 +11,7 @@ interface Props {
 export default function ProfileButton({ user }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const initial = user.profile?.displayName?.charAt(0).toUpperCase() || 
+  const initial = user.profile.displayName?.charAt(0).toUpperCase() || 
                  user.username.charAt(0).toUpperCase();
 
   useEffect(() => {
@@ -37,14 +37,14 @@ export default function ProfileButton({ user }: Props) {
         type="button"
       >
         <div className={styles.avatar}>
-          {user.profile?.imageUrl ? (
+          {user.profile.imageUrl ? (
             <img src={user.profile.imageUrl} alt="" className={styles.avatarImage} />
           ) : (
             initial
           )}
         </div>
         <span className={styles.displayName}>
-          {user.profile?.displayName || user.username}
+          {user.profile.displayName || user.username}
         </span>
         <ChevronUp 
           size={16} 

@@ -1,4 +1,5 @@
 import { ReactNode, useEffect } from 'react'
+import { X } from 'lucide-react'
 import styles from './Modal.module.css'
 
 type Props = {
@@ -25,7 +26,7 @@ export default function Modal({ isOpen, onClose, children }: Props) {
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
         <button className={styles.closeButton} onClick={onClose}>
-          ×
+          <X />
         </button>
         {children}
       </div>

@@ -4,7 +4,7 @@ import { useNavigation } from '../../hooks/useNavigation';
 import { useMessaging } from '../../hooks/useMessaging';
 import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, InfoIcon, Trash2Icon } from 'lucide-react';
 import styles from './ConversationView.module.css';
 import { User } from '../../types/user';
 import { Conversation } from '../../types/conversation';
@@ -73,26 +73,40 @@ export default function ConversationView({ conversation }: Props) {
     }
   };
 
+  const handleInfoClick = () => { };
+  
+  const handleDeleteClick = () => {};
+
   return (
     <div className={styles.container}>
-      <div className={styles.headerWrapper}>
-        <div className={styles.label}>To:</div>
-        {isNewConversation ? (
-          <NewConversationHeader 
-            onUserSelect={handleUserSelect} 
-            disabled={isCreatingConversation || false}
-          />
-        ) : (
-          <div>
-            {conversation && (
-              <div>
-                {getOtherParticipant()?.profile?.displayName || 
-                getOtherParticipant()?.username || 
-                'Unknown User'}
-              </div>
-            )}
-          </div>
-        )}
+      <div className={styles.headerContainer}>
+        <div className={styles.recipient}>
+          <div className={styles.label}>To:</div>
+          {isNewConversation ? (
+            <NewConversationHeader 
+              onUserSelect={handleUserSelect} 
+              disabled={isCreatingConversation || false}
+            />
+          ) : (
+            <div>
+              {conversation && (
+                <div>
+                  {getOtherParticipant()?.profile.displayName || 
+                  getOtherParticipant()?.username || 
+                  'Unknown User'}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        <div className={styles.actions}>
+          <button onClick={handleInfoClick}>
+            <InfoIcon size={20}/>
+          </button>
+          <button onClick={handleDeleteClick}>
+            <Trash2Icon size={20}/>
+          </button>
+        </div>
       </div>
       
       <div className={styles.messagesContainer}>  

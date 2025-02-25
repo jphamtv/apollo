@@ -4,12 +4,23 @@
   height: 100%;
 }
 
-.headerWrapper {
-  display: grid;
-  grid-template-columns: 2rem auto;
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid var(--border-color);
+}
+
+.recipient {
+  display: grid;
+  grid-template-columns: 2rem auto;
+  align-items: center;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
 }
 
 .messagesContainer {

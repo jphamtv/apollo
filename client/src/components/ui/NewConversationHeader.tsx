@@ -51,7 +51,7 @@ export default function NewConversationHeader({ onUserSelect, disabled = false }
   const handleSelectUser = (user: User) => {
     if (disabled) return;
     onUserSelect(user);
-    setSearchQuery(user.profile?.displayName || user.username);
+    setSearchQuery(user.profile.displayName || user.username);
     setShowDropdown(false);
   };
 
@@ -79,7 +79,7 @@ export default function NewConversationHeader({ onUserSelect, disabled = false }
                   className={styles.userItem}
                   onClick={() => handleSelectUser(user)}
                 >
-                  {user.profile?.imageUrl ? (
+                  {user.profile.imageUrl ? (
                     <img 
                       src={user.profile.imageUrl} 
                       alt="" 
@@ -87,13 +87,13 @@ export default function NewConversationHeader({ onUserSelect, disabled = false }
                     />
                   ) : (
                     <div className={styles.avatarPlaceholder}>
-                      {user.profile?.displayName?.[0].toUpperCase() || 
+                      {user.profile.displayName?.[0].toUpperCase() || 
                        user.username[0].toUpperCase()}
                     </div>
                   )}
                   <div className={styles.userInfo}>
                     <div className={styles.displayName}>
-                      {user.profile?.displayName || user.username}
+                      {user.profile.displayName || user.username}
                     </div>
                   </div>
                 </div>

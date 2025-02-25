@@ -10,8 +10,8 @@ import { User as UserIcon } from 'lucide-react';
 export default function SettingsModal() {
   const { user, updateProfile } = useAuth();
   const { isSettingsOpen, closeSettings } = useNavigation();
-  const [displayName, setDisplayName] = useState(user?.profile?.displayName || '');
-  const [bio, setBio] = useState(user?.profile?.bio || '');
+  const [displayName, setDisplayName] = useState(user?.profile.displayName || '');
+  const [bio, setBio] = useState(user?.profile.bio || '');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,7 +41,7 @@ export default function SettingsModal() {
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.imageSection}>
             <div className={styles.avatar}>
-              {user?.profile?.imageUrl ? (
+              {user?.profile.imageUrl ? (
                 <img 
                   src={user.profile.imageUrl} 
                   alt="" 
@@ -61,9 +61,9 @@ export default function SettingsModal() {
                 className={styles.fileInput}
               />
               <label htmlFor="image" className={styles.uploadButton}>
-                {user?.profile?.imageUrl ? 'Change Image' : 'Upload Image'}
+                {user?.profile.imageUrl ? 'Change Image' : 'Upload Image'}
               </label>
-              {user?.profile?.imageUrl && (
+              {user?.profile.imageUrl && (
                 <button
                   type="button"
                   onClick={() => {/* Handle image removal */}}

@@ -6,7 +6,7 @@ interface ProfileMenuProps {
   user: {
     username: string;
     email: string;
-    profile?: {
+    profile: {
       displayName?: string;
       imageUrl?: string;
     };
@@ -17,7 +17,7 @@ interface ProfileMenuProps {
 export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
   const { logout } = useAuth();
   const { openSettings } = useNavigation();
-  const initial = user.profile?.displayName?.charAt(0).toUpperCase() || '';
+  const initial = user.profile.displayName?.charAt(0).toUpperCase() || '';
 
   const handleSettingsClick = () => {
     openSettings();
@@ -33,7 +33,7 @@ export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
     <div className={styles.menu}>
       <div className={styles.userInfo}>
         <div className={styles.avatar}>
-          {user.profile?.imageUrl ? (
+          {user.profile.imageUrl ? (
             <img src={user.profile.imageUrl} alt="" className={styles.avatarImage} />
           ) : (
             initial

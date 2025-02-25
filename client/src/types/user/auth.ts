@@ -4,7 +4,7 @@ export interface User {
   id: string;
   username: string;
   email: string;
-  profile?: UserProfile;
+  profile: UserProfile;
   createdAt: string;
   updatedAt: string;
 }
