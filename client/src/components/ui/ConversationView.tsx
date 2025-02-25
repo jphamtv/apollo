@@ -88,12 +88,8 @@ export default function ConversationView({ conversation }: Props) {
     }
   };
 
-  const handleInfoClick = () => { 
-    if (showProfileInfo === false) {
-      setShowProfileInfo(true);
-    } else {
-      setShowProfileInfo(false);
-    }
+  const handleInfoClick = () => {
+    setShowProfileInfo(prev => !prev);
   };
   
   const handleDeleteClick = () => {};
