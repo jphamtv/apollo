@@ -1,17 +1,27 @@
 .container {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+  position: absolute;
+  top: 3rem;
+  right: 2.5rem;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 100;
 }
 
 .avatar {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
   background-color: var(--bg-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 12px;
+  margin-right: 0.75rem;
   font-weight: 500;
   color: var(--text-primary);
   overflow: hidden;
@@ -29,25 +39,25 @@
 }
 
 .userDetails {
-  flex: 1;
-  min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 .displayName {
-  font-weight: 500;
+  font-weight: 700;
+  font-size: 1.25rem;
   color: var(--text-primary);
-  flex: 1;
-  text-align: left;
 }
 
 .username {
   font-weight: 500;
-  color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: var(--text-secondary);
 }
 
 .bio {
+  padding: 1rem 0;
   color: var(--text-primary);
+  min-width: 20rem;
+  max-width: 30rem;
+  border-top: 1px solid var(--border-color);
 }

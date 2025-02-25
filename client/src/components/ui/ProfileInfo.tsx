@@ -2,7 +2,7 @@ import styles from './ProfileInfo.module.css';
 import { UserIcon } from 'lucide-react';
 
 interface ProfileInfoProps {
-  user: {
+  recipient: {
     username: string;
     email: string;
     profile: {
@@ -13,14 +13,14 @@ interface ProfileInfoProps {
   };
 }
 
-export default function ProfileInfo({ user }: ProfileInfoProps) {
+export default function ProfileInfo({ recipient }: ProfileInfoProps) {
   return (
     <div className={styles.container}>
       <div className={styles.userDetails}>
         <div className={styles.avatar}>
-          {user?.profile.imageUrl ? (
+          {recipient?.profile.imageUrl ? (
             <img 
-              src={user.profile.imageUrl} 
+              src={recipient.profile.imageUrl} 
               alt="" 
               className={styles.avatarImage} 
             />
@@ -31,12 +31,12 @@ export default function ProfileInfo({ user }: ProfileInfoProps) {
           )}
         </div>
         <div>
-          <p className={styles.displayName}>{user.profile.displayName}</p>
-          <p className={styles.username}>@{user.username}</p>
+          <p className={styles.displayName}>{recipient.profile.displayName}</p>
+          <p className={styles.username}>@{recipient.username}</p>
         </div>
       </div>
       <div className={styles.bio}>
-          {user.profile.bio}
+          {recipient.profile.bio}
       </div>
     </div>
   );

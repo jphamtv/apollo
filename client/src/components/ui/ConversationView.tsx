@@ -4,6 +4,7 @@ import { useNavigation } from '../../hooks/useNavigation';
 import { useMessaging } from '../../hooks/useMessaging';
 import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
+import ProfileInfo from './ProfileInfo';
 import { ArrowUp, InfoIcon, Trash2Icon } from 'lucide-react';
 import styles from './ConversationView.module.css';
 import { User } from '../../types/user';
@@ -17,9 +18,14 @@ export default function ConversationView({ conversation }: Props) {
   const { user } = useAuth();
   const { messages, sendMessage, loadMessages, clearMessages, createConversation, isCreatingConversation } = useMessaging();
   const [newMessage, setNewMessage] = useState('');
+  const [showProfileInfo, setShowProfileInfo] = useState(false);
   const { isNewConversation, navigateToConversation } = useNavigation();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
+  const profileInfoRef = useRef<HTMLDivElement>(null);
+  const infoButtonRef = useRef<HTMLButtonElement>(null);
+  const activeRecipient = conversation ?
+    conversation.participants.find(p => p.userId !== user?.id)?.user : null;
+  
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView();
   }, [messages]);
@@ -38,6 +44,21 @@ export default function ConversationView({ conversation }: Props) {
     }
   }, [conversation, loadMessages]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        profileInfoRef.current &&
+        !profileInfoRef.current.contains(event.target as Node) &&
+        !infoButtonRef.current?.contains(event.target as Node)
+      ) {
+        setShowProfileInfo(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleUserSelect = async (selected: User) => {
     if (isCreatingConversation) return;
     
@@ -47,12 +68,6 @@ export default function ConversationView({ conversation }: Props) {
     } catch (error) {
       console.error('Failed to create conversation:', error);
     }
-  };
-
-  const getOtherParticipant = () => {
-    if (!conversation || !user) return null;
-    return conversation.participants
-      .find(p => p.userId !== user.id)?.user;
   };
 
   const handleSendMessage = async () => {
@@ -73,7 +88,13 @@ export default function ConversationView({ conversation }: Props) {
     }
   };
 
-  const handleInfoClick = () => { };
+  const handleInfoClick = () => { 
+    if (showProfileInfo === false) {
+      setShowProfileInfo(true);
+    } else {
+      setShowProfileInfo(false);
+    }
+  };
   
   const handleDeleteClick = () => {};
 
@@ -91,8 +112,8 @@ export default function ConversationView({ conversation }: Props) {
             <div>
               {conversation && (
                 <div>
-                  {getOtherParticipant()?.profile.displayName || 
-                  getOtherParticipant()?.username || 
+                  {activeRecipient?.profile.displayName || 
+                  activeRecipient?.username || 
                   'Unknown User'}
                 </div>
               )}
@@ -100,7 +121,7 @@ export default function ConversationView({ conversation }: Props) {
           )}
         </div>
         <div className={styles.actions}>
-          <button onClick={handleInfoClick}>
+          <button ref={infoButtonRef} onClick={handleInfoClick}>
             <InfoIcon size={20}/>
           </button>
           <button onClick={handleDeleteClick}>
@@ -143,6 +164,12 @@ export default function ConversationView({ conversation }: Props) {
           <ArrowUp size={24} />
         </Button>
       </div>
+
+      {showProfileInfo && activeRecipient && (
+        <div ref={profileInfoRef}>
+          <ProfileInfo recipient={activeRecipient} />
+        </div>
+      )}
     </div>
   );
 }

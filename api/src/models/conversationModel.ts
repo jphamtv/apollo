@@ -9,7 +9,8 @@ const userSelect = {
   profile: {
     select: {
       displayName: true,
-      imageUrl: true
+      imageUrl: true,
+      bio: true
     }
   }
 }
