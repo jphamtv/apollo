@@ -44,6 +44,9 @@ export type MessageAction =
   | { type: 'CREATE_CONVERSATION_REQUEST' }
   | { type: 'CREATE_CONVERSATION_SUCCESS'; conversation: Conversation }
   | { type: 'CREATE_CONVERSATION_FAILURE'; error: string }
+  | { type: 'DELETE_CONVERSATION_REQUEST' }
+  | { type: 'DELETE_CONVERSATION_SUCCESS'; conversation: Conversation }
+  | { type: 'DELETE_CONVERSATION_FAILURE'; error: string }
   | { type: 'CLEAR_MESSAGES' }
   | { type: 'RESET_STATE' };
 
@@ -205,6 +208,27 @@ export function messageReducer(state: MessageState, action: MessageAction): Mess
     // Reset entire state to initial values
     case 'RESET_STATE':
       return initialMessageState;
+    
+    // Delete conversation actions
+    case 'DELETE_CONVERSATION_REQUEST':
+      return {
+        ...state
+      };    
+    case 'DELETE_CONVERSATION_SUCCESS': {
+      const updatedConversations = state.conversations.filter(
+        conv => conv.id !== action.conversation.id
+      );
+
+      return {
+        ...state,
+        conversations: updatedConversations,
+      };
+    }
+    case 'DELETE_CONVERSATION_FAILURE':
+      return {
+        ...state,
+        conversationsError: action.error
+      }
       
     default:
       return state;
@@ -221,6 +245,7 @@ export type MessageContextType = {
   loadMessages: (conversationId: string) => Promise<void>;
   sendMessage: (conversationId: string, text: string) => Promise<Message>;
   createConversation: (userId: string) => Promise<Conversation>;
+  deleteConversation: (conversationId: string) => Promise<void>;
   setActiveConversation: (conversation: Conversation) => void;
   clearActiveConversation: () => void;
   clearMessages: () => void;

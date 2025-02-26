@@ -25,6 +25,10 @@
   color: var(--text-secondary);
 }
 
+.danger {
+  background-color: var(--error);  
+}
+
 /* Add other variants... */
 
 /* Sizes */

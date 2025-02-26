@@ -5,11 +5,17 @@
 }
 
 .headerContainer {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 2rem auto;
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid var(--border-color);
+}
+
+.activeConversationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .recipient {
@@ -78,7 +84,8 @@
   padding: 0.75rem 1rem;
   border: none;
   border-radius: 0.5rem;
-  resize: none;
+  /* resize: none; */
+  resize: vertical;
   background-color: var(--bg-color);
   color: var(--text-color);
 }
@@ -90,4 +97,18 @@
 
 .label {
   color: var(--text-secondary);
+}
+
+.confirmationModal {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }

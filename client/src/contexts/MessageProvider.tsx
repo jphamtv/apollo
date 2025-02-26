@@ -189,6 +189,37 @@ export function MessageProvider({ children }: MessageProviderProps) {
     dispatch({ type: 'CLEAR_MESSAGES' });
   }, []);
 
+  const deleteConversation = useCallback(async (conversationId: string): Promise<void> => {
+    dispatch({ type: 'DELETE_CONVERSATION_REQUEST' });
+
+    try {
+      await apiClient.delete(`/conversations/${conversationId}`);
+
+      const conversationToDelete = state.conversations.find(
+        (conv) => conv.id === conversationId
+      );
+      if (!conversationToDelete) {
+        throw new Error('Conversation not found');
+      }
+
+      dispatch({
+        type: 'DELETE_CONVERSATION_SUCCESS',
+        conversation: conversationToDelete
+      });
+
+      if (state.activeConversation?.id === conversationId) {
+        dispatch({ type: 'CLEAR_ACTIVE_CONVERSATION' });
+      }
+    } catch (err) {
+      console.error('Delete conversation error: ', err);
+      dispatch({
+        type: 'DELETE_CONVERSATION_FAILURE',
+        error: 'Failed to delete conversation'
+      });
+      throw new Error('Failed to delete conversation');
+    }
+  }, [state.conversations, state.activeConversation]);
+
   const contextValue = {
     state,
     dispatch,
@@ -196,6 +227,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
     loadMessages,
     sendMessage,
     createConversation,
+    deleteConversation,
     setActiveConversation,
     clearActiveConversation,
     clearMessages,
