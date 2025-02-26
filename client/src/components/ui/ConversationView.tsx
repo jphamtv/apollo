@@ -25,6 +25,7 @@ export default function ConversationView({ conversation }: Props) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const profileInfoRef = useRef<HTMLDivElement>(null);
   const infoButtonRef = useRef<HTMLButtonElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const activeRecipient = conversation ?
     conversation.participants.find(p => p.userId !== user?.id)?.user : null;
   
@@ -60,6 +61,26 @@ export default function ConversationView({ conversation }: Props) {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (newMessage === '' && textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }    
+  }, [newMessage]);
+
+  useEffect(() => {
+    if (conversation && textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+  }, [conversation]);
+
+  useEffect(() => {
+    // Reset input when conversation changes
+    setNewMessage("");
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+  }, [conversation?.id]);
 
   const handleUserSelect = async (selected: User) => {
     if (isCreatingConversation) return;
@@ -107,6 +128,19 @@ export default function ConversationView({ conversation }: Props) {
     } catch (err) {
       console.error('Failed to delete conversation: ', err);
     }
+  };
+
+  const autoResizeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const textarea = e.target;
+    
+    // First update the message state
+    setNewMessage(textarea.value);
+    
+    // Reset height to auto so scrollHeight is correctly calculated based on content
+    textarea.style.height = 'auto';
+    
+    // Then set the height based on the new content (with a max height of 160px)
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
   };
 
   return (
@@ -161,8 +195,9 @@ export default function ConversationView({ conversation }: Props) {
 
       <div className={styles.inputContainer}>
         <textarea
+          ref={textareaRef}
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+          onChange={autoResizeTextArea}
           onKeyDown={handleKeyPress}
           placeholder="Type a message..."
           className={styles.messageInput}

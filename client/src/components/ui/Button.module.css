@@ -33,8 +33,14 @@
 
 /* Sizes */
 .small {
-  padding: 0.25rem 0.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 0.875rem;
+  height: 2.75rem;
+  width: 2.75rem;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .medium {
