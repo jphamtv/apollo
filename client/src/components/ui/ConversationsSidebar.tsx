@@ -5,6 +5,7 @@ import ProfileButton from './ProfileButton';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigation } from '../../hooks/useNavigation';
 import { useMessaging } from '../../hooks/useMessaging';
+import { formatMessageTime } from '../../utils/formatTime';
 
 export default function ConversationsSidebar() {
   const { user } = useAuth();
@@ -17,14 +18,6 @@ export default function ConversationsSidebar() {
 
   if (!user?.profile) return null;
 
-  const formatTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString([], { 
-      hour: 'numeric', 
-      minute: '2-digit'
-    });
-  };
-  
   return (
     <aside className={styles.container}>
       <header className={styles.header}>
@@ -46,8 +39,8 @@ export default function ConversationsSidebar() {
               displayName={otherParticipant.profile.displayName ?? otherParticipant.username}
               lastMessage={conversation.lastMessage?.text ?? 'No messages yet'}
               timestamp={conversation.lastMessage ? 
-                formatTimestamp(conversation.lastMessage.createdAt) : 
-                formatTimestamp(conversation.createdAt)
+                formatMessageTime(conversation.lastMessage.createdAt) : 
+                formatMessageTime(conversation.createdAt)
               }
               isActive={activeConversation?.id === conversation.id}
               hasUnread={conversation.hasUnread}
