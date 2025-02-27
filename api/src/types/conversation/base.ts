@@ -14,4 +14,6 @@ export type ConversationWithDetails = Prisma.ConversationGetPayload<{
       },
     },
   },
-}>;
+}> & {
+  hasUnread?: boolean;
+};

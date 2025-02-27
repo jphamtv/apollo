@@ -32,7 +32,7 @@ export const create = async (data: Prisma.ConversationCreateInput): Promise<Conv
 };
 
 export const findConversationsByUserId = async (userId: string) => {
-  return prisma.conversation.findMany({
+  const conversations = await prisma.conversation.findMany({
     where: {
       participants: {
         some: {
@@ -63,6 +63,19 @@ export const findConversationsByUserId = async (userId: string) => {
       updatedAt: 'desc',
     },
   });
+
+  // Calculate unread status for each conversation
+  const conversationsWithUnreadStatus = await Promise.all(
+    conversations.map(async (conversation) => {
+      const hasUnread = await hasUnreadMessages(conversation.id, userId);
+      return {
+        ...conversation,
+        hasUnread,
+      };
+    })
+  );
+
+  return conversationsWithUnreadStatus;
 };
 
 export const findById = async (id: string): Promise<ConversationWithDetails | null> => {
@@ -221,6 +234,54 @@ export const deleteById = async (id: string): Promise<void> => {
   ]);
 };
 
+export const hasUnreadMessages = async (conversationId: string, userId: string): Promise<boolean> => {
+  const unreadCount = await prisma.message.count({
+    where: {
+      conversationId,
+      isRead: false,
+      NOT: {
+        senderId: userId, // Don't count user's own messages
+      },
+    },
+  });
+
+return unreadCount > 0;
+};
+
+export const markConversationAsRead = async (
+  conversationId: string,
+  userId: string
+): Promise<number> => {
+  // First verify user is a participant
+  const participant = await prisma.conversationParticipant.findUnique({
+    where: {
+      userId_conversationId: {
+        userId,
+        conversationId,
+      },
+    },
+  });
+
+  if (!participant) {
+    throw new Error("User is not a participant in this conversation");
+  }
+
+  // Mark all messages as read
+  const result = await prisma.message.updateMany({
+    where: {
+      conversationId,
+      isRead: false,
+      NOT: {
+        senderId: userId, // Don't mark messages sent by the sender
+      },
+    },
+    data: {
+      isRead: true,
+    }
+  });
+
+  return result.count;
+};
 
 export default {
   create,
@@ -232,4 +293,5 @@ export default {
   removeParticipant,
   isParticipant,
   deleteById,
+  markConversationAsRead,
 };

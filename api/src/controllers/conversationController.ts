@@ -9,6 +9,7 @@ import {
   findConversationsByUserId,
   findExistingConversationByParticipants,
   deleteById,
+  markConversationAsRead,
 } from "../models/conversationModel";
 import { AuthRequest } from "../types";
 
@@ -247,6 +248,36 @@ export const deleteConversation = [
         error: "SERVER_ERROR",
         message: "Error deleting conversation"
       });
+    }
+  }
+] as unknown as RequestHandler[];
+
+export const markAsRead = [
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const conversationId = req.params.id;
+      const userId = req.user.id;
+
+      // First check if the user is a participant
+      const conversation = await findById(conversationId);
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+
+      const isParticipant = conversation.participants.some(p => p.userId === userId);
+      if (!isParticipant) {
+        return res.status(403).json({
+          error: "FORBIDDEN",
+          message: "Not authorized to access this conversation"
+        });
+      }
+      
+      // Mark all messages as read
+      const updatedCount = await markConversationAsRead(conversationId, userId);
+      res.json({ updated: updatedCount })
+    } catch (err) {
+      console.error("Mark conversation as read error:", err);
+      res.status(500).json({ message: "Error marking conversation as read" });
     }
   }
 ] as unknown as RequestHandler[];

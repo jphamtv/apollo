@@ -8,6 +8,7 @@ import {
   addParticipantToGroup,
   removeParticipantFromGroup,
   deleteConversation,
+  markAsRead,
 } from "../controllers/conversationController";
 
 const router = express.Router();
@@ -17,6 +18,7 @@ router.post("/", authenticateJWT, createConversation);
 router.get("/", authenticateJWT, getUserConversations);
 router.get("/:id", authenticateJWT, getConversationById);
 router.put("/:id", authenticateJWT, updateGroupName);
+router.put("/:id/read", authenticateJWT, markAsRead);
 router.delete("/:id", authenticateJWT, deleteConversation);
 
 // Participant management
