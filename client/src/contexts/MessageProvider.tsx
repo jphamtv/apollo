@@ -220,6 +220,19 @@ export function MessageProvider({ children }: MessageProviderProps) {
     }
   }, [state.conversations, state.activeConversation]);
 
+  const markConversationAsRead = useCallback(async (conversationId: string) => {
+    try {
+      await apiClient.put(`/conversations/${conversationId}/read`, null);
+
+      dispatch({
+        type: 'MARK_CONVERSATION_READ_SUCCESS',
+        conversationId
+      });
+    } catch (err) {
+      console.error('Mark conversation as read error: ', err);
+    }
+  }, []);
+
   const contextValue = {
     state,
     dispatch,
@@ -230,6 +243,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
     deleteConversation,
     setActiveConversation,
     clearActiveConversation,
+    markConversationAsRead,
     clearMessages,
     findConversationByParticipant
   };

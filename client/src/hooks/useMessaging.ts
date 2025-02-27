@@ -17,6 +17,7 @@ export function useMessaging() {
     setActiveConversation,
     clearActiveConversation,
     deleteConversation,
+    markConversationAsRead,
     clearMessages,
     findConversationByParticipant
   } = context;
@@ -45,6 +46,7 @@ export function useMessaging() {
     selectConversation: setActiveConversation,
     clearActiveConversation,
     deleteConversation,
+    markConversationAsRead,
     clearMessages,
     findConversationByParticipant
   };

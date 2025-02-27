@@ -50,6 +50,7 @@ export default function ConversationsSidebar() {
                 formatTimestamp(conversation.createdAt)
               }
               isActive={activeConversation?.id === conversation.id}
+              hasUnread={conversation.hasUnread}
               onClick={() => navigateToConversation(conversation)}
             />
           );

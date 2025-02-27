@@ -5,6 +5,7 @@ interface Props {
   lastMessage: string;
   timestamp: string;
   isActive?: boolean;
+  hasUnread?: boolean;
   onClick?: () => void;
 }
 
@@ -13,6 +14,7 @@ export default function ConversationItem({
   lastMessage,
   timestamp,
   isActive = false,
+  hasUnread = false,
   onClick
 }: Props) {
   const initials = displayName
@@ -34,7 +36,10 @@ export default function ConversationItem({
           <span className={styles.name}>{displayName}</span>
           <span className={styles.time}>{timestamp}</span>
         </div>
-        <p className={styles.preview}>{lastMessage}</p>
+        <div className={styles.previewContainer}>
+          <p className={styles.preview}>{lastMessage}</p>
+          {hasUnread && <div className={styles.unreadIndicator} />}
+        </div>
       </div>
     </div>
   );

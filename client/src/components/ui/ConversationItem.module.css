@@ -53,3 +53,18 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.previewContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.unreadIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #2c86f3;
+  flex-shrink: 0;
+}

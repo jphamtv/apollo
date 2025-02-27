@@ -47,6 +47,7 @@ export type MessageAction =
   | { type: 'DELETE_CONVERSATION_REQUEST' }
   | { type: 'DELETE_CONVERSATION_SUCCESS'; conversation: Conversation }
   | { type: 'DELETE_CONVERSATION_FAILURE'; error: string }
+  | { type: 'MARK_CONVERSATION_READ_SUCCESS';  conversationId: string}
   | { type: 'CLEAR_MESSAGES' }
   | { type: 'RESET_STATE' };
 
@@ -198,17 +199,6 @@ export function messageReducer(state: MessageState, action: MessageAction): Mess
         conversationsError: action.error
       };
       
-    // Clear messages action
-    case 'CLEAR_MESSAGES':
-      return {
-        ...state,
-        messages: []
-      };
-      
-    // Reset entire state to initial values
-    case 'RESET_STATE':
-      return initialMessageState;
-    
     // Delete conversation actions
     case 'DELETE_CONVERSATION_REQUEST':
       return {
@@ -229,6 +219,36 @@ export function messageReducer(state: MessageState, action: MessageAction): Mess
         ...state,
         conversationsError: action.error
       }
+    
+    // Mark conversation as read action
+    case 'MARK_CONVERSATION_READ_SUCCESS': {
+      const updatedConversations = state.conversations.map(conversation => {
+        if (conversation.id === action.conversationId) {
+          return {
+            ...conversation,
+            hasUnread: false
+          };
+        }
+        return conversation;
+      });
+
+      return {
+        ...state,
+        conversations: updatedConversations
+      }
+    }
+      
+    // Clear messages action
+    case 'CLEAR_MESSAGES':
+      return {
+        ...state,
+        messages: []
+      };
+      
+    // Reset entire state to initial values
+    case 'RESET_STATE':
+      return initialMessageState;
+    
       
     default:
       return state;
@@ -248,6 +268,7 @@ export type MessageContextType = {
   deleteConversation: (conversationId: string) => Promise<void>;
   setActiveConversation: (conversation: Conversation) => void;
   clearActiveConversation: () => void;
+  markConversationAsRead: (conversationId: string) => Promise<void>;
   clearMessages: () => void;
   findConversationByParticipant: (userId: string) => Conversation | undefined;
 };

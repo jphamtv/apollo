@@ -17,7 +17,7 @@ interface Props {
 
 export default function ConversationView({ conversation }: Props) {
   const { user } = useAuth();
-  const { messages, sendMessage, loadMessages, clearMessages, createConversation, deleteConversation, isCreatingConversation } = useMessaging();
+  const { messages, sendMessage, loadMessages, clearMessages, createConversation, deleteConversation, markConversationAsRead, isCreatingConversation } = useMessaging();
   const [newMessage, setNewMessage] = useState('');
   const [showProfileInfo, setShowProfileInfo] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -81,6 +81,14 @@ export default function ConversationView({ conversation }: Props) {
       textareaRef.current.style.height = 'auto';
     }
   }, [conversation?.id]);
+
+  useEffect(() => {
+    if (conversation && !isNewConversation) {
+      // Mark as read when user views the conversation
+      markConversationAsRead(conversation.id);
+      loadMessages(conversation.id);
+    }
+  }, [conversation, isNewConversation, markConversationAsRead, loadMessages]);
 
   const handleUserSelect = async (selected: User) => {
     if (isCreatingConversation) return;

@@ -20,6 +20,7 @@ export interface Conversation {
     createdAt: string;
   };
   messages: Message[];
+  hasUnread?: boolean;
   createdAt: string;
   updatedAt: string;
 }
