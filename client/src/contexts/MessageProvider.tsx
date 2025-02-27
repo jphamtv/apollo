@@ -222,7 +222,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
 
   const markConversationAsRead = useCallback(async (conversationId: string) => {
     try {
-      await apiClient.put(`/conversations/${conversationId}/read`, null);
+      await apiClient.put(`/conversations/${conversationId}/read`, {});
 
       dispatch({
         type: 'MARK_CONVERSATION_READ_SUCCESS',
