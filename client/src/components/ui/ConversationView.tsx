@@ -6,7 +6,7 @@ import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
 import ProfileInfo from './ProfileInfo';
 import Model from './Modal';
-import { ArrowUp, InfoIcon, Trash2Icon } from 'lucide-react';
+import { ArrowUp, Trash2Icon } from 'lucide-react';
 import styles from './ConversationView.module.css';
 import { User } from '../../types/user';
 import { Conversation } from '../../types/conversation';
@@ -24,7 +24,7 @@ export default function ConversationView({ conversation }: Props) {
   const { isNewConversation, navigateToConversation } = useNavigation();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const profileInfoRef = useRef<HTMLDivElement>(null);
-  const infoButtonRef = useRef<HTMLButtonElement>(null);
+  const displayProfileLinkRef = useRef<HTMLAnchorElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const activeRecipient = conversation ?
     conversation.participants.find(p => p.userId !== user?.id)?.user : null;
@@ -52,7 +52,7 @@ export default function ConversationView({ conversation }: Props) {
       if (
         profileInfoRef.current &&
         !profileInfoRef.current.contains(event.target as Node) &&
-        !infoButtonRef.current?.contains(event.target as Node)
+        !displayProfileLinkRef.current?.contains(event.target as Node)
       ) {
         setShowProfileInfo(false);
       }
@@ -159,16 +159,18 @@ export default function ConversationView({ conversation }: Props) {
           ) : (
             <div className={styles.activeConversationHeader}>
               {conversation && (
+                <a ref={displayProfileLinkRef} onClick={handleInfoClick}>
                 <div>
                   {activeRecipient?.profile.displayName || 
                   activeRecipient?.username || 
                   'Unknown User'}
                 </div>
+                </a>
               )}
               <div className={styles.actions}>
-                <button ref={infoButtonRef} onClick={handleInfoClick}>
+                {/* <button ref={displayProfileLinkRef} onClick={handleInfoClick}>
                   <InfoIcon size={20}/>
-                </button>
+                </button> */}
                 <button onClick={handleDeleteClick}>
                   <Trash2Icon size={20}/>
                 </button>
