@@ -15,18 +15,29 @@
   text-align: center;
 }
 
+.footer {
+  font-size: 0.875rem;
+}
+
 .form {
-  margin: 1rem 0;
+  margin: 1rem 0 0.5rem;
   padding: 2rem;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
 }
 
-.link {
+.signUpLink{
   text-decoration: underline;
   text-underline-offset: 0.25rem;
 }
 
 .errorMessage {
   color: var(--error);
+}
+
+.forgotPassword {
+  text-align: right;
+  font-size: 0.75rem;
+  margin-top: -0.25rem;
+  margin-bottom: 1rem;
 }

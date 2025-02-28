@@ -67,6 +67,11 @@ export default function Login() {
             autoComplete="current-password"
             required
           />
+          <div className={styles.forgotPassword}>
+            <Link to="/forgot-password">
+              <span className={styles.link}>Forgot password?</span>
+            </Link>
+          </div>
           {error && <p className={styles.errorMessage}>{error}</p>}
           <Button type="submit" isLoading={isLoading}>
             Log In
@@ -76,7 +81,7 @@ export default function Login() {
         <p className={styles.footer}>
           Don't have an account?{" "}
           <Link to="/register">
-            <span className={styles.link}>Create one</span>
+            <span className={styles.signUpLink}>Create one</span>
           </Link>
         </p>
       </div>

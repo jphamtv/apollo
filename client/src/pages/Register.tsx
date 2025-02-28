@@ -12,12 +12,24 @@ export default function Register() {
     email: "",
     password: "",
   });
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    // Simple validation
+    if (credentials.password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      return;
+    }
+
+    if (credentials.password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
 
     try {
       await apiClient.post("/auth/register", credentials);
@@ -71,7 +83,15 @@ export default function Register() {
               }
             required
           />
-
+          <Input
+              label="Confirm Password"
+              type="password"
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              autoComplete="new-password"
+              required
+            />
           <Button type="submit">
             Create Account
           </Button>

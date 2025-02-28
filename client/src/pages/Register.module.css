@@ -15,8 +15,12 @@
   text-align: center;
 }
 
+.footer {
+  font-size: 0.875rem;
+}
+
 .form {
-  margin: 1rem 0;
+  margin: 1rem 0 0.5rem;
   padding: 2rem;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
