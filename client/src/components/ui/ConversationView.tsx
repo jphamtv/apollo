@@ -5,8 +5,8 @@ import { useMessaging } from '../../hooks/useMessaging';
 import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
 import ProfileInfo from './ProfileInfo';
-import Model from './Modal';
-import { ArrowUp, Trash2Icon } from 'lucide-react';
+import Modal from './Modal';
+import { ArrowUp, Trash2Icon, ChevronDown } from 'lucide-react';
 import styles from './ConversationView.module.css';
 import { User } from '../../types/user';
 import { Conversation } from '../../types/conversation';
@@ -26,6 +26,7 @@ export default function ConversationView({ conversation }: Props) {
   const profileInfoRef = useRef<HTMLDivElement>(null);
   const displayProfileLinkRef = useRef<HTMLAnchorElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [profileInfoPosition, setProfileInfoPosition] = useState({ top: 0, left: 0 });
   const activeRecipient = conversation ?
     conversation.participants.find(p => p.userId !== user?.id)?.user : null;
   
@@ -120,6 +121,15 @@ export default function ConversationView({ conversation }: Props) {
   };
 
   const handleInfoClick = () => {
+    // Get the position of the link that was clicked
+    if (displayProfileLinkRef.current) {
+      const rect = displayProfileLinkRef.current.getBoundingClientRect();
+      // Position just below the name with a small offset for the triangle
+      setProfileInfoPosition({
+        top: rect.bottom + window.scrollY + 8, // Add extra space for the triangle
+        left: Math.max(rect.left + window.scrollX - 20, 10) // Offset so triangle points to middle of name
+      });
+    }
     setShowProfileInfo(prev => !prev);
   };
   
@@ -167,18 +177,16 @@ export default function ConversationView({ conversation }: Props) {
           ) : (
             <div className={styles.activeConversationHeader}>
               {conversation && (
-                <a ref={displayProfileLinkRef} onClick={handleInfoClick}>
-                <div>
-                  {activeRecipient?.profile.displayName || 
-                  activeRecipient?.username || 
-                  'Unknown User'}
-                </div>
+                <a ref={displayProfileLinkRef} onClick={handleInfoClick} className={styles.profileLink}>
+                  <div>
+                    {activeRecipient?.profile.displayName || 
+                    activeRecipient?.username || 
+                    'Unknown User'}
+                  </div>
+                  <ChevronDown size={16} className={styles.chevronIcon} />
                 </a>
               )}
               <div className={styles.actions}>
-                {/* <button ref={displayProfileLinkRef} onClick={handleInfoClick}>
-                  <InfoIcon size={20}/>
-                </button> */}
                 <button onClick={handleDeleteClick}>
                   <Trash2Icon size={20}/>
                 </button>
@@ -186,6 +194,20 @@ export default function ConversationView({ conversation }: Props) {
             </div>
           )}
       </div>
+      
+      {showProfileInfo && activeRecipient && (
+        <div 
+          ref={profileInfoRef} 
+          className={styles.profileInfoContainer}
+          style={{
+            position: 'absolute',
+            top: `${profileInfoPosition.top}px`,
+            left: `${profileInfoPosition.left}px`,
+          }}
+        >
+          <ProfileInfo recipient={activeRecipient} />
+        </div>
+      )}
       
       <div className={styles.messagesContainer}>  
         {Array.isArray(messages) && messages.map(message => (
@@ -223,14 +245,9 @@ export default function ConversationView({ conversation }: Props) {
         </Button>
       </div>
 
-      {showProfileInfo && activeRecipient && (
-        <div ref={profileInfoRef}>
-          <ProfileInfo recipient={activeRecipient} />
-        </div>
-      )}
 
       {showDeleteModal && conversation && (
-        <Model isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+        <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} hideCloseButton>
           <div className={styles.confirmationModal}>
             <h3>Delete Conversation</h3>
             <p>Are you sure you want to delete this conversation? This action cannot be undone.</p>
@@ -249,7 +266,7 @@ export default function ConversationView({ conversation }: Props) {
               </Button>
             </div>
           </div>
-        </Model>
+        </Modal>
       )}
     </div>
   );

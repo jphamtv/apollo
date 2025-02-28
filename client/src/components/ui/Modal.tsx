@@ -6,9 +6,10 @@ type Props = {
   isOpen: boolean
   onClose: () => void
   children: ReactNode
+  hideCloseButton?: boolean
 }
 
-export default function Modal({ isOpen, onClose, children }: Props) {
+export default function Modal({ isOpen, onClose, children, hideCloseButton = false }: Props) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -25,9 +26,11 @@ export default function Modal({ isOpen, onClose, children }: Props) {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
-        <button className={styles.closeButton} onClick={onClose}>
-          <X />
-        </button>
+        {!hideCloseButton && (
+          <button className={styles.closeButton} onClick={onClose}>
+            <X />
+          </button>
+        )}
         {children}
       </div>
     </div>

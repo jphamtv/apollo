@@ -137,3 +137,28 @@
   gap: 0.5rem;
   margin-top: 1rem;
 }
+
+.profileInfoContainer {
+  z-index: 1000;
+}
+
+.profileLink {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: 0.25rem 0;
+}
+
+.profileLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  text-decoration-color: var(--text-secondary);
+}
+
+.chevronIcon {
+  color: var(--text-secondary);
+}
