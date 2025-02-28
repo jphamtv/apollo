@@ -30,7 +30,7 @@ export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
   };
 
   return (
-    <div className={styles.menu}>
+    <div className={styles.container}>
       <div className={styles.userInfo}>
         <div className={styles.avatar}>
           {user.profile.imageUrl ? (

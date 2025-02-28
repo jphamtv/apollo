@@ -7,7 +7,7 @@
 .searchInput {
   width: 100%;
   border: none;
-  padding: 0;
+  padding: 0.25rem 0;
   margin-bottom: 0;
 }
 

@@ -1,4 +1,4 @@
-.menu {
+.container {
   position: absolute;
   bottom: 100%;
   left: 0;
@@ -7,6 +7,7 @@
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   padding: 0.5rem;
+  margin-bottom: 0.25rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 100;
 }
