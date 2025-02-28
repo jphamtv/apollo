@@ -69,7 +69,7 @@ export default function Login() {
           />
           <div className={styles.forgotPassword}>
             <Link to="/forgot-password">
-              <span className={styles.link}>Forgot password?</span>
+              <span className={styles.signUpLink}>Forgot password?</span>
             </Link>
           </div>
           {error && <p className={styles.errorMessage}>{error}</p>}
