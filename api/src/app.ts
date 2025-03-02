@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import passport from "passport";
+import path from 'path';
 import initializePassport from "./config/passportConfig";
 import authRouter from "./routes/authRouter";
 import userProfilesRouter from "./routes/userProfilesRouter";
@@ -12,6 +13,7 @@ const app: Express = express();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Updated CORS setup to allow both client ports
 const corsOptions = {
@@ -34,7 +36,7 @@ app.use(passport.initialize());
 app.use("/api/auth", authRouter);
 app.use("/api/users", userProfilesRouter);
 app.use("/api/conversations", conversationsRouter);
-app.use("/api/conversations", messagesRouter);
+app.use("/api/conversations/:conversationId/messages", messagesRouter);
 
 // Error handing
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

@@ -7,6 +7,7 @@ import {
 } from "../models/messageModel";
 import { findById } from "../models/conversationModel";
 import { AuthRequest } from "../types";
+import { getFileUrl } from "../middleware/uploadMiddleware";
 
 export const getConversationMessages = [
   async (req: AuthRequest, res: Response) => {
@@ -40,8 +41,8 @@ export const getConversationMessages = [
 export const createMessage = [
   body("text")
     .trim()
-    .isLength({ min: 1, max: 1000 })
-    .withMessage("Message must be between 1 and 1000 characters"),
+    .isLength({ min: 1, max: 5000 })
+    .withMessage("Message must be between 1 and 5000 characters"),
   async (req: AuthRequest, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -53,8 +54,20 @@ export const createMessage = [
       const conversationId = req.params.conversationId;
       const senderId = req.user.id;
 
+      // Allow either, text, image, or both
+      if (!text && !req.file) {
+        return res.status(400).json({ message: 'Message must contain text or an image' });
+      }
+
+      // Process image if present
+      let imageUrl = null;
+      if (req.file) {
+        imageUrl = getFileUrl(req.file.filename, 'message');
+      }
+
       const message = await create({
-        text,
+        text: text || "", // Use empty string if no text
+        imageUrl,
         conversation: { connect: { id: conversationId } },
         sender: { connect: { id: senderId } }
       });

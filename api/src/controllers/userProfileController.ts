@@ -2,6 +2,9 @@ import { Request, Response, RequestHandler } from "express";
 import { body, validationResult } from "express-validator";
 import { findByUsername, findByUserId, findByQuery, update } from "../models/userProfileModel";
 import { AuthRequest } from "../types";
+import { getFileUrl } from "../middleware/uploadMiddleware";
+import fs from 'fs';
+import path from 'path';
 
 const validateUserProfile = [
   body("displayName")
@@ -57,7 +60,7 @@ export const updateUserProfile = [
       res.json({ user: safeUser });
     } catch (error) {
       console.error("Update error:", error);
-      res.status(500).json({ message: "Error updating user's profile" });
+      res.status(500).json({ message: "Error updating profile" });
     }
   },
 ] as RequestHandler[];
@@ -70,7 +73,7 @@ export const getUserProfile = [
       if (!userProfile) {
         return res.status(404).json({
           error: "NOT_FOUND",
-          message: "User's Profile not found"
+          message: "Profile not found"
         });
       }
 
@@ -79,7 +82,7 @@ export const getUserProfile = [
       console.error("Fetching error: ", err);
       res.status(500).json({
         error: "SERVER_ERROR",
-        message: "Error getting user's profile"
+        message: "Error getting profile"
       });
     }
   }
@@ -99,6 +102,101 @@ export const searchUsers = [
     } catch (error) {
       console.error('User search error:', error);
       res.status(500).json({ message: "Error searching users" });
+    }
+  }
+] as unknown as RequestHandler[];
+
+export const uploadProfileImage = [
+  async (req: AuthRequest, res: Response) => {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    try {
+      const userId = req.user.id;
+      const existingProfile = await findByUserId(userId);
+
+      if (!existingProfile) {
+        return res.status(404).json({ message: 'Profile not found' });
+      }
+
+      // Generate image URL
+      const imageUrl = getFileUrl(req.file.filename, 'profile');
+
+      // Delete old image file if it exists
+      if (existingProfile.imageUrl) {
+        try {
+          const oldImagePath = existingProfile.imageUrl.split('/').pop();
+          if (oldImagePath) {
+            const fullPath = path.join(__dirname, '../../uploads/profiles', oldImagePath);
+            if (fs.existsSync(fullPath)) {
+              fs.unlinkSync(fullPath);
+            }
+          }
+        } catch (err) {
+          console.error('Error deleting old image: ', err);
+        }
+      }
+
+      // Update profile with new image URL
+      const userProfile = await update(userId, { imageUrl });
+
+      // Return updated user data
+      const safeUser = {
+        id: req.user.id,
+        username: req.user.username,
+        email: req.user.email,
+        profile: userProfile
+      };
+
+      res.json({ user: safeUser });
+    } catch (err) {
+      console.error('Upload error: ', err);
+      res.status(500).json({ message: 'Error uploading profile image' });
+    }
+  }
+] as unknown as RequestHandler[];
+
+export const deleteProfileImage = [
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const userId = req.user.id;
+      const existingProfile = await findByUserId(userId);
+
+      if (!existingProfile) {
+        return res.status(404).json({ message: 'Profile not found' });
+      }
+
+      // If there's an existing image, delete the file
+      if (existingProfile.imageUrl) {
+        try {
+          const oldImagePath = existingProfile.imageUrl.split('/').pop();
+          if (oldImagePath) {
+            const fullPath = path.join(__dirname, '../../uploads/profiles', oldImagePath);
+            if (fs.existsSync(fullPath)) {
+              fs.unlinkSync(fullPath);
+            }
+          }
+        } catch (err) {
+          console.error('Error deleting image file: ', err);
+        }
+      }
+
+      // Update profile to remove image URL
+      const userProfile = await update(userId, { imageUrl: null });
+
+      // Return updated user data
+      const safeUser = {
+        id: req.user.id,
+        username: req.user.username,
+        email: req.user.email,
+        profile: userProfile
+      };
+
+      res.json({ user: safeUser });
+    } catch (err) {
+      console.error('Delete image error: ', err);
+      res.status(500).json({ message: 'Error deleting profile image' });
     }
   }
 ] as unknown as RequestHandler[];
