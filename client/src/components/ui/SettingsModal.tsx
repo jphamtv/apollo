@@ -1,18 +1,21 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigation } from '../../hooks/useNavigation';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Modal from './Modal';
 import styles from './SettingsModal.module.css';
-import { User as UserIcon } from 'lucide-react';
+import { User as UserIcon, Trash, X } from 'lucide-react';
 
 export default function SettingsModal() {
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile, uploadProfileImage, deleteProfileImage } = useAuth();
   const { isSettingsOpen, closeSettings } = useNavigation();
   const [displayName, setDisplayName] = useState(user?.profile.displayName || '');
   const [bio, setBio] = useState(user?.profile.bio || '');
   const [isLoading, setIsLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(user?.profile.imageUrl || null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +34,53 @@ export default function SettingsModal() {
     }
   };
 
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      return;
+    }
+
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+
+    reader.readAsDataURL(file);
+
+    // Upload the image immediately
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setIsUploading(true);
+    try {
+      await uploadProfileImage(formData);
+    } catch (err) {
+      console.error('Failed to upload image: ', err);
+      setImagePreview(user?.profile.imageUrl || null); // Revert preview on error      
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    if (!imagePreview) return;
+
+    setIsUploading(true);
+    try {
+      await deleteProfileImage();
+      setImagePreview(null);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (err) {
+      console.error('Failed to remove image: ', err);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <Modal isOpen={isSettingsOpen} onClose={closeSettings}>
       <div className={styles.container}>
@@ -41,34 +91,55 @@ export default function SettingsModal() {
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.imageSection}>
             <div className={styles.avatar}>
-              {user?.profile.imageUrl ? (
-                <img 
-                  src={user.profile.imageUrl} 
-                  alt="" 
-                  className={styles.avatarImage} 
-                />
-              ) : (
-                <div className={styles.avatarPlaceholder}>
-                  <UserIcon size={40} />
+              {isUploading && (
+                <div className={styles.uploading}>
+                  <span>Uploading...</span>
                 </div>
               )}
+
+              {(!isUploading && imagePreview) ? (
+                <div className={styles.imagePreviewContainer}>
+                  <img 
+                    src={imagePreview} 
+                    alt="" 
+                    className={styles.avatarImage} 
+                  />
+                  <button
+                    type='button'
+                    onClick={handleRemoveImage}
+                    className={styles.removeImageButton}
+                    aria-label='Remove image'
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ) : (!isUploading) ? (
+                <div className={styles.avatarPlaceholder}>
+                  <UserIcon size={40} />
+                </div>                  
+              ) : null}
             </div>
             <div className={styles.imageControls}>
               <input
+                ref={fileInputRef}
                 type="file"
                 id="image"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/gif,image/webp"
                 className={styles.fileInput}
+                onChange={handleImageChange}
+                disabled={isUploading}
               />
-              <label htmlFor="image" className={styles.uploadButton}>
-                {user?.profile.imageUrl ? 'Change Image' : 'Upload Image'}
+              <label htmlFor="image" className={styles.uploadButton} aria-disabled={isUploading}>
+                {imagePreview ? 'Change Image' : 'Upload Image'}
               </label>
-              {user?.profile.imageUrl && (
+              {imagePreview && (
                 <button
                   type="button"
-                  onClick={() => {/* Handle image removal */}}
+                  onClick={handleRemoveImage}
                   className={styles.removeButton}
+                  disabled={isUploading}
                 >
+                  <Trash size={16} />
                   Remove Image
                 </button>
               )}

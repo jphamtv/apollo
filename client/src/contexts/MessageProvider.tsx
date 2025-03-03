@@ -124,6 +124,36 @@ export function MessageProvider({ children }: MessageProviderProps) {
     }
   }, []);
 
+  const sendMessageWithImage = useCallback(async (conversationId: string, formData: FormData) => {
+    dispatch({ type: 'SEND_MESSAGE_REQUEST' });
+
+    try {
+      const response = await apiClient.post<{ message: Message }>(
+        `/conversations/${conversationId}/messages`,
+        formData
+      );
+
+      if (!response.message) {
+        throw new Error('No message in response');
+      }
+      
+      dispatch({ 
+        type: 'SEND_MESSAGE_SUCCESS', 
+        message: response.message 
+      });
+
+      return response.message;
+    } catch (err) {
+      console.error('Send message with image error:', err);
+      const errorMessage = 'Failed to send message with image';
+      dispatch({ 
+        type: 'SEND_MESSAGE_FAILURE', 
+        error: errorMessage
+      });
+      throw new Error(errorMessage);
+    }
+  }, []);
+
   const findConversationByParticipant = useCallback((userId: string) => {
     return state.conversations.find(conv => 
       !conv.isGroup && 
@@ -239,6 +269,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
     loadConversations,
     loadMessages,
     sendMessage,
+    sendMessageWithImage,
     createConversation,
     deleteConversation,
     setActiveConversation,

@@ -3,7 +3,7 @@ import { User } from './user';
 export interface Message {
   id: string;
   text: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   conversationId: string;
   senderId: string;
   sender?: User;

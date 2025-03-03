@@ -264,6 +264,7 @@ export type MessageContextType = {
   loadConversations: () => Promise<void>;
   loadMessages: (conversationId: string) => Promise<void>;
   sendMessage: (conversationId: string, text: string) => Promise<Message>;
+  sendMessageWithImage: (conversationId: string, formData: FormData) => Promise<Message>;
   createConversation: (userId: string) => Promise<Conversation>;
   deleteConversation: (conversationId: string) => Promise<void>;
   setActiveConversation: (conversation: Conversation) => void;

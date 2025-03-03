@@ -31,9 +31,29 @@
   margin-bottom: 24px;
 }
 
+.uploading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border-radius: 50%;
+}
+
+.imagePreviewContainer {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
 .avatar {
-  width: 80px;
-  height: 80px;
+  position: relative;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   overflow: hidden;
   background-color: var(--bg-secondary);
@@ -51,7 +71,29 @@
 }
 
 .avatarPlaceholder {
-  color: var(--background-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--text-primary);
+}
+
+.removeImageButton {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
 }
 
 .imageControls {
@@ -61,40 +103,70 @@
 }
 
 .fileInput {
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 .uploadButton {
-  display: inline-block;
-  padding: 8px 16px;
-  background-color: var(--accent-color);
-  color: var(--background-color);
+  background-color: var(--background-light);
+  color: var(--text-primary);
+  padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.875rem;
-  text-align: center;
+  font-size: 14px;
   transition: background-color 0.2s;
-  border: 1px solid var(--border-color);
 }
 
 .uploadButton:hover {
-  background-color: var(--accent-color-hover);
+  background-color: var(--background-hover);
+}
+
+.uploadButton[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .removeButton {
-  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   background: none;
-  border: 1px solid var(--error-color);
-  color: var(--error-color);
-  border-radius: 4px;
+  border: none;
+  color: var(--danger);
   cursor: pointer;
-  font-size: 0.875rem;
-  transition: all 0.2s;
+  padding: 4px 8px;
+  font-size: 14px;
 }
 
 .removeButton:hover {
-  background-color: var(--error-color);
-  color: var(--background-color);
+  text-decoration: underline;
+}
+
+.removeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.imageControls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.imageSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
 .field {

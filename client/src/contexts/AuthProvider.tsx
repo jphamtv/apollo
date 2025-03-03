@@ -51,11 +51,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(response.user);
   };
 
+  const uploadProfileImage = async (formData: FormData) => {
+    const response = await apiClient.post<AuthResponse>("/users/profile/image", formData);
+    setUser(response.user);
+  };
+
+  const deleteProfileImage = async () => {
+    const response = await apiClient.delete<AuthResponse>("/users/profile/image");
+    setUser(response.user);
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  const value: AuthContextType = { user, isLoading, login, logout, updateProfile };
+  const value: AuthContextType = {
+    user,
+    isLoading,
+    login,
+    logout,
+    updateProfile,
+    uploadProfileImage,
+    deleteProfileImage
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

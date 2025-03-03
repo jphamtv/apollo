@@ -163,3 +163,88 @@
 .chevronIcon {
   color: var(--text-secondary);
 }
+
+.imagePreviewContainer {
+  position: relative;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  max-width: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.imagePreview {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.removeImageButton {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.imageButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.imageButton:hover {
+  background-color: var(--background-hover);
+}
+
+.imageButton[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.inputActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.messageImage {
+  margin-top: 8px;
+  max-width: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.messageImage img {
+  width: 100%;
+  height: auto;
+  display: block;
+}

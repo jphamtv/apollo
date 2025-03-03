@@ -6,7 +6,7 @@ import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
 import ProfileInfo from './ProfileInfo';
 import Modal from './Modal';
-import { ArrowUp, Trash2Icon, ChevronDown } from 'lucide-react';
+import { ArrowUp, Trash2Icon, ChevronDown, Image, X } from 'lucide-react';
 import styles from './ConversationView.module.css';
 import { User } from '../../types/user';
 import { Conversation } from '../../types/conversation';
@@ -17,16 +17,23 @@ interface Props {
 
 export default function ConversationView({ conversation }: Props) {
   const { user } = useAuth();
-  const { messages, sendMessage, loadMessages, clearMessages, createConversation, deleteConversation, markConversationAsRead, isCreatingConversation } = useMessaging();
+  const { messages, sendMessage, sendMessageWithImage, loadMessages, clearMessages, createConversation, deleteConversation, markConversationAsRead, isCreatingConversation } = useMessaging();
+  const { isNewConversation, navigateToConversation } = useNavigation();
+
   const [newMessage, setNewMessage] = useState('');
   const [showProfileInfo, setShowProfileInfo] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const { isNewConversation, navigateToConversation } = useNavigation();
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isSendingImage, setIsSendingImage] = useState(false);
+  const [profileInfoPosition, setProfileInfoPosition] = useState({ top: 0, left: 0 });
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const profileInfoRef = useRef<HTMLDivElement>(null);
   const displayProfileLinkRef = useRef<HTMLAnchorElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [profileInfoPosition, setProfileInfoPosition] = useState({ top: 0, left: 0 });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const activeRecipient = conversation ?
     conversation.participants.find(p => p.userId !== user?.id)?.user : null;
   
@@ -103,13 +110,34 @@ export default function ConversationView({ conversation }: Props) {
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !conversation) return;
+    if ((!newMessage.trim() && !imageFile) || !conversation) {
+      return;
+    }
 
     try {
-      await sendMessage(conversation.id, newMessage.trim());
+      if (imageFile) {
+        setIsSendingImage(true);
+        const formData = new FormData();
+        formData.append('image', imageFile);
+        if (newMessage.trim()) {
+          formData.append('text', newMessage.trim());
+        }
+        await sendMessageWithImage(conversation.id, formData);
+
+        // Clear image preview and file after sending
+        setImageFile(null);
+        setImagePreview(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      } else {
+        await sendMessage(conversation.id, newMessage.trim());
+      }
       setNewMessage('');
     } catch (error) {
       console.error('Failed to send message:', error);
+    } finally {
+      setIsSendingImage(false);
     }
   };
 
@@ -117,6 +145,30 @@ export default function ConversationView({ conversation }: Props) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      return;
+    }
+
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    
+    reader.readAsDataURL(file);
+    setImageFile(file);
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -163,9 +215,7 @@ export default function ConversationView({ conversation }: Props) {
 
   return (
     <div className={styles.container}>
-
       <div className={styles.headerContainer}>
-
           <div className={styles.label}>
             To:
           </div>
@@ -219,6 +269,12 @@ export default function ConversationView({ conversation }: Props) {
           >
             <div className={styles.messageContent}>
               {message.text}
+
+              {message.imageUrl && (
+                <div className={styles.messageImage}>
+                  <img src={message.imageUrl} alt="" />
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -226,6 +282,20 @@ export default function ConversationView({ conversation }: Props) {
       </div>
 
       <div className={styles.inputContainer}>
+        {imagePreview && (
+          <div className={styles.imagePreviewContainer}>
+            <img src={imagePreview} className={styles.imagePreview} />
+            <button
+              type='button'
+              onClick={handleRemoveImage}
+              className={styles.removeImageButton}
+              aria-label='Remove image'
+            >
+              <X size={16} />
+            </button>
+          </div>
+        )}
+
         <textarea
           ref={textareaRef}
           value={newMessage}
@@ -234,15 +304,35 @@ export default function ConversationView({ conversation }: Props) {
           placeholder="Type a message..."
           className={styles.messageInput}
           rows={1}
-          disabled={isNewConversation || (isCreatingConversation || false)}
+          disabled={isNewConversation || isCreatingConversation || isSendingImage}
         />
-        <Button 
-          onClick={handleSendMessage}
-          disabled={isNewConversation || (isCreatingConversation || false)}
-          size='small'
-        >
-          <ArrowUp size={24} />
-        </Button>
+
+        <div className={styles.inputActions}>
+          <input
+            ref={fileInputRef}
+            type="file"
+            id='messageImage'
+            accept='image/jpeg,image/png,image/gif,image/webp'
+            className={styles.fileInput}
+            onChange={handleImageChange}
+            disabled={isNewConversation || isCreatingConversation || isSendingImage}
+          />
+          <label
+            htmlFor="messageImage"
+            className={styles.imageButton}
+            aria-disabled={isNewConversation || isCreatingConversation || isSendingImage}
+          >
+            <Image size={20} />
+          </label>
+
+          <Button 
+            onClick={handleSendMessage}
+            disabled={isNewConversation || isCreatingConversation || isSendingImage || (!newMessage.trim() && !imageFile)}
+            size='small'
+            >
+            <ArrowUp size={24} />
+          </Button>
+        </div>
       </div>
 
 
