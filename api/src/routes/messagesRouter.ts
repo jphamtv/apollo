@@ -9,7 +9,7 @@ import {
 } from "../controllers/messageController";
 import { uploadMessageImage } from "../middleware/uploadMiddleware";
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.get("/", authenticateJWT, getConversationMessages);
 router.post('/', generalLimiter, authenticateJWT, (req: Request, res: Response, next: NextFunction) => {
