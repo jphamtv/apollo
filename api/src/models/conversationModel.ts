@@ -19,7 +19,9 @@ export const create = async (data: Prisma.ConversationCreateInput): Promise<Conv
   return prisma.conversation.create({
     data,
     include: {
-      messages: true,
+      messages: {
+        orderBy: { createdAt: 'asc' },
+      },
       participants: {
         include: {
           user: {
@@ -82,7 +84,9 @@ export const findById = async (id: string): Promise<ConversationWithDetails | nu
   return prisma.conversation.findUnique({
     where: { id },
     include: {
-      messages: true,
+      messages: {
+        orderBy: { createdAt: 'asc' },
+      },
       participants: {
         include: {
           user: {
@@ -167,7 +171,9 @@ export const update = async (
     where: { id },
     data,
     include: {
-      messages: true,
+      messages: {
+        orderBy: { createdAt: 'asc' },
+      },
       participants: {
         include: {
           user: {
