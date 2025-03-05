@@ -37,7 +37,14 @@ export default function ConversationsSidebar() {
             <ConversationItem
               key={conversation.id}
               displayName={otherParticipant.profile.displayName ?? otherParticipant.username}
-              lastMessage={conversation.lastMessage?.text ?? 'No messages yet'}
+              lastMessage={
+                conversation.lastMessage
+                  ? (
+                    conversation.lastMessage.text.trim() === "" && conversation.lastMessage.hasImage
+                      ? "📷 Image"
+                      : conversation.lastMessage.text
+                  ) : 'No messages yet'
+              }
               timestamp={conversation.lastMessage ? 
                 formatMessageTime(conversation.lastMessage.createdAt) : 
                 formatMessageTime(conversation.createdAt)

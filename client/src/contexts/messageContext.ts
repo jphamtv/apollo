@@ -124,7 +124,8 @@ export function messageReducer(state: MessageState, action: MessageAction): Mess
             ...conversation,
             lastMessage: {
               text: newMessage.text,
-              createdAt: newMessage.createdAt
+              createdAt: newMessage.createdAt,
+              hasImage: !!newMessage.imageUrl
             },
             // Add message to the conversation's messages array if it exists
             messages: [...(conversation.messages || []), newMessage]

@@ -18,6 +18,7 @@ export interface Conversation {
   lastMessage?: {
     text: string;
     createdAt: string;
+    hasImage?: boolean;
   };
   messages: Message[];
   hasUnread?: boolean;

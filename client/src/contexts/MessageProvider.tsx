@@ -29,7 +29,8 @@ export function MessageProvider({ children }: MessageProviderProps) {
         ...conversation,
         lastMessage: conversation.messages && conversation.messages[0] ? {
           text: conversation.messages[0].text,
-          createdAt: conversation.messages[0].createdAt
+          createdAt: conversation.messages[0].createdAt,
+          hasImage: !!conversation.messages[0].imageUrl
         } : undefined
       }));
 
