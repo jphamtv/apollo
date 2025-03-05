@@ -327,7 +327,12 @@ export default function ConversationView({ conversation }: Props) {
 
           <Button 
             onClick={handleSendMessage}
-            disabled={isNewConversation || isCreatingConversation || isSendingImage || (!newMessage.trim() && !imageFile)}
+            disabled={
+              isNewConversation ||
+              isCreatingConversation ||
+              isSendingImage ||
+              (!newMessage.trim() && !imageFile)
+            }
             size='small'
             >
             <ArrowUp size={24} />

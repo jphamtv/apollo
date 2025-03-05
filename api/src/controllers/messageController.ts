@@ -40,9 +40,15 @@ export const getConversationMessages = [
 
 export const createMessage = [
   body("text")
+    .if((value, { req }) => !req.file) // Only apply this validation if there's no image file
     .trim()
     .isLength({ min: 1, max: 5000 })
     .withMessage("Message must be between 1 and 5000 characters"),
+  body("text")
+    .if((value, { req }) => req.file) // Apply this validation if there's an image file
+    .optional() // Make text optional
+    .isLength({ max: 5000 }) // Still enforce text length if provided
+    .withMessage("Message text cannot exceed 5000 characters"),
   async (req: AuthRequest, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
