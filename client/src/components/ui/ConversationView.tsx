@@ -259,25 +259,36 @@ export default function ConversationView({ conversation }: Props) {
         </div>
       )}
       
-      <div className={styles.messagesContainer}>  
-        {Array.isArray(messages) && messages.map(message => (
-          <div 
-            key={message.id}
-            className={`${styles.message} ${
-              message.senderId === user?.id ? styles.sent : styles.received
-            }`}
-          >
-            <div className={styles.messageContent}>
-              {message.text}
-
-              {message.imageUrl && (
-                <div className={styles.messageImage}>
-                  <img src={message.imageUrl} alt="" />
+      <div className={styles.messagesContainer}>
+        {Array.isArray(messages) && messages.map(message => {
+          const isImageOnly = message.imageUrl && !message.text;
+          
+          return (
+            <div 
+              key={message.id}
+              className={`${styles.message} ${
+                message.senderId === user?.id ? styles.sent : styles.received
+              } ${isImageOnly ? styles.imageOnly : ''}`}
+            >
+              {isImageOnly ? (
+                // Image-only message (no bubble)
+                <div className={styles.messageImageOnly}>
+                  <img src={message.imageUrl || undefined} alt="" />
+                </div>
+              ) : (
+                // Text message or text+image message (regular bubble)
+                <div className={styles.messageContent}>
+                  {message.text}
+                  {message.imageUrl && (
+                    <div className={styles.messageImage}>
+                      <img src={message.imageUrl} alt="" />
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-          </div>
-        ))}
+          );
+        })}
         <div ref={messagesEndRef} />
       </div>
 

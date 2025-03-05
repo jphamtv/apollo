@@ -52,8 +52,8 @@
 }
 
 .messageContent {
-  padding: 0.5rem 1rem;
-  border-radius: 1.25rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1rem;
   white-space: pre-wrap;
 }
 
@@ -237,13 +237,29 @@
 }
 
 .messageImage {
-  margin-top: 8px;
+  margin-top: 0.5rem;
   max-width: 300px;
   border-radius: 8px;
   overflow: hidden;
 }
 
 .messageImage img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.imageOnly {
+  margin: 4px 0;
+}
+
+.messageImageOnly {
+  max-width: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.messageImageOnly img {
   width: 100%;
   height: auto;
   display: block;
