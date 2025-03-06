@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction, RequestHandler } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import {
   registerUser,

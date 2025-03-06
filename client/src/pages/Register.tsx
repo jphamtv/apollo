@@ -42,7 +42,7 @@ export default function Register() {
     
     // Password match validation (only done on frontend)
     if (credentials.password !== confirmPassword) {
-      validationErrors.push('Passwords do not match');
+      validationErrors.push("Passwords don't match. Please make sure both passwords are identical.");
     }
     
     // If there are errors, display them and stop

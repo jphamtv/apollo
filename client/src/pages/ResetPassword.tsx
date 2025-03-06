@@ -42,7 +42,7 @@ export default function ResetPassword() {
 
     // Check if passwords match
     if (newPassword !== confirmPassword) {
-      validationErrors.push('Passwords do not match');
+      validationErrors.push("Passwords don't match. Please make sure both passwords are identical.");
     }
 
     if (validationErrors.length > 0) {

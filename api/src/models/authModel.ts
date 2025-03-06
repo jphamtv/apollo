@@ -58,6 +58,13 @@ export const findById = async (id: string) => {
   });
 };
 
+export const findByUsername = async (username: string) => {
+  return prisma.user.findUnique({
+    where: { username },
+    select: { id: true }
+  });
+};
+
 export const createResetToken = async (email: string): Promise<string | null> => {
   const user = await findByEmail(email);
   if (!user) return null;
