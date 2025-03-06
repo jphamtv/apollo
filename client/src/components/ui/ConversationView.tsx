@@ -12,7 +12,7 @@ import styles from './ConversationView.module.css';
 import { User } from '../../types/user';
 import { Conversation } from '../../types/conversation';
 import { Message } from '../../types/message';
-import { formatMessageTime, formatMessageDate } from '../../utils/formatTime';
+import { formatMessageFeedTimestamp } from '../../utils/formatTime';
 
 interface Props {
   conversation?: Conversation;
@@ -292,17 +292,21 @@ const shouldShowDateDivider = (currentMsg: Message, prevMsg: Message | null): bo
           
           return (
             <React.Fragment key={message.id}>
-              {/* Date divider */}
+              {/* Date divider with time */}
               {showDateDivider && (
                 <div className={styles.timestampDivider}>
-                  <span className={styles.timestampText}>{formatMessageDate(message.createdAt)}</span>
+                  <span className={styles.timestampText}>
+                    {formatMessageFeedTimestamp(message.createdAt)}
+                  </span>
                 </div>
               )}
               
-              {/* Time separator */}
+              {/* Time separator with date */}
               {showTimestamp && (
                 <div className={styles.timestampDivider}>
-                  <span className={styles.timestampText}>{formatMessageTime(message.createdAt)}</span>
+                  <span className={styles.timestampText}>
+                    {formatMessageFeedTimestamp(message.createdAt)}
+                  </span>
                 </div>
               )}
               

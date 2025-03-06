@@ -5,7 +5,7 @@ import ProfileButton from './ProfileButton';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigation } from '../../hooks/useNavigation';
 import { useMessaging } from '../../hooks/useMessaging';
-import { formatMessageTime } from '../../utils/formatTime';
+import { formatLastMessageTimestamp } from '../../utils/formatTime';
 
 export default function ConversationsSidebar() {
   const { user } = useAuth();
@@ -46,8 +46,8 @@ export default function ConversationsSidebar() {
                   ) : 'No messages yet'
               }
               timestamp={conversation.lastMessage ? 
-                formatMessageTime(conversation.lastMessage.createdAt) : 
-                formatMessageTime(conversation.createdAt)
+                formatLastMessageTimestamp(conversation.lastMessage.createdAt) : 
+                formatLastMessageTimestamp(conversation.createdAt)
               }
               isActive={activeConversation?.id === conversation.id}
               hasUnread={conversation.hasUnread}
