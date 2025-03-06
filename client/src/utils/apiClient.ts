@@ -1,19 +1,11 @@
+import { ApiError, ErrorResponse, ValidationErrorResponse } from "../types/error";
+
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 interface RequestConfig extends RequestInit {
   data?: unknown;
   headers?: HeadersInit;
-}
-
-class ApiError extends Error {
-  constructor(
-    public status: number,
-    message: string,
-  ) {
-    super(message);
-    this.name = "ApiError";
-  }
 }
 
 export const apiClient = {
@@ -54,15 +46,21 @@ export const apiClient = {
 
     try {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-      const data = await response.json();
+      const responseData = await response.json();
 
       if (response.ok) {
-        return data;
+        return responseData;
       }
+
+      // Determine if we have validation errors or a general error
+      const errorData = Array.isArray(responseData.errors) 
+        ? responseData as ValidationErrorResponse 
+        : responseData as ErrorResponse;
 
       throw new ApiError(
         response.status,
-        data.message || "Something went wrong",
+        errorData.message || "Something went wrong",
+        errorData
       );
     } catch (error) {
       if (error instanceof ApiError) {

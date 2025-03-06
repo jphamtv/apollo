@@ -3,6 +3,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { apiClient } from '../utils/apiClient';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import ErrorBox from '../components/ui/ErrorBox';
+import { isApiError, hasValidationErrors } from '../types/error';
 import styles from './ForgotPassword.module.css';
 
 export default function ResetPassword() {
@@ -12,7 +14,7 @@ export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState<string[]>([]);
   const [isSuccess, setIsSuccess] = useState(false);
 
   // Extract token from URL query parameter
@@ -22,22 +24,29 @@ export default function ResetPassword() {
     if (resetToken) {
       setToken(resetToken);
     } else {
-      setError('Invalid reset link. Please request a new password reset.');
+      setErrors(['Invalid reset link. Please request a new password reset.']);
     }
   }, [location]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setErrors([]);
 
-    // Simple validation
+    // Validation
+    const validationErrors: string[] = [];
+    
+    // Check password length
     if (newPassword.length < 8) {
-      setError('Password must be at least 8 characters long');
-      return;
+      validationErrors.push('Password must be at least 8 characters long');
     }
 
+    // Check if passwords match
     if (newPassword !== confirmPassword) {
-      setError('Passwords do not match');
+      validationErrors.push('Passwords do not match');
+    }
+
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
@@ -47,8 +56,22 @@ export default function ResetPassword() {
       setIsSuccess(true);
       // Redirect to login after 3 seconds
       setTimeout(() => navigate('/login'), 3000);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Password reset failed. The link may have expired.');
+    } catch (error) {
+      if (isApiError(error)) {
+        if (error.data && hasValidationErrors(error.data)) {
+          // Handle validation errors from API
+          setErrors(error.data.errors.map(err => err.msg));
+        } else if (error.data && error.data.message) {
+          // Handle specific error message
+          setErrors([error.data.message]);
+        } else {
+          // Handle generic API error
+          setErrors(['Password reset failed. The link may have expired.']);
+        }
+      } else {
+        // Handle unknown errors
+        setErrors(['An unexpected error occurred. Please try again.']);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -79,7 +102,7 @@ export default function ResetPassword() {
         
         {!token ? (
           <div className={styles.errorMessage}>
-            {error}
+            {errors.length > 0 && <ErrorBox errors={errors} />}
             <p className={styles.footer}>
               <Link to="/forgot-password">
                 <span className={styles.link}>Request a new reset link</span>
@@ -88,6 +111,8 @@ export default function ResetPassword() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className={styles.form}>
+            {errors.length > 0 && <ErrorBox errors={errors} />}
+            
             <Input
               label="New Password"
               type="password"
@@ -106,7 +131,6 @@ export default function ResetPassword() {
               autoComplete="new-password"
               required
             />
-            {error && <p className={styles.errorMessage}>{error}</p>}
             <Button type="submit" isLoading={isLoading}>
               Reset Password
             </Button>

@@ -1,0 +1,28 @@
+.errorBox {
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgb(239, 68, 68, 0.5);
+  border-radius: 0.25rem;
+  color: var(--error);
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+}
+
+.errorBox p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.errorBox ul {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.errorBox li {
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  list-style-type: disc;
+}
+
+.errorBox li:last-child {
+  margin-bottom: 0;
+}

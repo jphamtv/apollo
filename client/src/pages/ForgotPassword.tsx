@@ -3,20 +3,25 @@ import { Link } from 'react-router-dom';
 import { apiClient } from '../utils/apiClient';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import ErrorBox from '../components/ui/ErrorBox';
+import { validateEmail } from '../utils/validation';
+import { isApiError } from '../types/error';
 import styles from './ForgotPassword.module.css';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState<string[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setErrors([]);
     
-    if (!email.trim()) {
-      setError('Email is required');
+    // Validate email
+    const emailError = validateEmail(email);
+    if (emailError) {
+      setErrors([emailError]);
       return;
     }
 
@@ -24,9 +29,14 @@ export default function ForgotPassword() {
     try {
       await apiClient.post('/auth/reset-request', { email });
       setIsSubmitted(true);
-    } catch {
-      // Not setting error here to prevent email enumeration
-      // The backend always returns 200 whether the email exists or not
+    } catch (error) {
+      // Not setting validation errors here to prevent email enumeration
+      // The backend should always return 200 whether the email exists or not
+      
+      // But we should handle unexpected errors
+      if (isApiError(error) && error.status !== 200) {
+        setErrors(['An unexpected error occurred. Please try again.']);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -50,6 +60,8 @@ export default function ForgotPassword() {
           </>
         ) : (
           <form onSubmit={handleSubmit} className={styles.form}>
+            {errors.length > 0 && <ErrorBox errors={errors} />}
+            
             <p>Enter your email address and we'll send you a link to reset your password.</p>
             <Input
               label="Email"
@@ -60,7 +72,6 @@ export default function ForgotPassword() {
               autoComplete="email"
               required
             />
-            {error && <p className={styles.errorMessage}>{error}</p>}
             <Button type="submit" isLoading={isLoading}>
               Send Reset Link
             </Button>

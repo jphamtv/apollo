@@ -4,13 +4,15 @@ import { useAuth } from "../hooks/useAuth";
 import { validateForm } from "../utils/validation";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+import ErrorBox from "../components/ui/ErrorBox";
+import { isApiError, hasValidationErrors } from "../types/error";
 import styles from './Login.module.css'
 
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<string[]>([]);
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -18,10 +20,21 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    
+    // Reset errors
+    setErrors([]);
 
-    const errors = validateForm(values);
-    if (Object.keys(errors).length > 0) {
+    // Validate form
+    const validationErrors: string[] = [];
+    const formErrors = validateForm(values);
+    
+    if (Object.keys(formErrors).length > 0) {
+      validationErrors.push(...Object.values(formErrors));
+    }
+    
+    // If there are errors, display them and stop
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
@@ -29,8 +42,19 @@ export default function Login() {
     try {
       await login(values);
       navigate("/");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+    } catch (error) {
+      if (isApiError(error)) {
+        if (error.data && hasValidationErrors(error.data)) {
+          // Handle validation errors from API
+          setErrors(error.data.errors.map(err => err.msg));
+        } else {
+          // Handle general API error
+          setErrors([error.message]);
+        }
+      } else {
+        // Handle unknown errors
+        setErrors(["An unexpected error occurred. Please try again."]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -49,6 +73,8 @@ export default function Login() {
         <h1 className={styles.title}>Messages App</h1>
           
         <form onSubmit={handleSubmit} className={styles.form}>
+          {errors.length > 0 && <ErrorBox errors={errors} />}
+          
           <Input
             label="Email"
             type="email"
@@ -72,7 +98,6 @@ export default function Login() {
               <span className={styles.signUpLink}>Forgot password?</span>
             </Link>
           </div>
-          {error && <p className={styles.errorMessage}>{error}</p>}
           <Button type="submit" isLoading={isLoading}>
             Log In
           </Button>
