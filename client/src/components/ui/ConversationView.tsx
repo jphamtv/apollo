@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigation } from '../../hooks/useNavigation';
@@ -10,6 +11,8 @@ import { ArrowUp, Trash2Icon, ChevronDown, Image, X } from 'lucide-react';
 import styles from './ConversationView.module.css';
 import { User } from '../../types/user';
 import { Conversation } from '../../types/conversation';
+import { Message } from '../../types/message';
+import { formatMessageTime, formatMessageDate } from '../../utils/formatTime';
 
 interface Props {
   conversation?: Conversation;
@@ -213,6 +216,25 @@ export default function ConversationView({ conversation }: Props) {
     textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
   };
 
+  const shouldShowTimestamp = (currentMsg: Message, prevMsg: Message | null): boolean => {
+  if (!prevMsg) return true; // Always show for first message
+  
+  const currentTime = new Date(currentMsg.createdAt);
+  const prevTime = new Date(prevMsg.createdAt);
+  
+  // Show timestamp if more than 2 hours between messages
+  return (currentTime.getTime() - prevTime.getTime()) > 2 * 60 * 60 * 1000;
+};
+
+const shouldShowDateDivider = (currentMsg: Message, prevMsg: Message | null): boolean => {
+  if (!prevMsg) return true; // Always show date for first message
+  
+  const currentDate = new Date(currentMsg.createdAt).toDateString();
+  const prevDate = new Date(prevMsg.createdAt).toDateString();
+  
+  return currentDate !== prevDate;
+};
+
   return (
     <div className={styles.container}>
       <div className={styles.headerContainer}>
@@ -260,33 +282,52 @@ export default function ConversationView({ conversation }: Props) {
       )}
       
       <div className={styles.messagesContainer}>
-        {Array.isArray(messages) && messages.map(message => {
+        {Array.isArray(messages) && messages.length > 0 && messages.map((message, index) => {
           const isImageOnly = message.imageUrl && !message.text;
+          const prevMessage = index > 0 ? messages[index - 1] : null;
+          
+          // Check if we need a date divider or timestamp
+          const showDateDivider = shouldShowDateDivider(message, prevMessage);
+          const showTimestamp = !showDateDivider && shouldShowTimestamp(message, prevMessage);
           
           return (
-            <div 
-              key={message.id}
-              className={`${styles.message} ${
-                message.senderId === user?.id ? styles.sent : styles.received
-              } ${isImageOnly ? styles.imageOnly : ''}`}
-            >
-              {isImageOnly ? (
-                // Image-only message (no bubble)
-                <div className={styles.messageImageOnly}>
-                  <img src={message.imageUrl || undefined} alt="" />
-                </div>
-              ) : (
-                // Text message or text+image message (regular bubble)
-                <div className={styles.messageContent}>
-                  {message.text}
-                  {message.imageUrl && (
-                    <div className={styles.messageImage}>
-                      <img src={message.imageUrl} alt="" />
-                    </div>
-                  )}
+            <React.Fragment key={message.id}>
+              {/* Date divider */}
+              {showDateDivider && (
+                <div className={styles.timestampDivider}>
+                  <span className={styles.timestampText}>{formatMessageDate(message.createdAt)}</span>
                 </div>
               )}
-            </div>
+              
+              {/* Time separator */}
+              {showTimestamp && (
+                <div className={styles.timestampDivider}>
+                  <span className={styles.timestampText}>{formatMessageTime(message.createdAt)}</span>
+                </div>
+              )}
+              
+              {/* Message content */}
+              <div 
+                className={`${styles.message} ${
+                  message.senderId === user?.id ? styles.sent : styles.received
+                } ${isImageOnly ? styles.imageOnly : ''}`}
+              >
+                {isImageOnly ? (
+                  <div className={styles.messageImageOnly}>
+                    <img src={message.imageUrl || undefined} alt="" />
+                  </div>
+                ) : (
+                  <div className={styles.messageContent}>
+                    {message.text}
+                    {message.imageUrl && (
+                      <div className={styles.messageImage}>
+                        <img src={message.imageUrl} alt="" />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </React.Fragment>
           );
         })}
         <div ref={messagesEndRef} />

@@ -41,3 +41,36 @@ export function formatMessageTime(timestamp: string | Date): string {
     year: '2-digit' 
   });
 }
+
+export function formatMessageDate(timestamp: string | Date): string {
+  const messageDate = new Date(timestamp);
+  const now = new Date();
+  
+  // Set times to midnight for day comparison
+  const messageDateDay = new Date(messageDate);
+  messageDateDay.setHours(0, 0, 0, 0);
+  
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
+  
+  // Calculate difference in days
+  const diffDays = Math.floor((today.getTime() - messageDateDay.getTime()) / (1000 * 60 * 60 * 24));
+  
+  // Same day: Show "Today"
+  if (diffDays === 0) {
+    return 'Today';
+  }
+  
+  // Yesterday: Show "Yesterday"
+  if (diffDays === 1) {
+    return 'Yesterday';
+  }
+  
+  // Other days: Show full date
+  return messageDate.toLocaleDateString([], { 
+    weekday: 'long',
+    month: 'long', 
+    day: 'numeric',
+    year: messageDate.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+  });
+}
