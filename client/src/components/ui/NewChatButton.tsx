@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react';
+import { MessageCirclePlus } from 'lucide-react';
 import styles from './NewChatButton.module.css';
 
 interface Props {
@@ -8,8 +8,8 @@ interface Props {
 export default function NewChatButton({ onClick }: Props) {
   return (
     <button className={styles.button} onClick={onClick}>
-      <Plus size={16} />
-      New Message
+      <MessageCirclePlus size={16} />
+      New Conversation
     </button>
   );
 }

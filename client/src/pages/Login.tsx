@@ -70,7 +70,7 @@ export default function Login() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Messages App</h1>
+        <h1 className={styles.title}>Apollo</h1>
           
         <form onSubmit={handleSubmit} className={styles.form}>
           {errors.length > 0 && <ErrorBox errors={errors} />}

@@ -23,7 +23,8 @@
   margin: 1rem 0 0.5rem;
   padding: 2rem;
   border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--bg-primary);
 }
 
 .link {

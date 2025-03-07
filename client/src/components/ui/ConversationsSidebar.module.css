@@ -3,8 +3,7 @@
   flex-direction: column;
   width: 20rem;
   height: 100%;
-  border-right: 1px solid var(--border-color);
-  background: var(--bg-primary);
+  background-color: var(--bg-secondary);
 }
 
 .header {
@@ -23,7 +22,7 @@
 }
 
 .footer {
-  height: 4rem;
+  height: 5rem;
   padding: 0 1rem;
   display: flex;
   align-items: center;

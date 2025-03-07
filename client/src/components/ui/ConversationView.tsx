@@ -255,12 +255,12 @@ const shouldShowDateDivider = (currentMsg: Message, prevMsg: Message | null): bo
                     activeRecipient?.username || 
                     'Unknown User'}
                   </div>
-                  <ChevronDown size={16} className={styles.chevronIcon} />
+                  <ChevronDown size={16} className={styles.chevronIcon} strokeWidth={1}/>
                 </a>
               )}
               <div className={styles.actions}>
                 <button onClick={handleDeleteClick}>
-                  <Trash2Icon size={20}/>
+                  <Trash2Icon size={20} strokeWidth={1} />
                 </button>
               </div>
             </div>
@@ -378,7 +378,7 @@ const shouldShowDateDivider = (currentMsg: Message, prevMsg: Message | null): bo
             className={styles.imageButton}
             aria-disabled={isNewConversation || isCreatingConversation || isSendingImage}
           >
-            <Image size={20} />
+            <Image size={24} strokeWidth={1} />
           </label>
 
           <Button 

@@ -8,7 +8,7 @@
   display: grid;
   grid-template-columns: 2rem auto;
   align-items: center;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -53,33 +53,32 @@
 
 .messageContent {
   padding: 0.5rem 0.75rem;
-  border-radius: 1rem;
+  border-radius: var(--border-radius-lg);
   white-space: pre-wrap;
 }
 
 .sent .messageContent {
-  background-color: rgb(255, 255, 255, 0.35);
+  background-color: var(--bg-sender);
   color: white;
 }
 
 .received .messageContent {
-  background-color: rgb(255, 255, 255, 0.15);
+  background-color: var(--bg-recipient);
 }
 
 .inputContainer {
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
-  margin: 0 1.5rem;
-  margin-bottom: 0.5rem;
-  background-color: var(--bg-primary);
-  /* border-top-left-radius: var(--border-radius);
-  border-top-right-radius: var(--border-radius);
+  margin: 0 1.5rem 1rem;
+  background-color: var(--bg-input);
+  /* border-top-left-radius: var(--border-radius-sm);
+  border-top-right-radius: var(--border-radius-sm);
   border-top: 1px solid var(--border-color);
   border-left: 1px solid var(--border-color);
   border-right: 1px solid var(--border-color); */
-  border-radius: var(--border-radius);
-  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  /* border: 1px solid var(--border-color); */
 }
 
 .messageInput {
@@ -103,7 +102,7 @@
 }
 
 .messageInput::-webkit-scrollbar-track {
-  background: transparent;
+  background-color: transparent;
 }
 
 .messageInput::-webkit-scrollbar-thumb {
@@ -213,7 +212,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
+  background-color: none;
   border: none;
   color: var(--text-secondary);
   cursor: pointer;
@@ -265,7 +264,6 @@
   height: auto;
   display: block;
 }
-
 
 .timestampDivider {
   display: flex;

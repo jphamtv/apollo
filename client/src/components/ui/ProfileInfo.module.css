@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-sm);
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 100;
@@ -13,7 +13,7 @@
 }
 
 .container::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -10px;
   left: 20px; /* Adjust this to align with the display name */
@@ -21,12 +21,12 @@
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 10px solid var(--bg-primary);
+  border-bottom: 10px solid var(--bg-secondary);
   z-index: 101;
 }
 
 .container::after {
-  content: '';
+  content: "";
   position: absolute;
   top: -11px;
   left: 19px; /* One pixel to the left of the before element */
@@ -39,15 +39,19 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .avatar {
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-avatar);
   display: flex;
   align-items: center;
   justify-content: center;

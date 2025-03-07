@@ -5,7 +5,7 @@ import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Modal from './Modal';
 import styles from './SettingsModal.module.css';
-import { User as UserIcon, Trash, X } from 'lucide-react';
+import { User as UserIcon, Trash2Icon } from 'lucide-react';
 
 export default function SettingsModal() {
   const { user, updateProfile, uploadProfileImage, deleteProfileImage } = useAuth();
@@ -104,14 +104,6 @@ export default function SettingsModal() {
                     alt="" 
                     className={styles.avatarImage} 
                   />
-                  <button
-                    type='button'
-                    onClick={handleRemoveImage}
-                    className={styles.removeImageButton}
-                    aria-label='Remove image'
-                  >
-                    <X size={16} />
-                  </button>
                 </div>
               ) : (!isUploading) ? (
                 <div className={styles.avatarPlaceholder}>
@@ -139,7 +131,7 @@ export default function SettingsModal() {
                   className={styles.removeButton}
                   disabled={isUploading}
                 >
-                  <Trash size={16} />
+                  <Trash2Icon size={16} />
                   Remove Image
                 </button>
               )}

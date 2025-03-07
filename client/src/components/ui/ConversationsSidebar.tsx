@@ -21,7 +21,7 @@ export default function ConversationsSidebar() {
   return (
     <aside className={styles.container}>
       <header className={styles.header}>
-        <h2>Messages App</h2>
+        <h2>Apollo</h2>
       </header>
       
       <main className={styles.main}>

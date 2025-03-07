@@ -1,6 +1,6 @@
 .container {
   padding: 24px;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: --border-radius;
 }
@@ -56,7 +56,7 @@
   height: 100px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-avatar);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,17 +115,18 @@
 }
 
 .uploadButton {
-  background-color: var(--background-light);
+  background-color: var(--btn-secondary);
   color: var(--text-primary);
   padding: 8px 12px;
   border-radius: 4px;
+  border: 1px solid var(--border-color);
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.2s;
 }
 
 .uploadButton:hover {
-  background-color: var(--background-hover);
+  background-color: var(--btn-secondary-hover);
 }
 
 .uploadButton[aria-disabled="true"] {
@@ -137,7 +138,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  background: none;
+  background-color: none;
   border: none;
   color: var(--danger);
   cursor: pointer;
@@ -181,7 +182,7 @@
 }
 
 .input {
-  background-color: var(--bg-primary);
+  background-color: var(--bg-input);
   color: var(--text-primary);
   border-radius: 4px;
 }
@@ -190,7 +191,7 @@
   padding: 8px 12px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
-  background-color: var(--input-background);
+  background-color: var(--bg-input);
   color: var(--text-primary);
   font-size: 0.875rem;
   resize: vertical;
