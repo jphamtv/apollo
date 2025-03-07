@@ -17,14 +17,14 @@
   top: calc(100% + 1.5rem);
   left: -10px;
   right: 0;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   max-height: 20rem;
   max-width: 20rem;
   overflow-y: auto;
   z-index: 10;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow);
 }
 
 .dropdownMessage {
