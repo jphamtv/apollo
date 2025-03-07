@@ -7,7 +7,7 @@ import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
 import ProfileInfo from './ProfileInfo';
 import Modal from './Modal';
-import { ArrowUp, Trash2Icon, ChevronDown, Image, X } from 'lucide-react';
+import { ArrowUp, Trash2, ChevronDown, Image, X } from 'lucide-react';
 import styles from './ConversationView.module.css';
 import { User } from '../../types/user';
 import { Conversation } from '../../types/conversation';
@@ -30,6 +30,7 @@ export default function ConversationView({ conversation }: Props) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSendingImage, setIsSendingImage] = useState(false);
   const [profileInfoPosition, setProfileInfoPosition] = useState({ top: 0, left: 0 });
+  const [landscapeImages, setLandscapeImages] = useState<Set<string>>(new Set());
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const profileInfoRef = useRef<HTMLDivElement>(null);
@@ -217,23 +218,30 @@ export default function ConversationView({ conversation }: Props) {
   };
 
   const shouldShowTimestamp = (currentMsg: Message, prevMsg: Message | null): boolean => {
-  if (!prevMsg) return true; // Always show for first message
-  
-  const currentTime = new Date(currentMsg.createdAt);
-  const prevTime = new Date(prevMsg.createdAt);
-  
-  // Show timestamp if more than 2 hours between messages
-  return (currentTime.getTime() - prevTime.getTime()) > 2 * 60 * 60 * 1000;
-};
+    if (!prevMsg) return true; // Always show for first message
+    
+    const currentTime = new Date(currentMsg.createdAt);
+    const prevTime = new Date(prevMsg.createdAt);
+    
+    // Show timestamp if more than 2 hours between messages
+    return (currentTime.getTime() - prevTime.getTime()) > 2 * 60 * 60 * 1000;
+  };
 
-const shouldShowDateDivider = (currentMsg: Message, prevMsg: Message | null): boolean => {
-  if (!prevMsg) return true; // Always show date for first message
+  const shouldShowDateDivider = (currentMsg: Message, prevMsg: Message | null): boolean => {
+    if (!prevMsg) return true; // Always show date for first message
+    
+    const currentDate = new Date(currentMsg.createdAt).toDateString();
+    const prevDate = new Date(prevMsg.createdAt).toDateString();
+    
+    return currentDate !== prevDate;
+  };
   
-  const currentDate = new Date(currentMsg.createdAt).toDateString();
-  const prevDate = new Date(prevMsg.createdAt).toDateString();
-  
-  return currentDate !== prevDate;
-};
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>, messageId: string) => {
+    const img = e.target as HTMLImageElement;
+    if (img.naturalWidth > img.naturalHeight) {
+      setLandscapeImages(prev => new Set(prev).add(messageId));
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -260,7 +268,7 @@ const shouldShowDateDivider = (currentMsg: Message, prevMsg: Message | null): bo
               )}
               <div className={styles.actions}>
                 <button onClick={handleDeleteClick}>
-                  <Trash2Icon size={20} strokeWidth={1} />
+                  <Trash2 size={20} strokeWidth={1} />
                 </button>
               </div>
             </div>
@@ -317,15 +325,23 @@ const shouldShowDateDivider = (currentMsg: Message, prevMsg: Message | null): bo
                 } ${isImageOnly ? styles.imageOnly : ''}`}
               >
                 {isImageOnly ? (
-                  <div className={styles.messageImageOnly}>
-                    <img src={message.imageUrl || undefined} alt="" />
+                  <div className={`${styles.messageImageOnly} ${landscapeImages.has(message.id) ? styles.landscape : ''}`}>
+                    <img
+                      src={message.imageUrl || undefined}
+                      alt=""
+                      onLoad={(e) => handleImageLoad(e, message.id)}
+                    />
                   </div>
                 ) : (
                   <div className={styles.messageContent}>
                     {message.text}
                     {message.imageUrl && (
-                      <div className={styles.messageImage}>
-                        <img src={message.imageUrl} alt="" />
+                      <div className={`${styles.messageImage} ${landscapeImages.has(message.id) ? styles.landscape : ''}`}>
+                        <img
+                          src={message.imageUrl}
+                          alt=""
+                          onLoad={(e) => handleImageLoad(e, message.id)}
+                        />
                       </div>
                     )}
                   </div>
@@ -391,7 +407,7 @@ const shouldShowDateDivider = (currentMsg: Message, prevMsg: Message | null): bo
             }
             size='small'
             >
-            <ArrowUp size={24} />
+            <ArrowUp size={24} strokeWidth={2}/>
           </Button>
         </div>
       </div>

@@ -25,6 +25,6 @@ router.post('/profile/image', authenticateJWT, (req: Request, res: Response, nex
     next();
   });
 }, uploadProfileImage);
-router.delete('/profile/delete', authenticateJWT, deleteProfileImage);
+router.delete('/profile/image', authenticateJWT, deleteProfileImage);
 
 export default router;

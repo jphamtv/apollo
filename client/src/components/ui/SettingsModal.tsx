@@ -107,7 +107,7 @@ export default function SettingsModal() {
                 </div>
               ) : (!isUploading) ? (
                 <div className={styles.avatarPlaceholder}>
-                  <UserIcon size={40} />
+                  <UserIcon size={60} strokeWidth={1}/>
                 </div>                  
               ) : null}
             </div>
@@ -131,7 +131,7 @@ export default function SettingsModal() {
                   className={styles.removeButton}
                   disabled={isUploading}
                 >
-                  <Trash2Icon size={16} />
+                  <Trash2Icon size={16} strokeWidth={1}/>
                   Remove Image
                 </button>
               )}
@@ -139,18 +139,18 @@ export default function SettingsModal() {
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="displayName">Display Name</label>
+            <label htmlFor="displayName">Full Name</label>
             <Input
               id="displayName"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              placeholder="Enter your display name"
+              placeholder="Enter your full name"
               className={styles.input}
             />
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="bio">Bio</label>
+            <label htmlFor="bio">What do you want people to know about you?</label>
             <textarea
               id="bio"
               value={bio}

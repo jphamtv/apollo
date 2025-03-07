@@ -243,6 +243,10 @@
   overflow: hidden;
 }
 
+.landscape {
+  max-width: 424px !important; 
+}
+
 .messageImage img {
   width: 100%;
   height: auto;

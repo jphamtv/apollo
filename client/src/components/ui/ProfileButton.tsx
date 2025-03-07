@@ -48,6 +48,7 @@ export default function ProfileButton({ user }: Props) {
         </span>
         <ChevronUp 
           size={16} 
+          strokeWidth={1}
           className={styles.chevron}
         />
       </button>
