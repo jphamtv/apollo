@@ -6,19 +6,21 @@
   --bg-recipient: #2E2F30;
   --bg-input: #2E2F30;
   --bg-hover: #1D1E1F;
-  --bg-selected: #191A1A;
+  --bg-selected: #141415;
   --bg-avatar: #363F46;
   
   --text-primary: #f8fafc;
   --text-secondary: #cbd5e1;
   
-  --border-color: #353639;
-  
   --accent-primary: #0B89E9;
   --accent-primary-hover: #097bd3;
 
-  --btn-primary: #0B89E9;
-  --btn-primary-hover: #097bd3;
+  --border-color: #353639;
+  --border-color-hover: #3f4043;
+  --border-color-focus: var(--accent-primary);  
+
+  --btn-primary: var(--accent-primary);
+  --btn-primary-hover: var(--accent-primary-hover);
   --btn-secondary: #242526;
   --btn-secondary-hover: #292a2b;
  

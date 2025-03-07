@@ -20,8 +20,13 @@
   margin-bottom: 0.5rem;
 }
 
+.input:hover {
+  border-color: var(--border-color-hover);
+}
+
 .input:focus {
   outline: none;
+  border-color: var(--border-color-focus);
 }
 
 .error {

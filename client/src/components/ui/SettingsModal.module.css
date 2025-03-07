@@ -199,7 +199,11 @@
   font-family: inherit;
 }
 
+.textarea:hover {
+  border-color: var(--border-color-hover);
+}
+
 .textarea:focus {
   outline: none;
-  border-color: var(--accent-color);
+  border-color: var(--border-color-focus);
 }
