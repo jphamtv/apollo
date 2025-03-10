@@ -22,12 +22,21 @@
 }
 
 .secondary {
-  background-color: var(--bg-secondary);
+  background-color: var(--btn-secondary);
+  color: var(--text-secondary);
+}
+
+.secondary:hover {
+  background-color: var(--btn-secondary-hover);
   color: var(--text-secondary);
 }
 
 .danger {
   background-color: var(--error);
+}
+
+.danger:hover {
+  background-color: rgb(215, 56, 56);
 }
 
 /* Add other variants... */
