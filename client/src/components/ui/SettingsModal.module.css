@@ -1,5 +1,5 @@
 .container {
-  padding: 24px;
+  padding: 1.5rem 1.5rem 2.5rem;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: --border-radius;
@@ -21,14 +21,14 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 1.5rem;
 }
 
 .imageSection {
   display: flex;
   align-items: center;
-  gap: 24px;
-  margin-bottom: 24px;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .uploading {
@@ -87,8 +87,8 @@
   color: white;
   border: none;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -159,7 +159,6 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 8px;
   align-items: center;
 }
 
@@ -167,7 +166,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 1rem;
 }
 
 .field {
@@ -197,6 +196,7 @@
   resize: vertical;
   min-height: 80px;
   font-family: inherit;
+  margin-bottom: 1rem;
 }
 
 .textarea:hover {

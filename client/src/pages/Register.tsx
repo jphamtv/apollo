@@ -87,7 +87,7 @@ export default function Register() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Create Account</h1>
+        <h1 className={styles.title}>Apollo</h1>
 
         <form onSubmit={handleSubmit} className={styles.form}>
           {errors.length > 0 && <ErrorBox errors={errors} />}
@@ -133,10 +133,16 @@ export default function Register() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               autoComplete="new-password"
               required
-            />
-          <Button type="submit" isLoading={isLoading}>
-            Create Account
-          </Button>
+          />
+          <div className={styles.buttonContainer}>
+            <Button
+              type="submit"
+              isLoading={isLoading}
+              className={styles.button}
+            >
+              Create Account
+            </Button>
+          </div>
         </form>
 
         <p className={styles.footer}>

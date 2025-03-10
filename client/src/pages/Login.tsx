@@ -98,15 +98,21 @@ export default function Login() {
               <span className={styles.signUpLink}>Forgot password?</span>
             </Link>
           </div>
-          <Button type="submit" isLoading={isLoading}>
-            Log In
-          </Button>
+          <div className={styles.buttonContainer}>
+            <Button
+              type="submit"
+              isLoading={isLoading}
+              className={styles.button}
+            >
+              Log In
+            </Button>
+          </div>
         </form>
 
         <p className={styles.footer}>
           Don't have an account?{" "}
           <Link to="/register">
-            <span className={styles.signUpLink}>Create one</span>
+            <span className={styles.signUpLink}>Sign up</span>
           </Link>
         </p>
       </div>

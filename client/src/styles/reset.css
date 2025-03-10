@@ -33,7 +33,7 @@ ol {
 
 /* Set core body defaults */
 body {
-  min-height: 100vh;
+  min-height: 85vh;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -62,7 +62,7 @@ select {
   html:focus-within {
     scroll-behavior: auto;
   }
-  
+
   *,
   *::before,
   *::after {

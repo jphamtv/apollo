@@ -131,9 +131,11 @@ export default function ResetPassword() {
               autoComplete="new-password"
               required
             />
-            <Button type="submit" isLoading={isLoading}>
-              Reset Password
-            </Button>
+            <div>
+              <Button type="submit" isLoading={isLoading}>
+                Reset Password
+              </Button>
+            </div>
           </form>
         )}
       </div>

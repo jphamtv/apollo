@@ -16,6 +16,7 @@
 }
 
 .footer {
+  margin-top: 1rem;
   font-size: 0.875rem;
 }
 
@@ -25,6 +26,15 @@
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   background-color: var(--bg-primary);
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button {
+  min-width: 25%;
 }
 
 .signUpLink {
@@ -37,8 +47,6 @@
 }
 
 .forgotPassword {
-  text-align: right;
   font-size: 0.75rem;
-  margin-top: -0.25rem;
   margin-bottom: 1rem;
 }

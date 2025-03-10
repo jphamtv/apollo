@@ -45,7 +45,9 @@ export default function ForgotPassword() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Reset Password</h1>
+        <Link to="/login">
+          <h1 className={styles.title}>Apollo</h1>
+        </Link>
         
         {isSubmitted ? (
           <>
@@ -64,23 +66,21 @@ export default function ForgotPassword() {
             
             <p>Enter your email address and we'll send you a link to reset your password.</p>
             <Input
-              label="Email"
               type="email"
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
               required
-            />
-            <Button type="submit" isLoading={isLoading}>
-              Send Reset Link
-            </Button>
-            <p className={styles.footer}>
-              Remember your password?{' '}
-              <Link to="/login">
-                <span className={styles.link}>Log in</span>
-              </Link>
-            </p>
+            />              
+            <div className={styles.buttonContainer}>
+              <Button
+                type="submit"
+                isLoading={isLoading}
+              >
+                Send Reset Link
+              </Button>
+            </div>
           </form>
         )}
       </div>
