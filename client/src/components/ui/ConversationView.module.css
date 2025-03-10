@@ -10,6 +10,8 @@
   align-items: center;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.08);
+  z-index: 100;
 }
 
 .activeConversationHeader {
@@ -31,7 +33,7 @@
 
 .messagesContainer {
   flex: 1;
-  padding: 1rem 2rem;
+  padding: 1rem 2.5rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -74,6 +76,8 @@
   background-color: var(--bg-input);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
+  box-shadow: 0px -2px 2px 0px rgba(0, 0, 0, 0.08);
+  z-index: 100;
 }
 
 .messageInput {
