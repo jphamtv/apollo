@@ -1,5 +1,6 @@
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigation } from '../../hooks/useNavigation';
+import ThemeToggle from './ThemeToggle';
 import styles from './ProfileMenu.module.css';
 
 interface ProfileMenuProps {
@@ -49,6 +50,9 @@ export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
         <button onClick={handleSettingsClick} className={styles.menuItem}>
           Settings
         </button>
+        <div className={styles.menuItem}>
+          <ThemeToggle />
+        </div>
         <button onClick={handleLogout} className={styles.menuItem}>
           Log Out
         </button>

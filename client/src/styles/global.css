@@ -46,14 +46,30 @@
 [data-theme='light'] {
   --bg-primary: #ffffff;
   --bg-secondary: #f8fafc;
+  --bg-sender: #f0f4f9;
+  --bg-recipient: #ebf3fe;
+  --bg-input: #f8fafc;
+  --bg-hover: #f0f4f9;
+  --bg-selected: #e0e7ff;
+  --bg-avatar: #e0e7ff;
   
   --text-primary: #0f172a;
   --text-secondary: #475569;
   
   --border-color: #e2e8f0;
+  --border-color-hover: #cbd5e1;
+  --border-color-focus: var(--accent-primary);
   
   --accent-primary: #4f46e5;
   --accent-primary-hover: #4338ca;
+
+  --btn-primary: var(--accent-primary);
+  --btn-primary-hover: var(--accent-primary-hover);
+  --btn-secondary: #e2e8f0;
+  --btn-secondary-hover: #cbd5e1;
+  
+  --error: #dc2626;
+  --success: #16a34a;
 
   --box-shadow: 
     0 0 0 1px rgba(14, 62, 124, 0.04),

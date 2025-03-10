@@ -2,6 +2,7 @@ import { NavigationProvider } from './contexts/NavigationProvider';
 import { MessageProvider } from './contexts/MessageProvider';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthProvider';
+import { ThemeProvider } from './contexts/ThemeProvider';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -11,10 +12,11 @@ import ResetPassword from './pages/ResetPassword';
 
 function App() {
   return (
-    <AuthProvider>
-      <NavigationProvider>
-        <MessageProvider>
-          <Routes>
+    <ThemeProvider>
+      <AuthProvider>
+        <NavigationProvider>
+          <MessageProvider>
+            <Routes>
             {/* Public routes */}
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
@@ -26,9 +28,10 @@ function App() {
               <Route path='/*' element={<MessagesLayout />} />
             </Route>
           </Routes>
-        </MessageProvider>
-      </NavigationProvider>
-    </AuthProvider>
+          </MessageProvider>
+        </NavigationProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 
