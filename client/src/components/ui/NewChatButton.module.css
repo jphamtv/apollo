@@ -18,5 +18,6 @@
 
 .button:hover {
   background-color: var(--btn-primary);
-  color: var(--text-primary);
+  color: #fff;
+  border: 1px solid var(--btn-primary);
 }

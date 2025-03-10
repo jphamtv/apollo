@@ -47,12 +47,12 @@ export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
       </div>
 
       <div className={styles.menuItems}>
-        <button onClick={handleSettingsClick} className={styles.menuItem}>
-          Settings
-        </button>
         <div className={styles.menuItem}>
           <ThemeToggle />
         </div>
+        <button onClick={handleSettingsClick} className={styles.menuItem}>
+          Settings
+        </button>
         <button onClick={handleLogout} className={styles.menuItem}>
           Log Out
         </button>

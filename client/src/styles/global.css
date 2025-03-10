@@ -1,29 +1,31 @@
 :root {
   /* Dark theme (default) */
   --bg-primary: #272829;
-  --bg-secondary: #1F2021;
+  --bg-secondary: #1f2021;
   --bg-sender: #202021;
-  --bg-recipient: #2E2F30;
-  --bg-input: #2E2F30;
-  --bg-hover: #1D1E1F;
+  --bg-recipient: #2e2f30;
+  --bg-input: #2e2f30;
+  --bg-hover: #1d1e1f;
   --bg-selected: #141415;
-  --bg-avatar: #363F46;
-  
+  --bg-avatar: #363f46;
+  --bg-messageContainer: #3A3C3D;
+
   --text-primary: #f8fafc;
   --text-secondary: #cbd5e1;
-  
-  --accent-primary: #0B89E9;
+
+  --accent-primary: #0b89e9;
   --accent-primary-hover: #097bd3;
 
+  --border-avatar: #5c5c5c;
   --border-color: #353639;
   --border-color-hover: #3f4043;
-  --border-color-focus: var(--accent-primary);  
+  --border-color-focus: var(--accent-primary);
 
   --btn-primary: var(--accent-primary);
   --btn-primary-hover: var(--accent-primary-hover);
   --btn-secondary: #242526;
   --btn-secondary-hover: #292a2b;
- 
+
   --error: #ef4444;
   --success: #22c55e;
 
@@ -33,55 +35,58 @@
   --border-radius-md: 0.75rem;
   --border-radius-lg: 1rem;
   --border-radius-xlg: 2rem;
-  --box-shadow: 
-    0 0 0 1px rgba(0, 0, 0, 0.04),
-    0 1px 1px -0.5px rgba(0, 0, 0, 0.04),
-    0 3px 3px -1.5px rgba(0, 0, 0, 0.04),
-    0 6px 6px -3px rgba(0, 0, 0, 0.04),
-    0 12px 12px -6px rgba(0, 0, 0, 0.04),
-    0 24px 24px -12px rgba(0, 0, 0, 0.04);
+  --box-shadow-header: 0px 2px 2px 0px rgba(0, 0, 0, 0.08);
+  --box-shadow-input: 0px -2px 2px 0px rgba(0, 0, 0, 0.08);
+  --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04),
+                0 1px 1px -0.5px rgba(0, 0, 0, 0.04), 
+                0 3px 3px -1.5px rgba(0, 0, 0, 0.04),
+                0 6px 6px -3px rgba(0, 0, 0, 0.04), 
+                0 12px 12px -6px rgba(0, 0, 0, 0.04),
+                0 24px 24px -12px rgba(0, 0, 0, 0.04);
 }
 
 /* Light theme */
-[data-theme='light'] {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-sender: #f0f4f9;
-  --bg-recipient: #ebf3fe;
-  --bg-input: #f8fafc;
+[data-theme="light"] {
+  --bg-primary: #e9eef2;
+  --bg-secondary: #dee4e9;
+  --bg-sender: #dbdfe3;
+  --bg-recipient: #f3f8fc;
+  --bg-input: #ffffff;
   --bg-hover: #f0f4f9;
-  --bg-selected: #e0e7ff;
-  --bg-avatar: #e0e7ff;
-  
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  
-  --border-color: #e2e8f0;
+  --bg-selected: #cfd4d9;
+  --bg-avatar: #eaeff3;
+  --bg-messageContainer: #fff;
+
+  --text-primary: #1d2024;
+  --text-secondary: #4f5967;
+
+  --border-avatar: #c6d0da;
+  --border-color: #d1d7de;
   --border-color-hover: #cbd5e1;
   --border-color-focus: var(--accent-primary);
-  
-  --accent-primary: #4f46e5;
-  --accent-primary-hover: #4338ca;
 
-  --btn-primary: var(--accent-primary);
-  --btn-primary-hover: var(--accent-primary-hover);
-  --btn-secondary: #e2e8f0;
-  --btn-secondary-hover: #cbd5e1;
-  
-  --error: #dc2626;
-  --success: #16a34a;
+  /* --accent-primary: #4f46e5;
+  --accent-primary-hover: #4338ca; */
 
-  --box-shadow: 
-    0 0 0 1px rgba(14, 62, 124, 0.04),
-    0 1px 1px -0.5px rgba(43, 52, 70, 0.04),
-    0 3px 3px -1.5px rgba(43, 52, 70, 0.04),
-    0 6px 6px -3px rgba(42, 51, 69, 0.04),
-    0 12px 12px -6px rgba(14, 63, 126, 0.04),
-    0 24px 24px -12px rgba(14, 63, 126, 0.04);
+  /* --btn-primary: var(--accent-primary);
+  --btn-primary-hover: var(--accent-primary-hover); */
+  --btn-secondary: #e7edf2;
+  --btn-secondary-hover: #edf3f7;
+
+  /* --error: #dc2626;
+  --success: #16a34a; */
+  --box-shadow-header: 0px 2px 2px 0px rgba(0, 0, 0, 0.02);
+  --box-shadow-input: 0px -2px 2px 0px rgba(0, 0, 0, 0.02);
+  --box-shadow: 0 0 0 1px rgba(14, 62, 124, 0.04),
+                0 1px 1px -0.5px rgba(43, 52, 70, 0.04),
+                0 3px 3px -1.5px rgba(43, 52, 70, 0.04),
+                0 6px 6px -3px rgba(42, 51, 69, 0.04),
+                0 12px 12px -6px rgba(14, 63, 126, 0.04),
+                0 24px 24px -12px rgba(14, 63, 126, 0.04);
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
   color: var(--text-primary);
   background-color: var(--bg-secondary);
@@ -90,7 +95,7 @@ body {
 
 /* Handle font smoothing */
 @media screen and (-webkit-min-device-pixel-ratio: 2),
-       screen and (min-resolution: 2dppx) {
+  screen and (min-resolution: 2dppx) {
   body {
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;

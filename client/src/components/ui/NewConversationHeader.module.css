@@ -21,7 +21,7 @@
   border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   max-height: 20rem;
-  max-width: 20rem;
+  max-width: 30rem;
   overflow-y: auto;
   z-index: 10;
   box-shadow: var(--box-shadow);
@@ -43,7 +43,7 @@
 }
 
 .userItem:hover {
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-selected);
 }
 
 .avatar {
@@ -58,7 +58,8 @@
   height: 2.5rem;
   border-radius: 50%;
   background-color: var(--bg-avatar);
-  color: white;
+  border: 1px solid var(--border-avatar);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;

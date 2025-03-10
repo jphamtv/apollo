@@ -17,7 +17,7 @@
   height: 3rem;
   border-radius: 50%;
   background-color: var(--bg-avatar);
-  border: 1px solid #5c5c5c;
+  border: 1px solid var(--border-avatar);
   display: flex;
   align-items: center;
   justify-content: center;

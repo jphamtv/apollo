@@ -14,11 +14,13 @@
 /* Variants */
 .primary {
   background-color: var(--btn-primary);
+  border: none;
   color: white;
 }
 
 .primary:hover {
   background-color: var(--btn-primary-hover);
+  border: none;
 }
 
 .secondary {
@@ -33,6 +35,8 @@
 
 .danger {
   background-color: var(--error);
+  color: #fff;
+  border: none;
 }
 
 .danger:hover {
@@ -63,6 +67,6 @@
 }
 
 .disabled {
-  opacity: 0.25;
+  opacity: 0.5;
   cursor: not-allowed;
 }

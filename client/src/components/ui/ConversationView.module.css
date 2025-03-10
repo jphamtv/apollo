@@ -10,7 +10,7 @@
   align-items: center;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
-  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--box-shadow-header);
   z-index: 100;
 }
 
@@ -29,6 +29,10 @@
 .actions {
   display: flex;
   gap: 1rem;
+}
+
+.actions button:hover {
+  color: var(--error);
 }
 
 .messagesContainer {
@@ -61,11 +65,12 @@
 
 .sent .messageContent {
   background-color: var(--bg-sender);
-  color: white;
+  color: var(--text-primary);
 }
 
 .received .messageContent {
   background-color: var(--bg-recipient);
+  color: var(--text-primary);
 }
 
 .inputContainer {
@@ -73,10 +78,10 @@
   gap: 0.5rem;
   padding: 1rem;
   margin: 0 1.5rem 1rem;
-  background-color: var(--bg-input);
+  background-color: var(--bg-messageContainer);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
-  box-shadow: 0px -2px 2px 0px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--box-shadow-input);
   z-index: 100;
 }
 
@@ -86,8 +91,8 @@
   border: none;
   border-radius: 0.5rem;
   resize: none;
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  color: var(--text-primary);
+  background-color: var(--bg-messageContainer);
   min-height: 2.5rem;
   max-height: 10rem;
   overflow-y: auto;
@@ -244,7 +249,7 @@
 }
 
 .landscape {
-  max-width: 424px !important; 
+  max-width: 424px !important;
 }
 
 .messageImage img {
@@ -278,10 +283,7 @@
 }
 
 .timestampText {
-  padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
   color: var(--text-secondary);
-  background-color: var(--bg-primary);
-  border-radius: 1rem;
   z-index: 1;
 }

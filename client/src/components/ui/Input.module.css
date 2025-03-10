@@ -14,7 +14,7 @@
   width: 100%;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-xsm);
+  border-radius: var(--border-radius-sm);
   background-color: var(--bg-input);
   color: var(--text-primary);
   margin-bottom: 0.75rem;
