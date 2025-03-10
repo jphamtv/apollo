@@ -21,12 +21,11 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.5rem;
 }
 
 .imageSection {
   display: flex;
-  align-items: center;
   gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
@@ -79,27 +78,10 @@
   color: var(--text-primary);
 }
 
-.removeImageButton {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 1.5rem;
-  height: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 2;
-}
-
 .imageControls {
   display: flex;
-  flex-direction: column;
   gap: 8px;
+  align-items: center;
 }
 
 .fileInput {
@@ -114,7 +96,8 @@
   border-width: 0;
 }
 
-.uploadButton {
+.uploadButton,
+.removeButton {
   background-color: var(--btn-secondary);
   color: var(--text-primary);
   padding: 8px 12px;
@@ -125,7 +108,8 @@
   transition: background-color 0.2s;
 }
 
-.uploadButton:hover {
+.uploadButton:hover,
+.removeButton:hover {
   background-color: var(--btn-secondary-hover);
 }
 
@@ -138,35 +122,12 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  background-color: none;
-  border: none;
-  color: var(--danger);
-  cursor: pointer;
-  padding: 4px 8px;
-  font-size: 14px;
-}
-
-.removeButton:hover {
-  text-decoration: underline;
+  color: var(--error);
 }
 
 .removeButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.imageControls {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-}
-
-.imageSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1rem;
 }
 
 .field {
@@ -193,8 +154,8 @@
   background-color: var(--bg-input);
   color: var(--text-primary);
   font-size: 0.875rem;
-  resize: vertical;
-  min-height: 80px;
+  resize: none;
+  min-height: 8rem;
   font-family: inherit;
   margin-bottom: 1rem;
 }
@@ -206,4 +167,13 @@
 .textarea:focus {
   outline: none;
   border-color: var(--border-color-focus);
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button {
+  min-width: 25%;
 }

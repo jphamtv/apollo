@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  height: 85vh;
+  height: 100vh;
   background-color: var(--bg-primary);
 }
 

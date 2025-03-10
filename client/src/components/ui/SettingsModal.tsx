@@ -161,9 +161,15 @@ export default function SettingsModal() {
             />
           </div>
 
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Saving...' : 'Update Profile'}
-          </Button>
+          <div className={styles.buttonContainer}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className={styles.button}
+            >
+              {isLoading ? 'Saving...' : 'Update Profile'}
+            </Button>
+          </div>
         </form>
       </div>
     </Modal>
