@@ -20,6 +20,7 @@
   --border-color: #353639;
   --border-color-hover: #3f4043;
   --border-color-focus: var(--accent-primary);
+  --border-messageContainer: #474a4c;
 
   --btn-primary: var(--accent-primary);
   --btn-primary-hover: var(--accent-primary-hover);
@@ -60,10 +61,11 @@
   --text-primary: #1d2024;
   --text-secondary: #4f5967;
 
-  --border-avatar: #c6d0da;
+  --border-avatar: #b6c1cb;
   --border-color: #d1d7de;
-  --border-color-hover: #cbd5e1;
+  --border-color-hover: #bfc9d5;
   --border-color-focus: var(--accent-primary);
+  --border-messageContainer: var(--border-color);
 
   /* --accent-primary: #4f46e5;
   --accent-primary-hover: #4338ca; */
