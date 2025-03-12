@@ -1,0 +1,28 @@
+.menuButton {
+  display: none;
+  padding: .25rem;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.menuButton:hover {
+  background-color: var(--bg-hover);
+  border-radius: var(--border-radius-sm);
+}
+
+/* Only show menu button on mobile */
+@media (max-width: 46.875rem) {
+  .menuButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 751px) {
+  .menuButton {
+    display: none; /* Hide menu button on desktop */
+  }
+}

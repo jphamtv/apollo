@@ -36,5 +36,6 @@
 }
 
 .closeButton:hover {
-  transform: rotate(90deg);
+  background-color: var(--bg-hover);
+  border-radius: var(--border-radius-sm);
 }

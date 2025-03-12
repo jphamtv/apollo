@@ -8,6 +8,7 @@ import Button from './Button';
 import ProfileInfo from './ProfileInfo';
 import Modal from './Modal';
 import { ArrowUp, Trash2, ChevronDown, Image, X } from 'lucide-react';
+import MenuButton from './MenuButton';
 import styles from './ConversationView.module.css';
 import { User } from '../../types/user';
 import { Conversation } from '../../types/conversation';
@@ -246,15 +247,24 @@ export default function ConversationView({ conversation }: Props) {
   return (
     <div className={styles.container}>
       <div className={styles.headerContainer}>
-          <div className={styles.label}>
-            To:
-          </div>
-          {isNewConversation ? (
+        {/* Mobile menu button */}
+        <div className={styles.mobileMenuContainer}>
+          <MenuButton />
+        </div>
+        
+        <div className={styles.label}>
+          To:
+        </div>
+        
+        {isNewConversation ? (
+          <div className={styles.headerContent}>
             <NewConversationHeader 
               onUserSelect={handleUserSelect} 
               disabled={isCreatingConversation || false}
             />
-          ) : (
+          </div>
+        ) : (
+          <div className={styles.headerContent}>
             <div className={styles.activeConversationHeader}>
               {conversation && (
                 <a ref={displayProfileLinkRef} onClick={handleInfoClick} className={styles.profileLink}>
@@ -272,7 +282,8 @@ export default function ConversationView({ conversation }: Props) {
                 </button>
               </div>
             </div>
-          )}
+          </div>
+        )}
       </div>
       
       {showProfileInfo && activeRecipient && (

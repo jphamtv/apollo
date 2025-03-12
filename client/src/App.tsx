@@ -3,6 +3,7 @@ import { MessageProvider } from './contexts/MessageProvider';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthProvider';
 import { ThemeProvider } from './contexts/ThemeProvider';
+import { SidebarProvider } from './contexts/SidebarProvider';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -15,20 +16,21 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <NavigationProvider>
-          <MessageProvider>
-            <Routes>
-            {/* Public routes */}
-            <Route path='/login' element={<Login />} />
-            <Route path='/register' element={<Register />} />
-            <Route path='/forgot-password' element={<ForgotPassword />} />
-            <Route path='/reset-password' element={<ResetPassword />} />
-
-            {/* Protected routes */}
-            <Route element={<ProtectedRoute />}>
-              <Route path='/*' element={<MessagesLayout />} />
-            </Route>
-          </Routes>
-          </MessageProvider>
+          <SidebarProvider>
+            <MessageProvider>
+              <Routes>
+                {/* Public routes */}
+                <Route path='/login' element={<Login />} />
+                <Route path='/register' element={<Register />} />
+                <Route path='/forgot-password' element={<ForgotPassword />} />
+                <Route path='/reset-password' element={<ResetPassword />} />
+                {/* Protected routes */}
+                <Route element={<ProtectedRoute />}>
+                  <Route path='/*' element={<MessagesLayout />} />
+                </Route>
+              </Routes>
+            </MessageProvider>
+          </SidebarProvider>
         </NavigationProvider>
       </AuthProvider>
     </ThemeProvider>

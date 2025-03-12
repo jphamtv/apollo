@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { NavigationContext } from '../contexts/navigationContext';
 import { Conversation } from '../types/conversation';
 import { MessageContext } from '../contexts/messageContext';
+import { SidebarContext } from '../contexts/sidebarContext';
 
 export function useNavigation() {
   const context = useContext(NavigationContext);
@@ -11,6 +12,7 @@ export function useNavigation() {
 
   const { state, dispatch } = context;
   const messageContext = useContext(MessageContext);
+  const sidebarContext = useContext(SidebarContext);
 
   return {
     view: state.view,
@@ -23,6 +25,10 @@ export function useNavigation() {
         messageContext.clearActiveConversation();
       }
       dispatch({ type: 'START_NEW_CONVERSATION' });
+      // Close mobile sidebar when starting a new conversation
+      if (sidebarContext) {
+        sidebarContext.closeMobileSidebar();
+      }
     },
 
     navigateToConversation: (conversation: Conversation) => {
@@ -30,10 +36,24 @@ export function useNavigation() {
         messageContext.setActiveConversation(conversation);
       }
       dispatch({ type: 'NAVIGATE_TO_CONVERSATION' });
+      // Close mobile sidebar when navigating to a conversation
+      if (sidebarContext) {
+        sidebarContext.closeMobileSidebar();
+      }
     },
 
-    navigateToMessages: () => dispatch({ type: 'NAVIGATE_TO_MESSAGES' }),
-    openSettings: () => dispatch({ type: 'OPEN_SETTINGS' }),
+    navigateToMessages: () => {
+      dispatch({ type: 'NAVIGATE_TO_MESSAGES' });
+      if (sidebarContext) {
+        sidebarContext.closeMobileSidebar();
+      }
+    },
+    openSettings: () => {
+      dispatch({ type: 'OPEN_SETTINGS' });
+      if (sidebarContext) {
+        sidebarContext.closeMobileSidebar();
+      }
+    },
     closeSettings: () => dispatch({ type: 'CLOSE_SETTINGS' }),
   };
 }

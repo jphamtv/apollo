@@ -154,7 +154,6 @@
   border-radius: var(--border-radius-sm);
   background-color: var(--bg-input);
   color: var(--text-primary);
-  /* font-size: 0.875rem; */
   resize: none;
   min-height: 10rem;
   font-family: inherit;

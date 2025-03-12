@@ -11,9 +11,22 @@
   height: 4rem;
   padding: 0 1rem;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.closeButton {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  padding: 0.5rem;
+}
+
+.closeButton:hover {
+  background-color: var(--bg-hover);
+  border-radius: var(--border-radius-sm);
 }
 
 .main {
@@ -27,4 +40,26 @@
   padding: 0 1rem;
   display: flex;
   align-items: center;
+}
+
+/* Mobile styles */
+@media (max-width: 46.875rem) {
+  .container {
+    position: fixed;
+    left: -20rem;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    box-shadow: none;
+  }
+
+  .open {
+    left: 0;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .closeButton {
+    display: block;
+  }
 }

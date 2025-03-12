@@ -7,3 +7,10 @@
 .main {
   flex: 1;
 }
+
+/* Mobile styles */
+@media (max-width: 46.875rem) {
+  .container {
+    position: relative;
+  }
+}
