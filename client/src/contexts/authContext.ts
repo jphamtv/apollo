@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { User, LoginCredentials } from "../types/user";
+import { User, LoginCredentials, RegisterCredentials } from "../types/user";
 
 export interface UpdateProfileData {
   displayName: string;
@@ -11,6 +11,7 @@ export interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
+  register: (credentials: RegisterCredentials) => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (data: UpdateProfileData) => Promise<void>;
   uploadProfileImage: (formData: FormData) => Promise<void>;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { AuthContext, AuthContextType } from "./authContext";
-import { User, AuthResponse, LoginCredentials } from "../types/user";
+import { User, AuthResponse, LoginCredentials, RegisterCredentials } from "../types/user";
 import { apiClient } from "../utils/apiClient";
 import type { UpdateProfileData } from "./authContext";
 
@@ -37,6 +37,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(response.user);
   };
 
+  const register = async (credentials: RegisterCredentials) => {
+    const response = await apiClient.post<AuthResponse>("/auth/register", credentials);
+    apiClient.setToken(response.token);
+    setUser(response.user);
+  };
+
   const logout = async () => {
     try {
       await apiClient.get("/auth/logout");
@@ -69,6 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     isLoading,
     login,
+    register,
     logout,
     updateProfile,
     uploadProfileImage,

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { RegisterCredentials } from "../types/user";
-import { apiClient } from "../utils/apiClient";
+import { useAuth } from "../hooks/useAuth";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import ErrorBox from "../components/ui/ErrorBox";
@@ -10,6 +10,7 @@ import { isApiError, hasValidationErrors } from "../types/error";
 import styles from './Register.module.css'
 
 export default function Register() {
+  const { register } = useAuth();
   const [credentials, setCredentials] = useState<RegisterCredentials>({
     username: "",
     email: "",
@@ -56,10 +57,8 @@ export default function Register() {
     // Continue with registration
     setIsLoading(true);
     try {
-      await apiClient.post("/auth/register", credentials);
-      navigate("/login", {
-        state: { message: "Account created successfully. Please login." },
-      });
+      await register(credentials);
+      navigate("/");
     } catch (error) {
       if (isApiError(error)) {
         if (error.data && hasValidationErrors(error.data)) {
