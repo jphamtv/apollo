@@ -26,7 +26,7 @@
 
 .newChatButton {
   margin-top: 1rem;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -35,9 +35,5 @@
 @media (max-width: 46.875rem) {
   .mobileNav {
     display: block;
-  }
-
-  .newChatButton {
-    display: flex;
   }
 }
