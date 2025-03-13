@@ -6,4 +6,38 @@
   justify-content: center;
   text-align: center;
   color: var(--text-secondary);
+  position: relative;
+}
+
+.mobileNav {
+  position: absolute;
+  top: 1rem;
+  left: 0.5rem;
+  display: none; 
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .25rem;
+  padding: 1rem;
+}
+
+.newChatButton {
+  margin-top: 1rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile styles */
+@media (max-width: 46.875rem) {
+  .mobileNav {
+    display: block;
+  }
+
+  .newChatButton {
+    display: flex;
+  }
 }

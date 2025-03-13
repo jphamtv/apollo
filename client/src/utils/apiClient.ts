@@ -13,7 +13,17 @@ export const apiClient = {
 
   setToken: (token: string) => localStorage.setItem("token", token),
 
-  removeToken: () => localStorage.removeItem("token"),
+  removeToken: () => {
+    // Create an array of keys to clear
+    const keysToRemove = [
+      "token",
+      "lastViewedConversationId",
+      // Add any other user-specific localStorage keys here
+    ];
+    
+    // Clear all keys
+    keysToRemove.forEach(key => localStorage.removeItem(key));
+  },
 
   request: async <T>(
     endpoint: string,

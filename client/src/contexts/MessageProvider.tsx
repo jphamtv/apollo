@@ -45,6 +45,33 @@ export function MessageProvider({ children }: MessageProviderProps) {
         type: 'LOAD_CONVERSATIONS_SUCCESS', 
         conversations: sortedConversations 
       });
+      
+      // If we have conversations and nothing is currently selected, select one
+      if (sortedConversations.length > 0 && !state.activeConversation) {
+        // Try to get the last viewed conversation ID from localStorage
+        const lastViewedId = localStorage.getItem('lastViewedConversationId');
+        
+        if (lastViewedId) {
+          // Check if the last viewed conversation still exists
+          const lastViewedConversation = sortedConversations.find(c => c.id === lastViewedId);
+          
+          if (lastViewedConversation) {
+            // Last viewed conversation found, select it
+            dispatch({
+              type: 'SET_ACTIVE_CONVERSATION',
+              conversation: lastViewedConversation
+            });
+            return;
+          }
+        }
+        
+        // Fallback: If no valid last viewed conversation, select the most recent one
+        dispatch({
+          type: 'SET_ACTIVE_CONVERSATION',
+          conversation: sortedConversations[0]
+        });
+      }
+      
     } catch (err) {
       console.error('Load conversations error:', err);
       dispatch({ 
@@ -52,7 +79,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
         error: 'Failed to load conversations' 
       });
     }
-  }, []);
+  }, [state.activeConversation]);
   
   // Load conversations when user logs in
   useEffect(() => {
@@ -206,13 +233,20 @@ export function MessageProvider({ children }: MessageProviderProps) {
   }, [findConversationByParticipant, dispatch]);
 
   const setActiveConversation = useCallback((conversation: Conversation) => {
+    // Save conversation id in localStorage to remember user's context between sessions
+    if (conversation?.id) {
+      localStorage.setItem('lastViewedConversationId', conversation.id);
+    }
+    
     dispatch({ 
       type: 'SET_ACTIVE_CONVERSATION', 
       conversation 
     });
   }, []);
 
+  // Clear localStorage and active conversation when user logs out
   const clearActiveConversation = useCallback(() => {
+    localStorage.removeItem('lastViewedConversationId');
     dispatch({ type: 'CLEAR_ACTIVE_CONVERSATION' });
   }, []);
 
@@ -239,6 +273,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
       });
 
       if (state.activeConversation?.id === conversationId) {
+        localStorage.removeItem('lastViewedConversationId');
         dispatch({ type: 'CLEAR_ACTIVE_CONVERSATION' });
       }
     } catch (err) {
