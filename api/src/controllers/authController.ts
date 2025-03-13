@@ -10,9 +10,9 @@ const validateUser = [
   body("username")
     .trim()
     .isLength({ min: 3, max: 20 })
-    .withMessage(`Username must between 3 and 20 characters`)
-    .matches(/^[a-z0-9 '-_]+$/i)
-    .withMessage("Username contains invalid characters"),
+    .withMessage(`Username must be between 3 and 20 characters`)
+    .matches(/^[a-z0-9_-]+$/i)
+    .withMessage("Username can only contain letters, numbers, underscores, and hyphens"),
   body("email").trim().isEmail().withMessage(`Invalid email`),
   body("password")
     .trim()
