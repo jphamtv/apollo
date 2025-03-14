@@ -33,7 +33,7 @@ const createTransporter = async () => {
 export const sendPasswordResetEmail = async (email: string, resetToken: string) => {
   try {
     const transporter = await createTransporter();
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+    const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
     console.log(`Reset URL: `, resetUrl)
 
     // Send mail with defined transport object
