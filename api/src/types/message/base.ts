@@ -11,14 +11,3 @@ export type MessageWithDetails = Prisma.MessageGetPayload<{
   },
 }>;
 
-export type MessageResponse = {
-  id: string;
-  text: string;
-  conversationId: string;
-  isRead: boolean;
-  createdAt: Date;
-  sender: {
-    id: string;
-    username: string;
-  };
-};

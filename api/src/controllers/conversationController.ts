@@ -12,6 +12,7 @@ import {
   markConversationAsRead,
 } from "../models/conversationModel";
 import { AuthRequest } from "../types";
+import { notifyMessageRead } from "../services/socketService";
 
 const validateGroupName = [
   body("name")
@@ -274,6 +275,10 @@ export const markAsRead = [
       
       // Mark all messages as read
       const updatedCount = await markConversationAsRead(conversationId, userId);
+
+      // Notify message was read
+      notifyMessageRead(conversationId, userId);
+
       res.json({ updated: updatedCount })
     } catch (err) {
       console.error("Mark conversation as read error:", err);

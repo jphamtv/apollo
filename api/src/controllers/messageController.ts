@@ -8,6 +8,7 @@ import {
 import { findById } from "../models/conversationModel";
 import { AuthRequest } from "../types";
 import { getFileUrl } from "../middleware/uploadMiddleware";
+import { notifyNewMessage } from "../services/socketService";
 
 export const getConversationMessages = [
   async (req: AuthRequest, res: Response) => {
@@ -77,6 +78,9 @@ export const createMessage = [
         conversation: { connect: { id: conversationId } },
         sender: { connect: { id: senderId } }
       });
+
+      // Notify about new message
+      notifyNewMessage(message, conversationId, senderId);
 
       res.json({ message });
     } catch (err) {
