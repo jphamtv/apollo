@@ -1,12 +1,13 @@
-import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigation } from '../../hooks/useNavigation';
 import { useMessaging } from '../../hooks/useMessaging';
+import { useSocket } from '../../hooks/useSocket';
 import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
 import ProfileInfo from './ProfileInfo';
 import Modal from './Modal';
+import TypingIndicators from './TypingIndicators';
 import { ArrowUp, Trash2, ChevronDown, Image, X } from 'lucide-react';
 import MenuButton from './MenuButton';
 import styles from './ConversationView.module.css';
@@ -23,6 +24,7 @@ export default function ConversationView({ conversation }: Props) {
   const { user } = useAuth();
   const { messages, sendMessage, sendMessageWithImage, loadMessages, clearMessages, createConversation, deleteConversation, markConversationAsRead, isCreatingConversation } = useMessaging();
   const { isNewConversation, navigateToConversation } = useNavigation();
+  const { joinConversationRoom, leaveConversationRoom, handleTyping, getTypingUsers } = useSocket();
 
   const [newMessage, setNewMessage] = useState('');
   const [showProfileInfo, setShowProfileInfo] = useState(false);
@@ -42,9 +44,34 @@ export default function ConversationView({ conversation }: Props) {
   const activeRecipient = conversation ?
     conversation.participants.find(p => p.userId !== user?.id)?.user : null;
   
+  // Get typing users for the current conversation
+  const typingUsers = conversation ? getTypingUsers(conversation.id) : [];
+
+  // Filter out current user from typing indicators
+  const otherTypingUsers = typingUsers.filter(id => id !== user?.id);
+
+  // Get display name of the first typing user
+  const typingUserName = otherTypingUsers.length > 0 && activeRecipient
+    ? activeRecipient.profile.displayName || activeRecipient.username
+    : '';
+  
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView();
   }, [messages]);
+
+  // Join conversation room when conversation changes
+  useEffect(() => {
+    if (conversation && !isNewConversation) {
+      joinConversationRoom(conversation.id);
+
+      // Clean up when component unmounts or conversation changes
+      return () => {
+        if (conversation) {
+          leaveConversationRoom(conversation.id);
+        }
+      };
+    }
+  }, [conversation, isNewConversation, joinConversationRoom, leaveConversationRoom]);
 
   useEffect(() => {
     if (isNewConversation) {
@@ -139,6 +166,12 @@ export default function ConversationView({ conversation }: Props) {
         await sendMessage(conversation.id, newMessage.trim());
       }
       setNewMessage('');
+
+      // Stop typing indicator when message is sent
+      if (conversation) {
+        handleTyping(conversation.id, false);
+      }
+
     } catch (error) {
       console.error('Failed to send message:', error);
     } finally {
@@ -150,6 +183,9 @@ export default function ConversationView({ conversation }: Props) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
+    } else {
+      // User is typing something other than Enter
+      handleTypingIndicator(true);
     }
   };
 
@@ -205,6 +241,12 @@ export default function ConversationView({ conversation }: Props) {
     }
   };
 
+  const handleTypingIndicator = (isTyping: boolean) => {
+    if (!conversation) return;
+
+    handleTyping(conversation.id, isTyping);
+  };
+
   const autoResizeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target;
     
@@ -216,6 +258,9 @@ export default function ConversationView({ conversation }: Props) {
     
     // Then set the height based on the new content (with a max height of 160px)
     textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
+
+    // Send typing indicator when the user is typing
+    handleTypingIndicator(textarea.value.trim().length > 0);
   };
 
   const shouldShowTimestamp = (currentMsg: Message, prevMsg: Message | null): boolean => {
@@ -361,6 +406,11 @@ export default function ConversationView({ conversation }: Props) {
             </React.Fragment>
           );
         })}
+
+        {otherTypingUsers.length > 0 && typingUserName && (
+          <TypingIndicators displayName={typingUserName} />
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -384,6 +434,7 @@ export default function ConversationView({ conversation }: Props) {
           value={newMessage}
           onChange={autoResizeTextArea}
           onKeyDown={handleKeyPress}
+          onPaste={() => handleTypingIndicator(true)}
           placeholder="Type a message..."
           className={styles.messageInput}
           rows={1}

@@ -10,6 +10,7 @@ export function useMessaging() {
 
   const { 
     state, 
+    dispatch,
     loadConversations,
     loadMessages,
     sendMessage,
@@ -38,6 +39,9 @@ export function useMessaging() {
     // Error states
     conversationsError: state.conversationsError,
     messagesError: state.messagesError,
+
+    // Include dispatch for advanced state manipulation
+    dispatch,
     
     // Methods
     loadConversations,

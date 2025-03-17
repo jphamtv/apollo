@@ -2,8 +2,8 @@
   /* Dark theme (default) */
   --bg-primary: #272829;
   --bg-secondary: #1f2021;
-  --bg-sender: #202021;
-  --bg-recipient: #2e2f30;
+  --bg-sender: #363739;
+  --bg-recipient: #1d1e1f;
   --bg-input: #2e2f30;
   --bg-hover: #1d1e1f;
   --bg-selected: #141415;
@@ -30,7 +30,6 @@
   --error: #ef4444;
   --success: #22c55e;
 
-  /* UI */
   --border-radius-xsm: 0.25rem;
   --border-radius-sm: 0.5rem;
   --border-radius-md: 0.75rem;
@@ -50,8 +49,8 @@
 [data-theme="light"] {
   --bg-primary: #e9eef2;
   --bg-secondary: #dee4e9;
-  --bg-sender: #dbdfe3;
-  --bg-recipient: #f3f8fc;
+  --bg-sender: #f5f9fc;
+  --bg-recipient: #d9dee4;
   --bg-input: #ffffff;
   --bg-hover: #f0f4f9;
   --bg-selected: #cfd4d9;
@@ -67,16 +66,9 @@
   --border-color-focus: var(--accent-primary);
   --border-messageContainer: var(--border-color);
 
-  /* --accent-primary: #4f46e5;
-  --accent-primary-hover: #4338ca; */
-
-  /* --btn-primary: var(--accent-primary);
-  --btn-primary-hover: var(--accent-primary-hover); */
   --btn-secondary: #e7edf2;
   --btn-secondary-hover: #edf3f7;
 
-  /* --error: #dc2626;
-  --success: #16a34a; */
   --box-shadow-header: 0px 2px 2px 0px rgba(0, 0, 0, 0.02);
   --box-shadow-input: 0px -2px 2px 0px rgba(0, 0, 0, 0.02);
   --box-shadow: 0 0 0 1px rgba(14, 62, 124, 0.04),

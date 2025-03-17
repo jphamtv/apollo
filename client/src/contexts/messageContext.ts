@@ -29,7 +29,7 @@ export const initialMessageState: MessageState = {
 };
 
 // Define all possible actions
-export type MessageAction = 
+export type MessageAction =
   | { type: 'LOAD_CONVERSATIONS_REQUEST' }
   | { type: 'LOAD_CONVERSATIONS_SUCCESS'; conversations: Conversation[] }
   | { type: 'LOAD_CONVERSATIONS_FAILURE'; error: string }
@@ -47,9 +47,38 @@ export type MessageAction =
   | { type: 'DELETE_CONVERSATION_REQUEST' }
   | { type: 'DELETE_CONVERSATION_SUCCESS'; conversation: Conversation }
   | { type: 'DELETE_CONVERSATION_FAILURE'; error: string }
-  | { type: 'MARK_CONVERSATION_READ_SUCCESS';  conversationId: string}
+  | { type: 'MARK_CONVERSATION_READ_SUCCESS'; conversationId: string }
   | { type: 'CLEAR_MESSAGES' }
-  | { type: 'RESET_STATE' };
+  | { type: 'RESET_STATE' }
+  | { type: 'RECEIVE_MESSAGE'; message: Message };
+  
+// Helper function to update conversations with a new message
+const updateConversationsWithMessage = (state: MessageState, message: Message, isReceived = false) => {
+  // Update conversations with the new message
+  const updatedConversations = state.conversations.map(conversation => {
+    if (conversation.id === message.conversationId) {
+      return {
+        ...conversation,
+        lastMessage: {
+          text: message.text,
+          createdAt: message.createdAt,
+          hasImage: !!message.imageUrl
+        },
+        // Set hasUnread flag only for received messages and if not active conversation
+        hasUnread: isReceived ? state.activeConversation?.id !== conversation.id : false,
+        messages: [...(conversation.messages || []), message]
+      };
+    }
+    return conversation;
+  });
+  
+  // Sort conversations to move the updated one to the top
+  return [...updatedConversations].sort((a, b) => {
+    const aTime = a.lastMessage?.createdAt || a.createdAt;
+    const bTime = b.lastMessage?.createdAt || b.createdAt;
+    return new Date(bTime).getTime() - new Date(aTime).getTime();
+  });
+};
 
 // Message reducer function
 export function messageReducer(state: MessageState, action: MessageAction): MessageState {
@@ -115,40 +144,17 @@ export function messageReducer(state: MessageState, action: MessageAction): Mess
       };
     case 'SEND_MESSAGE_SUCCESS': {
       const newMessage = action.message;
+      const sortedConversations = updateConversationsWithMessage(state, newMessage);      
       
-      // Update conversations with the new message
-      const updatedConversations = state.conversations.map(conversation => {
-        if (conversation.id === newMessage.conversationId) {
-          // Create a new conversation object with updated lastMessage
-          return {
-            ...conversation,
-            lastMessage: {
-              text: newMessage.text,
-              createdAt: newMessage.createdAt,
-              hasImage: !!newMessage.imageUrl
-            },
-            // Add message to the conversation's messages array if it exists
-            messages: [...(conversation.messages || []), newMessage]
-          };
-        }
-        return conversation;
-      });
-      
-      // Sort conversations to move the updated one to the top
-      const sortedConversations = [...updatedConversations].sort((a, b) => {
-        const aTime = a.lastMessage?.createdAt || a.createdAt;
-        const bTime = b.lastMessage?.createdAt || b.createdAt;
-        return new Date(bTime).getTime() - new Date(aTime).getTime();
-      });
-      
-      // Update active conversation if it's the one we sent the message to
+      // Update active conversation
       const updatedActiveConversation = state.activeConversation && 
         state.activeConversation.id === newMessage.conversationId
         ? {
             ...state.activeConversation,
             lastMessage: {
               text: newMessage.text,
-              createdAt: newMessage.createdAt
+              createdAt: newMessage.createdAt,
+              hasImage: !!newMessage.imageUrl
             },
             messages: [...(state.activeConversation.messages || []), newMessage]
           }
@@ -250,6 +256,36 @@ export function messageReducer(state: MessageState, action: MessageAction): Mess
     case 'RESET_STATE':
       return initialMessageState;
     
+    case 'RECEIVE_MESSAGE': {
+      const newMessage = action.message;
+      const sortedConversations = updateConversationsWithMessage(state, newMessage, true)
+      
+      // Update active conversation if it's the one we received the message in
+      const updatedActiveConversation = state.activeConversation && 
+        state.activeConversation.id === newMessage.conversationId
+        ? {
+            ...state.activeConversation,
+            lastMessage: {
+              text: newMessage.text,
+              createdAt: newMessage.createdAt,
+              hasImage: !!newMessage.imageUrl
+            },
+            messages: [...(state.activeConversation.messages || []), newMessage]
+          }
+        : state.activeConversation;
+        
+      // Only update messages array if this is for the active conversation
+      const updatedMessages = state.activeConversation?.id === newMessage.conversationId
+        ? [...state.messages, newMessage]
+        : state.messages;
+        
+      return {
+        ...state,
+        conversations: sortedConversations,
+        activeConversation: updatedActiveConversation,
+        messages: updatedMessages
+      };
+    }    
       
     default:
       return state;
