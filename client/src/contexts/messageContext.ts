@@ -65,7 +65,7 @@ const updateConversationsWithMessage = (state: MessageState, message: Message, i
           hasImage: !!message.imageUrl
         },
         // Set hasUnread flag only for received messages and if not active conversation
-        hasUnread: isReceived ? state.activeConversation?.id !== conversation.id : false,
+        hasUnread: isReceived ? state.activeConversation?.id !== conversation.id : conversation.hasUnread,
         messages: [...(conversation.messages || []), message]
       };
     }
