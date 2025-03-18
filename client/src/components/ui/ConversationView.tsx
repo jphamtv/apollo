@@ -55,9 +55,10 @@ export default function ConversationView({ conversation }: Props) {
     ? activeRecipient.profile.displayName || activeRecipient.username
     : '';
   
+  // Add typing indicators to dependencies to auto-scroll when they appear/disappear
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView();
-  }, [messages]);
+  }, [messages, otherTypingUsers]);
 
   // Join conversation room when conversation changes
   useEffect(() => {
