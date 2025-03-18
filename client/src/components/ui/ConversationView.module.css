@@ -50,7 +50,7 @@
 
 .messagesContainer {
   flex: 1;
-  padding: 1rem 3rem;
+  padding: 1rem 2.75rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -310,7 +310,11 @@
   }
 
   .messagesContainer {
-    padding: 1rem 1.5rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .wrapper {
+    max-width: 100%;
   }
 
   .inputContainer {
