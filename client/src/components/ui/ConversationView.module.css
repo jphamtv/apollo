@@ -239,14 +239,12 @@
   color: var(--text-secondary);
   cursor: pointer;
   padding: 0.5rem;
-  margin-top: 3px;
   border-radius: 50%;
   transition: background-color 0.2s;
 }
 
 .imageButton:hover {
   background-color: var(--bg-hover);
-  border-radius: var(--border-radius-sm);
 }
 
 .imageButton[aria-disabled="true"] {
@@ -254,10 +252,14 @@
   cursor: not-allowed;
 }
 
+.sendButton {
+  border-radius: 50%;
+}
+
 .inputActions {
   display: flex;
   align-items: flex-start;
-  gap: 4px;
+  gap: 0.5rem;
 }
 
 .messageImage {

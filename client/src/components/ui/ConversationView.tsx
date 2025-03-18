@@ -447,6 +447,7 @@ export default function ConversationView({ conversation }: Props) {
           </label>
 
           <Button 
+            className={styles.sendButton}
             onClick={handleSendMessage}
             disabled={
               isNewConversation ||
