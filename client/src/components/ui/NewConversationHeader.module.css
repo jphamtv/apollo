@@ -81,3 +81,10 @@
   font-size: 0.875rem;
   color: var(--text-secondary);
 }
+
+/* Mobile styles */
+@media (max-width: 31rem) {
+  .dropdown {
+    left: -70px;
+  }
+}
