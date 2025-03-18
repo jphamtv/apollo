@@ -242,6 +242,9 @@ export default function ConversationView({ conversation }: Props) {
     
     // Reset height to auto so scrollHeight is correctly calculated based on content
     textarea.style.height = 'auto';
+
+    // Force a reflow to ensure the browser recalculates dimensions
+    // textarea.scrollHeight;
     
     // Then set the height based on the new content (with a max height of 160px)
     textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
@@ -377,7 +380,6 @@ export default function ConversationView({ conversation }: Props) {
                   </div>
                 ) : (
                   <div className={styles.messageContent}>
-                    {message.text}
                     {message.imageUrl && (
                       <div className={`${styles.messageImage} ${landscapeImages.has(message.id) ? styles.landscape : ''}`}>
                         <img
@@ -387,6 +389,7 @@ export default function ConversationView({ conversation }: Props) {
                         />
                       </div>
                     )}
+                    {message.text}
                   </div>
                 )}
               </div>
