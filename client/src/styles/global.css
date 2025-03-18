@@ -34,7 +34,7 @@
   --border-radius-sm: 0.5rem;
   --border-radius-md: 0.75rem;
   --border-radius-lg: 1rem;
-  --border-radius-xlg: 2rem;
+  --border-radius-xlg: 1.5rem;
   --box-shadow-header: 0px 2px 2px 0px rgba(0, 0, 0, 0.08);
   --box-shadow-input: 0px -2px 2px 0px rgba(0, 0, 0, 0.08);
   --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04),

@@ -50,7 +50,7 @@
 
 .messagesContainer {
   flex: 1;
-  padding: 1rem 2.5rem;
+  padding: 1rem 3rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -93,7 +93,7 @@
   margin: 0 1.5rem 1rem;
   background-color: var(--bg-messageContainer);
   border: 1px solid var(--border-messageContainer);
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-xlg);
   box-shadow: var(--box-shadow-input);
   z-index: 100;
 }
@@ -310,7 +310,7 @@
   }
 
   .messagesContainer {
-    padding: 1rem;
+    padding: 1rem 1.5rem;
   }
 
   .inputContainer {
