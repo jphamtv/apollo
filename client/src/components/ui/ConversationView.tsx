@@ -24,7 +24,7 @@ export default function ConversationView({ conversation }: Props) {
   const { user } = useAuth();
   const { messages, sendMessage, sendMessageWithImage, loadMessages, clearMessages, createConversation, deleteConversation, markConversationAsRead, isCreatingConversation } = useMessaging();
   const { isNewConversation, navigateToConversation } = useNavigation();
-  const { joinConversationRoom, leaveConversationRoom, handleTyping, getTypingUsers } = useSocket();
+  const { handleTyping, getTypingUsers } = useSocket();
 
   const [newMessage, setNewMessage] = useState('');
   const [showProfileInfo, setShowProfileInfo] = useState(false);
@@ -59,20 +59,6 @@ export default function ConversationView({ conversation }: Props) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView();
   }, [messages, otherTypingUsers]);
-
-  // Join conversation room when conversation changes
-  useEffect(() => {
-    if (conversation && !isNewConversation) {
-      joinConversationRoom(conversation.id);
-
-      // Clean up when component unmounts or conversation changes
-      return () => {
-        if (conversation) {
-          leaveConversationRoom(conversation.id);
-        }
-      };
-    }
-  }, [conversation, isNewConversation, joinConversationRoom, leaveConversationRoom]);
 
   useEffect(() => {
     if (isNewConversation) {

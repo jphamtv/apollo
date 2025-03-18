@@ -67,13 +67,6 @@ export const joinConversation = (conversationId: string) => {
   }
 };
 
-// Leave a specific conversation room
-export const leaveConversation = (conversationId: string) => {
-  if (socket) {
-    socket.emit(EVENTS.CONVERSATION_LEAVE, conversationId);
-  }
-};
-
 // Send typing indicator start
 export const startTyping = (conversationId: string) => {
   if (socket) {

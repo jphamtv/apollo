@@ -1,6 +1,6 @@
 import { useContext, useCallback, useRef, useEffect } from 'react';
 import { SocketContext } from '../contexts/socketContext';
-import { joinConversation, leaveConversation, startTyping, stopTyping } from '../utils/socketClient';
+import { startTyping, stopTyping } from '../utils/socketClient';
 
 export const useSocket = () => {
   const context = useContext(SocketContext);
@@ -11,16 +11,6 @@ export const useSocket = () => {
   }
 
   const { socket, isConnected, typingUsers } = context;
-
-  // Join a conversation room
-  const joinConversationRoom = useCallback((conversationId: string) => {
-    joinConversation(conversationId);
-  }, []);
-
-  // Leave a conversation room
-  const leaveConversationRoom = useCallback((conversationId: string) => {
-    leaveConversation(conversationId);
-  }, []);
 
   // Get typing users for a specific conversation
   const getTypingUsers = useCallback((conversationId: string) => {
@@ -60,8 +50,6 @@ export const useSocket = () => {
   return {
     socket,
     isConnected,
-    joinConversationRoom,
-    leaveConversationRoom,
     getTypingUsers,
     handleTyping,
   };

@@ -3,7 +3,7 @@ import { Socket } from 'socket.io-client';
 import { SocketContext } from './socketContext';
 import { useAuth } from '../hooks/useAuth';
 import { apiClient } from '../utils/apiClient';
-import { EVENTS, initializeSocket, disconnectSocket } from '../utils/socketClient';
+import { EVENTS, initializeSocket, disconnectSocket, joinConversation } from '../utils/socketClient';
 import { useMessaging } from '../hooks/useMessaging';
 import { Message } from '../types/message';
 
@@ -13,7 +13,7 @@ interface SocketProviderProps {
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const { user } = useAuth();
-  const { activeConversation, markConversationAsRead, dispatch } = useMessaging();
+  const { activeConversation, markConversationAsRead, dispatch, conversations } = useMessaging();
 
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -41,6 +41,16 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       };
     }
   }, [user]);
+
+  // Join all conversation rooms when socket connects or conversations change
+  useEffect(() => {
+    if (socket && isConnected && conversations.length > 0) {
+      // Join all conversation rooms, not just the active one
+      conversations.forEach(conversation => {
+        joinConversation(conversation.id);
+      });
+    }
+  }, [socket, isConnected, conversations]);
 
   // Handle real-time message updates
   useEffect(() => {
