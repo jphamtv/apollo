@@ -30,11 +30,10 @@ export async function generateBotResponse(
           role: "developer",
           content: enhancedPrompt
         },
-        ...conversationHistory
-        // ...conversationHistory.map(msg => ({
-        //   role: msg.role as "user" | "assistant",
-        //   content: msg.content
-        // }))
+        ...conversationHistory as {
+          role: "user" | "assistant";
+          content: string;
+        }[]
       ],
       max_completion_tokens: maxTokens,
       temperature: 0.7,

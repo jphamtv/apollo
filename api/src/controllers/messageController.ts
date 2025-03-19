@@ -109,7 +109,7 @@ export const createMessage = [
           // Format history for OpenAI API
           const conversationHistory = messageHistory
             .map(msg => ({
-              role: msg.sender.id === botUser.id ? 'assisstant' : 'user',
+              role: msg.sender.id === botUser.id ? 'assistant' : 'user',
               content: msg.text
             }))
             .reverse();
@@ -119,9 +119,9 @@ export const createMessage = [
 
           try {
             // Generate bot response
-            const botResponse = generateBotResponse(
+            const botResponse = await generateBotResponse(
               botUser.botSystemPrompt || "You are a helpful assistant",
-              botUser.quotes || [],
+              botUser.botQuotes || [],
               conversationHistory
             );
     

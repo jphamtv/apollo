@@ -9,6 +9,7 @@ export type ConversationWithDetails = Prisma.ConversationGetPayload<{
           select: {
             id: true,
             username: true,
+            isBot: true,
           },
         },
       },

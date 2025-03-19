@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 const userSelect = {
   id: true,
   username: true,
+  isBot: true,
   profile: {
     select: {
       displayName: true,
