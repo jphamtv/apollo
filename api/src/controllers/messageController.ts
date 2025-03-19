@@ -138,8 +138,7 @@ export const createMessage = [
             // Notify about bot message
             notifyNewMessage(botMessage, conversationId, botUser.id);
     
-            // Return both messages
-            return res.json({ message: botMessage });            
+            return res.json({ message });            
           } catch (err) {
             console.error("Bot response error:", err);
             notifyTypingStopped(botUser.id, conversationId);

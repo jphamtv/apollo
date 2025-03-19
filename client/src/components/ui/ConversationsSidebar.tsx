@@ -72,6 +72,7 @@ export default function ConversationsSidebar() {
               }
               isActive={activeConversation?.id === conversation.id}
               hasUnread={conversation.hasUnread}
+              isBot={otherParticipant.isBot}
               onClick={() => handleConversationClick(conversation)}
             />
           );

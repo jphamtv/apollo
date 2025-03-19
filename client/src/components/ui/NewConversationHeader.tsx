@@ -3,6 +3,7 @@ import { useUserSearch } from '../../hooks/useUserSearch';
 import Input from './Input';
 import styles from './NewConversationHeader.module.css';
 import { User } from '../../types/user';
+import BotBadge from './BotBadge';
 
 interface Props {
   onUserSelect: (user: User) => void;
@@ -94,6 +95,7 @@ export default function NewConversationHeader({ onUserSelect, disabled = false }
                   <div className={styles.userInfo}>
                     <div className={styles.displayName}>
                       {user.profile.displayName || user.username}
+                      {user.isBot && <BotBadge />}
                     </div>
                   </div>
                 </div>
