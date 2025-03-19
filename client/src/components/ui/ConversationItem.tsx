@@ -1,4 +1,5 @@
 import styles from './ConversationItem.module.css';
+import BotBadge from './BotBadge';
 
 interface Props {
   displayName: string;
@@ -6,6 +7,7 @@ interface Props {
   timestamp: string;
   isActive?: boolean;
   hasUnread?: boolean;
+  isBot?: boolean;
   onClick?: () => void;
 }
 
@@ -15,6 +17,7 @@ export default function ConversationItem({
   timestamp,
   isActive = false,
   hasUnread = false,
+  isBot = false,
   onClick
 }: Props) {
   const initials = displayName
@@ -35,7 +38,10 @@ export default function ConversationItem({
       </div>
       <div className={styles.content}>
         <div className={styles.header}>
-          <span className={styles.name}>{displayName}</span>
+          <span className={styles.name}>
+            {displayName}
+            {isBot && <BotBadge />}
+          </span>
           <span className={styles.time}>{timestamp}</span>
         </div>
         <div className={styles.previewContainer}>

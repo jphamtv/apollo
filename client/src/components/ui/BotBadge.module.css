@@ -1,0 +1,9 @@
+.botBadge {
+  background-color: var(--accent-color);
+  color: var(--bg-color);
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  font-weight: 600;
+}

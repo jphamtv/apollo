@@ -5,6 +5,7 @@ export interface User {
   username: string;
   email: string;
   profile: UserProfile;
+  isBot?: boolean;
   createdAt: string;
   updatedAt: string;
 }
