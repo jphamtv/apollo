@@ -58,6 +58,17 @@ export const findById = async (id: string) => {
   });
 };
 
+export const findBotById = async (id: string) => {
+  return prisma.user.findUnique({
+    where: { id },
+    select: { 
+      id: true, 
+      botSystemPrompt: true,
+      botQuotes: true
+    }
+  });
+};
+
 export const findByUsername = async (username: string) => {
   return prisma.user.findUnique({
     where: { username },
