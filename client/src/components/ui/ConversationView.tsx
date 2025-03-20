@@ -8,6 +8,7 @@ import Button from './Button';
 import ProfileInfo from './ProfileInfo';
 import Modal from './Modal';
 import TypingIndicators from './TypingIndicators';
+import BotBadge from './BotBadge';
 import { ArrowUp, Trash2, ChevronDown, Image, X } from 'lucide-react';
 import MenuButton from './MenuButton';
 import styles from './ConversationView.module.css';
@@ -303,10 +304,11 @@ export default function ConversationView({ conversation }: Props) {
             <div className={styles.activeConversationHeader}>
               {conversation && (
                 <a ref={displayProfileLinkRef} onClick={handleInfoClick} className={styles.profileLink}>
-                  <div>
+                  <div className={styles.recipientName}>
                     {activeRecipient?.profile.displayName || 
                     activeRecipient?.username || 
                     'Unknown User'}
+                    {activeRecipient?.isBot && <BotBadge />}
                   </div>
                   <ChevronDown size={16} className={styles.chevronIcon} strokeWidth={1}/>
                 </a>

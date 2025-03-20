@@ -64,6 +64,7 @@ export const findByQuery = async (
     select: {
       id: true,
       username: true,
+      isBot: true,
       profile: {
         select: {
           displayName: true,

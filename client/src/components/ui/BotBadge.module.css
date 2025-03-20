@@ -2,8 +2,8 @@
   background-color: var(--accent-primary);
   color: #fff;
   font-size: 0.75rem;
-  padding: 2px 6px;
-  border-radius: var(--border-radius-lg);
-  margin-left: 6px;
+  padding: 2px 4px;
+  border-radius: var(--border-radius-xsm);
+  margin-left: 0.25rem;
   font-weight: 600;
 }

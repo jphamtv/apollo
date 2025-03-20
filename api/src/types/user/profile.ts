@@ -26,6 +26,7 @@ export type SearchUserResult = Prisma.UserGetPayload<{
   select: {
     id: true;
     username: true;
+    isBot: true;
     profile: {
       select: {
         displayName: true;

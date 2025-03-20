@@ -3,11 +3,11 @@ import { UserProfile } from './profile';
 export interface User {
   id: string;
   username: string;
-  email: string;
+  email?: string;
   profile: UserProfile;
   isBot?: boolean;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface AuthResponse {

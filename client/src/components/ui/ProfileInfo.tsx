@@ -4,7 +4,7 @@ import { UserIcon } from 'lucide-react';
 interface ProfileInfoProps {
   recipient: {
     username: string;
-    email: string;
+    email?: string;
     profile: {
       displayName?: string;
       imageUrl?: string;
