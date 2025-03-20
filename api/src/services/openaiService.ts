@@ -13,14 +13,14 @@ export async function generateBotResponse(
   maxTokens: number = 150
 ): Promise<string> {
   try {
-    // Select up to 5 random quotes if available
+    // Select up to 10 random quotes if available
     const selectedQuotes = quotes && quotes.length > 0
-      ? quotes.sort(() => 0.5 - Math.random()).slice(0, 5)
+      ? quotes.sort(() => 0.5 - Math.random()).slice(0, 10)
       : [];
     
     // Enhance system prompt with quotes
     const enhancedPrompt = selectedQuotes.length > 0
-      ? `${systemPrompt}\n\nOccasionally incorporate these quotes when appropriate:\n${selectedQuotes.join('\n')}`
+      ? `${systemPrompt}\n\nOccasionally incorporate these quotes (make sure to remove the quotations) when appropriate:\n${selectedQuotes.join('\n')}`
       : systemPrompt;
     
     const response = await openai.chat.completions.create({
