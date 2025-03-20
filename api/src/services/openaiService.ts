@@ -10,12 +10,12 @@ export async function generateBotResponse(
   systemPrompt: string,
   quotes: string[],
   conversationHistory: Array<{ role: string, content: string }>,
-  maxTokens: number = 1000
+  maxTokens: number = 150
 ): Promise<string> {
   try {
-    // Select up to 3 random quotes if available
+    // Select up to 5 random quotes if available
     const selectedQuotes = quotes && quotes.length > 0
-      ? quotes.sort(() => 0.5 - Math.random()).slice(0, 3)
+      ? quotes.sort(() => 0.5 - Math.random()).slice(0, 5)
       : [];
     
     // Enhance system prompt with quotes
@@ -35,8 +35,8 @@ export async function generateBotResponse(
           content: string;
         }[]
       ],
-      max_completion_tokens: maxTokens,
-      temperature: 0.7,
+      max_tokens: maxTokens,
+      temperature: 0.75,
     });
 
     return response.choices[0].message.content || "I'm having trouble connecting right now.";
