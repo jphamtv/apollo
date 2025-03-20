@@ -86,11 +86,14 @@ export const createMessage = [
       // Notify about new message via socket
       notifyNewMessage(message, conversationId, senderId);
 
-      // Check if this conversation has a bot participant
-      const conversation = await findById(conversationId);
+      // Send response immediately with user's message
+      res.json({ message });
 
+      // Get conversation for bot check
+      const conversation = await findById(conversationId);
       if (!conversation) {
-        return res.status(404).json({ message: 'Conversation not found' });
+        console.error('Conversation not found for bot processing')
+        return;
       }
 
       // Look for bot participant
@@ -99,56 +102,54 @@ export const createMessage = [
       );
 
       if (botParticipant && senderId !== botParticipant.user.id) {
-        // Get bot user with its system prompt
-        const botUser = await findBotById(botParticipant.user.id);
-
-        if (botUser) {
-          // Get conversation history (last 10 messages for context)
-          const messageHistory = await findByConversationId(conversationId);
-  
-          // Format history for OpenAI API
-          const conversationHistory = messageHistory
-            .map(msg => ({
-              role: msg.sender.id === botUser.id ? 'assistant' : 'user',
-              content: msg.text
-            }))
-            .reverse();
-          
-          // Send typing indicator via socket
-          notifyTypingStarted(botUser.id, conversationId);
-
+        (async () => {
+          const botId = botParticipant.user.id;
           try {
+            // Get bot user with its system prompt
+            const botUser = await findBotById(botId);
+            if (!botUser) return;
+  
+            // Get conversation history (last 10 messages for context)
+            const messageHistory = await findByConversationId(conversationId);
+    
+            // Format history for OpenAI API
+            const conversationHistory = messageHistory
+              .map(msg => ({
+                role: msg.sender.id === botUser.id ? 'assistant' : 'user',
+                content: msg.text
+              }))
+              .reverse();
+            
+            // Send typing indicator via socket
+            notifyTypingStarted(botId, conversationId);
+  
             // Generate bot response
             const botResponse = await generateBotResponse(
               botUser.botSystemPrompt || "You are a helpful assistant",
               botUser.botQuotes || [],
               conversationHistory
             );
-    
+      
             // Stop typing indicator
-            notifyTypingStopped(botUser.id, conversationId);
-    
+            notifyTypingStopped(botId, conversationId);
+      
             // Save bot message response as message
             const botMessage = await create({
               text: botResponse,
               conversation: { connect: { id: conversationId } },
               sender: { connect: { id: botUser.id } }
             });
-      
+        
             // Notify about bot message
-            notifyNewMessage(botMessage, conversationId, botUser.id);
-    
-            return res.json({ message });            
+            notifyNewMessage(botMessage, conversationId, botId);
           } catch (err) {
             console.error("Bot response error:", err);
-            notifyTypingStopped(botUser.id, conversationId);
-            return res.status(500).json({ message: "Error generating bot response" });
-          }    
-        }
+            // Cannot access botUser here as it's scoped to the try block
+            notifyTypingStopped(botId, conversationId);
+          }
+        })();
       }
 
-      // Standard response for non-bot conversations
-      res.json({ message });
     } catch (err) {
       console.error("Create message error: ", err);
       res.status(500).json({ message: "Error creating message" });
