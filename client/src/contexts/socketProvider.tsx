@@ -42,7 +42,11 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     }
   }, [user]);
 
-  // Join all conversation rooms when socket connects or conversations change
+  /**
+   * Automatically joins all conversation rooms when socket connects or conversations list changes
+   * This eliminates the need for individual components to manually join rooms
+   * and ensures all conversations receive real-time updates regardless of which one is active
+   */
   useEffect(() => {
     if (socket && isConnected && conversations.length > 0) {
       // Join all conversation rooms, not just the active one
@@ -52,7 +56,10 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     }
   }, [socket, isConnected, conversations]);
 
-  // Handle real-time message updates
+  /**
+   * Handles incoming real-time messages from all conversations
+   * Updates the message state and marks messages as read if in active conversation
+   */
   useEffect(() => {
     if (!socket) return;
 
@@ -72,7 +79,10 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     };
   }, [socket, dispatch, activeConversation, markConversationAsRead]);
 
-  // Handle typing indicators
+  /**
+   * Manages typing indicators from other users
+   * Tracks which users are typing in which conversations
+   */
   useEffect(() => {
     if (!socket) return;
 

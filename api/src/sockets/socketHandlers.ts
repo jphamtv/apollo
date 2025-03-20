@@ -1,6 +1,13 @@
 import { Server, Socket } from 'socket.io';
 import { EVENTS } from './socketEvents';
 
+/**
+ * Registers socket event handlers for a connected client
+ * Sets up handlers for joining/leaving rooms and typing indicators
+ * 
+ * @param io - Socket.io server instance
+ * @param socket - Individual client socket connection with user data attached
+ */
 export const registerHandlers = (io: Server, socket: Socket) => {
   const userId = socket.data.user.id;
 

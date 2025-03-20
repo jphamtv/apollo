@@ -1,5 +1,8 @@
 import { io, Socket } from 'socket.io-client';
 
+/**
+ * Socket.io event constants used for communication between client and server
+ */
 export const EVENTS = {
   CONNECT: 'connect',
   DISCONNECT: 'disconnect',
@@ -25,7 +28,12 @@ const getServerUrl = () => {
   return apiUrl.endsWith('/api') ? apiUrl.slice(0, -4) : apiUrl;
 }
 
-// Initialize socket connection with authentication
+/**
+ * Initializes a Socket.io connection with authentication token
+ * Sets up base event handlers and returns the socket instance
+ * @param token - JWT auth token
+ * @returns Socket instance
+ */
 export const initializeSocket = (token: string): Socket => {
   if (socket) {
     socket.disconnect();
@@ -57,31 +65,47 @@ export const initializeSocket = (token: string): Socket => {
   return socket;
 };
 
-// Get the current socket instance
+/**
+ * Returns the current socket instance
+ * @returns Current Socket instance or null if not connected
+ */
 export const getSocket = (): Socket | null => socket;
 
-// Join a specific conversation room
+/**
+ * Requests to join a specific conversation room on the server
+ * Called by socketProvider to join all user conversations at once
+ * @param conversationId - ID of conversation room to join
+ */
 export const joinConversation = (conversationId: string) => {
   if (socket) {
     socket.emit(EVENTS.CONVERSATION_JOIN, conversationId);
   }
 };
 
-// Send typing indicator start
+/**
+ * Emits typing started event to the server
+ * @param conversationId - ID of conversation where typing occurs
+ */
 export const startTyping = (conversationId: string) => {
   if (socket) {
     socket.emit(EVENTS.TYPING_START, conversationId);
   }
 };
 
-// Send typing indicator stop
+/**
+ * Emits typing stopped event to the server
+ * @param conversationId - ID of conversation where typing stopped
+ */
 export const stopTyping = (conversationId: string) => {
   if (socket) {
     socket.emit(EVENTS.TYPING_STOP, conversationId);
   }
 };
 
-// Disconnect socket
+/**
+ * Disconnects the socket and resets the socket variable
+ * Called when user logs out
+ */
 export const disconnectSocket = () => {
   if (socket) {
     socket.disconnect();
