@@ -120,6 +120,8 @@ export const createMessage = [
               }))
               .reverse();
             
+            await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 1500) + 750));
+            
             // Send typing indicator via socket
             notifyTypingStarted(botId, conversationId);
   
@@ -129,6 +131,8 @@ export const createMessage = [
               botUser.botQuotes || [],
               conversationHistory
             );
+
+            await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 3000) + 1500));
       
             // Stop typing indicator
             notifyTypingStopped(botId, conversationId);

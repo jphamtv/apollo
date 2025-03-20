@@ -13,9 +13,9 @@ export async function generateBotResponse(
   maxTokens: number = 150
 ): Promise<string> {
   try {
-    // Select up to 10 random quotes if available
+    // Select up to 15 random quotes if available
     const selectedQuotes = quotes && quotes.length > 0
-      ? quotes.sort(() => 0.5 - Math.random()).slice(0, 10)
+      ? quotes.sort(() => 0.5 - Math.random()).slice(0, 15)
       : [];
     
     // Enhance system prompt with quotes

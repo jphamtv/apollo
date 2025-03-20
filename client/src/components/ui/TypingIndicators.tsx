@@ -3,9 +3,10 @@ import styles from './TypingIndicators.module.css'
 
 interface TypingIndicatorProps {
   displayName: string;
+  isConversationWithBot: boolean;
 }
 
-export default function TypingIndicator({ displayName }: TypingIndicatorProps) {
+export default function TypingIndicator({ displayName, isConversationWithBot }: TypingIndicatorProps) {
   const [dots, setDots] = useState('...');
 
   // Animate the dots
@@ -24,7 +25,8 @@ export default function TypingIndicator({ displayName }: TypingIndicatorProps) {
   return (
     <div className={styles.container}>
       <div className={styles.text}>
-        {displayName} is typing<span className={styles.dots}>{dots}</span>
+        {displayName} is {isConversationWithBot ? "replying" : "typing"}
+        <span className={styles.dots}>{dots}</span>            
       </div>
     </div>
   );

@@ -403,7 +403,7 @@ export default function ConversationView({ conversation }: Props) {
         })}
 
         {otherTypingUsers.length > 0 && typingUserName && (
-          <TypingIndicators displayName={typingUserName} />
+          <TypingIndicators displayName={typingUserName} isConversationWithBot={isConversationWithBot} />
         )}
 
         <div ref={messagesEndRef} />
