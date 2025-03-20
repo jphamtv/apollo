@@ -56,6 +56,9 @@ export default function ConversationView({ conversation }: Props) {
     ? activeRecipient.profile.displayName || activeRecipient.username
     : '';
   
+  // Check to determine if the current conversation is with a bot
+  const isConversationWithBot = activeRecipient?.isBot || false;
+  
   // Add typing indicators to dependencies to auto-scroll when they appear/disappear
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView();
@@ -441,15 +444,22 @@ export default function ConversationView({ conversation }: Props) {
             accept='image/jpeg,image/png,image/gif,image/webp'
             className={styles.fileInput}
             onChange={handleImageChange}
-            disabled={isNewConversation || isCreatingConversation || isSendingImage}
+            disabled={isNewConversation || isCreatingConversation || isSendingImage || isConversationWithBot}
           />
-          <label
-            htmlFor="messageImage"
-            className={styles.imageButton}
-            aria-disabled={isNewConversation || isCreatingConversation || isSendingImage}
-          >
-            <Image size={24} strokeWidth={1} />
-          </label>
+
+          {isConversationWithBot ? (
+            <div className={styles.botImageNotice}>
+              <span>Sending images not available with bots</span>
+            </div>
+          ): (
+            <label
+              htmlFor="messageImage"
+              className={styles.imageButton}
+              aria-disabled={isNewConversation || isCreatingConversation || isSendingImage}
+            >
+              <Image size={24} strokeWidth={1} />
+            </label>              
+          )}
 
           <Button 
             className={styles.sendButton}

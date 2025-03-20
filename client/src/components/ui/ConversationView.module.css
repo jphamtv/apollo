@@ -264,7 +264,7 @@
 
 .inputActions {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 0.5rem;
 }
@@ -314,6 +314,21 @@
   font-size: 0.75rem;
   color: var(--text-secondary);
   z-index: 1;
+}
+
+.botImageNotice {
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-style: italic;
+  font-weight: 300;
+}
+
+.botImageNotice span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Mobile styles */
