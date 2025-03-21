@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function ProfileButton({ user }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const initial = user.profile.displayName?.charAt(0).toUpperCase() || 
                  user.username.charAt(0).toUpperCase();

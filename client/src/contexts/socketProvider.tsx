@@ -16,7 +16,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const { activeConversation, markConversationAsRead, dispatch, conversations } = useMessaging();
 
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
   const [typingUsers, setTypingUsers] = useState<Record<string, string[]>>({});
 
   // Initialize socket connection when user is authenticated

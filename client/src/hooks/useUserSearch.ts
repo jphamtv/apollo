@@ -6,7 +6,7 @@ import { User } from '../types/user';
 
 export function useUserSearch() {
   const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const timeoutRef = useRef<number | undefined>(undefined);
 

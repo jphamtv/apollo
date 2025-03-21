@@ -11,8 +11,8 @@ interface Props {
 }
 
 export default function NewConversationHeader({ onUserSelect, disabled = false }: Props) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const { users, isLoading, searchUsers } = useUserSearch();
   const dropdownRef = useRef<HTMLDivElement>(null);
 

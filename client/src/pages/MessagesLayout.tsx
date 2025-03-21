@@ -11,8 +11,8 @@ import styles from './MessagesLayout.module.css';
 export default function MessagesLayout() {
   const { loadConversations } = useMessaging();
   const { activeConversation, isNewConversation } = useNavigation();
-  const [dateRefresh, setDateRefresh] = useState(new Date());
-  const [, setForceUpdate] = useState(0);
+  const [dateRefresh, setDateRefresh] = useState<Date>(new Date());
+  const [, setForceUpdate] = useState<number>(0);
 
   useEffect(() => {
     loadConversations();

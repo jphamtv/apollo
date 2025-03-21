@@ -11,9 +11,9 @@ import styles from './Login.module.css'
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
-  const [values, setValues] = useState({
+  const [values, setValues] = useState <{ email: string, password: string }>({
     email: "",
     password: "",
   });

@@ -28,13 +28,13 @@ export default function ConversationView({ conversation }: Props) {
   const { isNewConversation, navigateToConversation } = useNavigation();
   const { handleTyping, getTypingUsers } = useSocket();
 
-  const [newMessage, setNewMessage] = useState('');
-  const [showProfileInfo, setShowProfileInfo] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [newMessage, setNewMessage] = useState<string>('');
+  const [showProfileInfo, setShowProfileInfo] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isSendingImage, setIsSendingImage] = useState(false);
-  const [profileInfoPosition, setProfileInfoPosition] = useState({ top: 0, left: 0 });
+  const [isSendingImage, setIsSendingImage] = useState<boolean>(false);
+  const [profileInfoPosition, setProfileInfoPosition] = useState<{ top: number, left: number }>({ top: 0, left: 0 });
   const [landscapeImages, setLandscapeImages] = useState<Set<string>>(new Set());
   
   const messagesEndRef = useRef<HTMLDivElement>(null);

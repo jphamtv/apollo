@@ -7,7 +7,7 @@ interface TypingIndicatorProps {
 }
 
 export default function TypingIndicator({ displayName, isConversationWithBot }: TypingIndicatorProps) {
-  const [dots, setDots] = useState('...');
+  const [dots, setDots] = useState<string>('...');
 
   // Animate the dots
   useEffect(() => {

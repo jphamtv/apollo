@@ -11,11 +11,11 @@ import { User as UserIcon, Trash2Icon } from 'lucide-react';
 export default function SettingsModal() {
   const { user, updateProfile, uploadProfileImage, deleteProfileImage } = useAuth();
   const { isSettingsOpen, closeSettings } = useNavigation();
-  const [displayName, setDisplayName] = useState(user?.profile.displayName || '');
-  const [bio, setBio] = useState(user?.profile.bio || '');
-  const [isLoading, setIsLoading] = useState(false);
+  const [displayName, setDisplayName] = useState<string>(user?.profile.displayName || '');
+  const [bio, setBio] = useState<string>(user?.profile.bio || '');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string | null>(user?.profile.imageUrl || null);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
