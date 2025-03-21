@@ -6,7 +6,7 @@ import {
   deleteById,
   findByConversationId,
 } from "../models/messageModel";
-import { findById } from "../models/conversationModel";
+import { findById, isParticipant } from "../models/conversationModel";
 import { findBotById } from "../models/authModel";
 import { AuthRequest } from "../types";
 import { getFileUrl } from "../middleware/uploadMiddleware";
@@ -76,6 +76,14 @@ export const createMessage = [
         imageUrl = getFileUrl(req.file.filename, 'message');
       }
 
+      const isUserParticipant = await isParticipant(senderId, conversationId);
+      if (!isUserParticipant) {
+        return res.status(403).json({
+        error: "FORBIDDEN",
+        message: "Not authorized to send messages to this conversation"
+        });
+      }
+
       const message = await create({
         text: text || "", 
         imageUrl,
@@ -104,6 +112,7 @@ export const createMessage = [
       if (botParticipant && senderId !== botParticipant.user.id) {
         (async () => {
           const botId = botParticipant.user.id;
+          let typingStarted = false;
           try {
             // Get bot user with its system prompt
             const botUser = await findBotById(botId);
@@ -124,6 +133,7 @@ export const createMessage = [
             
             // Send typing indicator via socket
             notifyTypingStarted(botId, conversationId);
+            typingStarted = true;
   
             // Generate bot response
             const botResponse = await generateBotResponse(
@@ -148,8 +158,11 @@ export const createMessage = [
             notifyNewMessage(botMessage, conversationId, botId);
           } catch (err) {
             console.error("Bot response error:", err);
-            // Cannot access botUser here as it's scoped to the try block
-            notifyTypingStopped(botId, conversationId);
+          } finally {
+            // Always stop typing if it was started
+            if (typingStarted) {
+              notifyTypingStopped(botId, conversationId);
+            }            
           }
         })();
       }

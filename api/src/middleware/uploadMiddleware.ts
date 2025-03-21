@@ -42,7 +42,7 @@ const imageFilter = (req: Express.Request, file: Express.Multer.File, callback: 
 export const uploadUserProfileImage = multer({
   storage: profileStorage,
   limits: {
-    fileSize: 2 * 1024 * 1024 // 2MB max
+    fileSize: 5 * 1024 * 1024 // 5MB max
   },
   fileFilter: imageFilter,
 }).single('image');
@@ -50,7 +50,7 @@ export const uploadUserProfileImage = multer({
 export const uploadMessageImage = multer({
   storage: messageStorage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB max
+    fileSize: 10 * 1024 * 1024 // 10MB max
   },
   fileFilter: imageFilter,
 }).single('image');
