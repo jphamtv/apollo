@@ -36,6 +36,7 @@ export default function ConversationView({ conversation }: Props) {
   const [isSendingImage, setIsSendingImage] = useState<boolean>(false);
   const [profileInfoPosition, setProfileInfoPosition] = useState<{ top: number, left: number }>({ top: 0, left: 0 });
   const [landscapeImages, setLandscapeImages] = useState<Set<string>>(new Set());
+  const [sendError, setSendError] = useState<string | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const profileInfoRef = useRef<HTMLDivElement>(null);
@@ -116,6 +117,17 @@ export default function ConversationView({ conversation }: Props) {
     }
   }, [conversation, isNewConversation, markConversationAsRead, loadMessages]);
 
+  // Automatically clear errors after 5 seconds
+  useEffect(() => {
+    if (sendError) {
+      const timer = setTimeout(() => {
+        setSendError(null);
+      }, 5000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [sendError]);
+
   const handleUserSelect = async (selected: User) => {
     if (isCreatingConversation) return;
     
@@ -132,34 +144,49 @@ export default function ConversationView({ conversation }: Props) {
       return;
     }
 
+    setSendError(null);
+
+    // Store the current message text to preserve it in case of error
+    const messageText = newMessage.trim();
+
     try {
       if (imageFile) {
         setIsSendingImage(true);
         const formData = new FormData();
         formData.append('image', imageFile);
-        if (newMessage.trim()) {
-          formData.append('text', newMessage.trim());
+        if (messageText) {
+          formData.append('text', messageText);
         }
         await sendMessageWithImage(conversation.id, formData);
 
-        // Clear image preview and file after sending
+        // Only clear these on success
         setImageFile(null);
         setImagePreview(null);
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
+
+        // Only clear text on success
+        setNewMessage('');
       } else {
         await sendMessage(conversation.id, newMessage.trim());
+
+        // Only clear text on success
+        setNewMessage('');
       }
-      setNewMessage('');
 
       // Stop typing indicator when message is sent
       if (conversation) {
         handleTyping(conversation.id, false);
       }
 
-    } catch (error) {
-      logger.error('Failed to send message:', error);
+    } catch (err) {
+      logger.error('Failed to send message:', err);
+
+      // Set user-friendly error message
+      const errorMessage = err instanceof Error ?
+        err.message : 'Failed to send message. Please try again.';
+      setSendError(errorMessage);
     } finally {
       setIsSendingImage(false);
     }
@@ -404,6 +431,19 @@ export default function ConversationView({ conversation }: Props) {
         <div ref={messagesEndRef} />
       </div>
 
+      {sendError && (
+        <div className={styles.errorMessage}>
+          <p>{sendError}</p>
+          <button 
+            className={styles.dismissButton}
+            onClick={() => setSendError(null)}
+            aria-label="Dismiss error"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
+
       <div className={styles.inputContainer}>
         {imagePreview && (
           <div className={styles.imagePreviewContainer}>
@@ -471,7 +511,6 @@ export default function ConversationView({ conversation }: Props) {
           </Button>
         </div>
       </div>
-
 
       {showDeleteModal && conversation && (
         <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} hideCloseButton>

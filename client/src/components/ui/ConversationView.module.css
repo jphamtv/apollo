@@ -331,6 +331,35 @@
   text-overflow: ellipsis;
 }
 
+.errorMessage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(239, 68, 68, 0.08);
+  border: 1px solid var(--error);
+  color: var(--error);
+  padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+  margin: 1rem auto;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.875rem;
+  width: 21rem;
+}
+
+.errorMessage p {
+  margin: 0;
+}
+
+.dismissButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--error);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
 /* Mobile styles */
 @media (max-width: 46.875rem) {
   .headerContainer {
