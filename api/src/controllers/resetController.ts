@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import { createResetToken, resetPassword } from '../models/authModel';
 import { sendPasswordResetEmail } from '../services/emailService';
+import { logger } from '../utils/logger';
 
 export const validateResetRequest = [
   body('email')
@@ -39,7 +40,7 @@ export const requestReset: RequestHandler = async (req, res): Promise<void> => {
       try {
         const emailResult = await sendPasswordResetEmail(email, resetToken);
       } catch (emailError) {
-        console.error('Error sending reset email:', emailError);
+        logger.error(`Error sending reset email: ${emailError}`);
       }
     }
 
@@ -48,7 +49,7 @@ export const requestReset: RequestHandler = async (req, res): Promise<void> => {
       message: 'If an account exists with this email, a password reset link will be sent.' 
     });
   } catch (error) {
-    console.error('Password reset request error:', error);
+    logger.error(`Password reset request error: ${error}`);
     res.status(500).json({ message: 'Error processing password reset request' });
   }
 };
@@ -75,7 +76,7 @@ export const confirmReset: RequestHandler = async (req, res): Promise<void> => {
 
     res.json({ message: 'Password has been reset successfully' });
   } catch (error) {
-    console.error('Password reset confirmation error:', error);
+    logger.error(`Password reset confirmation error: ${error}`);
     res.status(500).json({ message: 'Error resetting password' });
   }
 };

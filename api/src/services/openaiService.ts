@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
+import { logger } from "../utils/logger";
 dotenv.config();
 
 const openai = new OpenAI({
@@ -44,7 +45,7 @@ export async function generateBotResponse(
 
     return response.choices[0].message.content || "I'm having trouble connecting right now.";
   } catch (err) {
-    console.error('Error generating bot response: ', err);
+    logger.error(`Error generating bot response: ${err}`);
     return "I'm unable to respond right now. Please try again later."
   }
 }

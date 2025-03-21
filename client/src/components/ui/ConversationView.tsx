@@ -16,6 +16,7 @@ import { User } from '../../types/user';
 import { Conversation } from '../../types/conversation';
 import { Message } from '../../types/message';
 import { formatMessageFeedTimestamp } from '../../utils/formatTime';
+import { logger } from '../../utils/logger';
 
 interface Props {
   conversation?: Conversation;
@@ -128,7 +129,7 @@ export default function ConversationView({ conversation }: Props) {
       const newConversation = await createConversation(selected.id);
       navigateToConversation(newConversation);
     } catch (error) {
-      console.error('Failed to create conversation:', error);
+      logger.error('Failed to create conversation:', error);
     }
   };
 
@@ -164,7 +165,7 @@ export default function ConversationView({ conversation }: Props) {
       }
 
     } catch (error) {
-      console.error('Failed to send message:', error);
+      logger.error('Failed to send message:', error);
     } finally {
       setIsSendingImage(false);
     }
@@ -228,7 +229,7 @@ export default function ConversationView({ conversation }: Props) {
       await deleteConversation(conversation.id);
       setShowDeleteModal(false);
     } catch (err) {
-      console.error('Failed to delete conversation: ', err);
+      logger.error('Failed to delete conversation:', err);
     }
   };
 

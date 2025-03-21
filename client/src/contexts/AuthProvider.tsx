@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { AuthContext, AuthContextType } from "./authContext";
 import { User, AuthResponse, LoginCredentials, RegisterCredentials } from "../types/user";
 import { apiClient } from "../utils/apiClient";
+import { logger } from "../utils/logger";
 import type { UpdateProfileData } from "./authContext";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -22,7 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (err) {
         apiClient.removeToken();
         setUser(null);
-        console.error('Initialize Auth error: ', err);
+        logger.error('Initialize Auth error:', err);
       } finally {
         setIsLoading(false);
       }

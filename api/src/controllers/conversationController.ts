@@ -13,6 +13,7 @@ import {
 } from "../models/conversationModel";
 import { AuthRequest } from "../types";
 import { notifyMessageRead } from "../services/socketService";
+import { logger } from "../utils/logger";
 
 const validateGroupName = [
   body("name")
@@ -51,7 +52,7 @@ export const createConversation = [
       const conversation = await create(data);
       res.json({ conversation });
     } catch (err) {
-      console.error("Create conversation error: ", err);
+      logger.error(`Create conversation error: ${err}`);
       res.status(500).json({ message: "Error creating conversation" });
     }
   }
@@ -71,7 +72,7 @@ export const getUserConversations = [
 
       res.json(conversations);
     } catch (err) {
-      console.error("Fetching error: ", err);
+      logger.error(`Fetching error: ${err}`);
       res.status(500).json({
         error: "SERVER_ERROR",
         message: "Error getting user's conversations"
@@ -101,7 +102,7 @@ export const getConversationById = [
 
       res.json(conversation);
     } catch (err) {
-      console.error("Fetching error: ", err);
+      logger.error(`Fetching error: ${err}`);
       res.status(500).json({
         error: "SERVER_ERROR",
         message: "Error getting conversation"
@@ -142,7 +143,7 @@ export const updateGroupName = [
       const updatedConversation = await update(conversationId, data);
       res.json(updatedConversation);
     } catch (err) {
-      console.error("Update error: ", err);
+      logger.error(`Update error: ${err}`);
       res.status(500).json({
         error: "SERVER_ERROR",
         message: "Error updating conversation name"
@@ -182,7 +183,7 @@ export const addParticipantToGroup = [
       const updatedConversation = await addParticipant(conversationId, participantId);
       res.json(updatedConversation);
     } catch (err) {
-      console.error("Add participant error: ", err);
+      logger.error(`Add participant error: ${err}`);
       res.status(500).json({
         error: "SERVER_ERROR",
         message: "Error adding participant to conversation"
@@ -216,7 +217,7 @@ export const removeParticipantFromGroup = [
       const updatedConversation = await removeParticipant(conversationId, participantId);
       res.json(updatedConversation);
     } catch (err) {
-      console.error("Remove participant error: ", err);
+      logger.error(`Remove participant error: ${err}`);
       res.status(500).json({
         error: "SERVER_ERROR",
         message: "Error removing participant from conversation"
@@ -244,7 +245,7 @@ export const deleteConversation = [
       await deleteById(req.params.id);
       res.json({ message: "Conversation deleted successfully" });
     } catch (err) {
-      console.error("Delete error: ", err);
+      logger.error(`Delete error: ${err}`);
       res.status(500).json({
         error: "SERVER_ERROR",
         message: "Error deleting conversation"
@@ -281,7 +282,7 @@ export const markAsRead = [
 
       res.json({ updated: updatedCount })
     } catch (err) {
-      console.error("Mark conversation as read error:", err);
+      logger.error(`Mark conversation as read error: ${err}`);
       res.status(500).json({ message: "Error marking conversation as read" });
     }
   }

@@ -7,6 +7,7 @@ import Input from "../components/ui/Input";
 import ErrorBox from "../components/ui/ErrorBox";
 import { validateForm } from "../utils/validation";
 import { isApiError, hasValidationErrors } from "../types/error";
+import { logger } from "../utils/logger";
 import styles from './Register.module.css'
 
 export default function Register() {
@@ -77,7 +78,7 @@ export default function Register() {
         // Handle unknown errors
         setErrors(["An unexpected error occurred. Please try again."]);
       }
-      console.error('Register error: ', error);
+      logger.error('Register error:', error);
     } finally {
       setIsLoading(false);
     }

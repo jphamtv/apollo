@@ -1,6 +1,7 @@
 // hooks/useUserSearch.ts
 import { useState, useRef, useCallback } from 'react';
 import { apiClient } from '../utils/apiClient';
+import { logger } from '../utils/logger';
 import { User } from '../types/user';
 
 export function useUserSearch() {
@@ -29,7 +30,7 @@ export function useUserSearch() {
         setUsers(response.users);
       } catch (err) {
         setError('Failed to search users');
-        console.error('User search error:', err);
+        logger.error('User search error:', err);
       } finally {
         setIsLoading(false);
       }

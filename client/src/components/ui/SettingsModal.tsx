@@ -4,6 +4,7 @@ import { useNavigation } from '../../hooks/useNavigation';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Modal from './Modal';
+import { logger } from '../../utils/logger';
 import styles from './SettingsModal.module.css';
 import { User as UserIcon, Trash2Icon } from 'lucide-react';
 
@@ -28,7 +29,7 @@ export default function SettingsModal() {
       });
       closeSettings();
     } catch (error) {
-      console.error('Failed to update profile:', error);
+      logger.error('Failed to update profile:', error);
     } finally {
       setIsLoading(false);
     }
@@ -56,7 +57,7 @@ export default function SettingsModal() {
     try {
       await uploadProfileImage(formData);
     } catch (err) {
-      console.error('Failed to upload image: ', err);
+      logger.error('Failed to upload image:', err);
       setImagePreview(user?.profile.imageUrl || null); // Revert preview on error      
     } finally {
       setIsUploading(false);
@@ -75,7 +76,7 @@ export default function SettingsModal() {
         fileInputRef.current.value = '';
       }
     } catch (err) {
-      console.error('Failed to remove image: ', err);
+      logger.error('Failed to remove image:', err);
     } finally {
       setIsUploading(false);
     }

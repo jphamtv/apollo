@@ -11,6 +11,7 @@ import { findBotById } from "../models/authModel";
 import { AuthRequest } from "../types";
 import { getFileUrl } from "../middleware/uploadMiddleware";
 import { notifyNewMessage } from "../services/socketService";
+import { logger } from "../utils/logger";
 import { generateBotResponse } from "../services/openaiService";
 import { notifyTypingStarted, notifyTypingStopped } from "../services/socketService";
 
@@ -37,7 +38,7 @@ export const getConversationMessages = [
 
       res.json({ messages: conversation.messages });
     } catch (err) {
-      console.error('Get messages error:', err);
+      logger.error(`Get messages error: ${err}`);
       res.status(500).json({ message: 'Error getting messages' });
     }
   }
@@ -100,7 +101,7 @@ export const createMessage = [
       // Get conversation for bot check
       const conversation = await findById(conversationId);
       if (!conversation) {
-        console.error('Conversation not found for bot processing')
+        logger.error('Conversation not found for bot processing')
         return;
       }
 
@@ -157,7 +158,7 @@ export const createMessage = [
             // Notify about bot message
             notifyNewMessage(botMessage, conversationId, botId);
           } catch (err) {
-            console.error("Bot response error:", err);
+            logger.error(`Bot response error: ${err}`);
           } finally {
             // Always stop typing if it was started
             if (typingStarted) {
@@ -168,7 +169,7 @@ export const createMessage = [
       }
 
     } catch (err) {
-      console.error("Create message error: ", err);
+      logger.error(`Create message error: ${err}`);
       res.status(500).json({ message: "Error creating message" });
     }
   }
@@ -181,7 +182,7 @@ export const markMessageAsRead = [
       const message = await markAsRead(messageId);
       res.json({ message });
     } catch (err) {
-      console.error("Mark as read error: ", err);
+      logger.error(`Mark as read error: ${err}`);
       res.status(500).json({ message: "Error marking message as read" });
     }
   }
@@ -194,7 +195,7 @@ export const deleteMessage = [
       await deleteById(messageId);
       res.json({ message: "Message deleted successfully" });
     } catch (err) {
-      console.error("Delete message error: ", err);
+      logger.error(`Delete message error: ${err}`);
       res.status(500).json({ message: "Error deleting message" });
     }
   }

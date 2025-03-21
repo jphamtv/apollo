@@ -5,6 +5,7 @@ import { AuthRequest } from "../types";
 import { getFileUrl } from "../middleware/uploadMiddleware";
 import fs from 'fs';
 import path from 'path';
+import { logger } from '../utils/logger';
 
 const validateUserProfile = [
   body("displayName")
@@ -59,7 +60,7 @@ export const updateUserProfile = [
       
       res.json({ user: safeUser });
     } catch (error) {
-      console.error("Update error:", error);
+      logger.error(`Update error: ${error}`);
       res.status(500).json({ message: "Error updating profile" });
     }
   },
@@ -79,7 +80,7 @@ export const getUserProfile = [
 
       res.json(userProfile);
     } catch (err) {
-      console.error("Fetching error: ", err);
+      logger.error(`Fetching error: ${err}`);
       res.status(500).json({
         error: "SERVER_ERROR",
         message: "Error getting profile"
@@ -100,7 +101,7 @@ export const searchUsers = [
       const users = await findByQuery(query, req.user.id);
       res.json({ users });
     } catch (error) {
-      console.error('User search error:', error);
+      logger.error(`User search error: ${error}`);
       res.status(500).json({ message: "Error searching users" });
     }
   }
@@ -134,7 +135,7 @@ export const uploadProfileImage = [
             }
           }
         } catch (err) {
-          console.error('Error deleting old image: ', err);
+          logger.error(`Error deleting old image: ${err}`);
         }
       }
 
@@ -151,7 +152,7 @@ export const uploadProfileImage = [
 
       res.json({ user: safeUser });
     } catch (err) {
-      console.error('Upload error: ', err);
+      logger.error(`Upload error: ${err}`);
       res.status(500).json({ message: 'Error uploading profile image' });
     }
   }
@@ -178,7 +179,7 @@ export const deleteProfileImage = [
             }
           }
         } catch (err) {
-          console.error('Error deleting image file: ', err);
+          logger.error(`Error deleting image file: ${err}`);
         }
       }
 
@@ -195,7 +196,7 @@ export const deleteProfileImage = [
 
       res.json({ user: safeUser });
     } catch (err) {
-      console.error('Delete image error: ', err);
+      logger.error(`Delete image error: ${err}`);
       res.status(500).json({ message: 'Error deleting profile image' });
     }
   }

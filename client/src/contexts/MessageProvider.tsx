@@ -5,6 +5,7 @@ import {
   initialMessageState
 } from './messageContext';
 import { apiClient } from '../utils/apiClient';
+import { logger } from '../utils/logger';
 import { Conversation } from '../types/conversation';
 import { Message } from '../types/message';
 import { useAuth } from '../hooks/useAuth';
@@ -73,7 +74,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
       }
       
     } catch (err) {
-      console.error('Load conversations error:', err);
+      logger.error('Load conversations error:', err);
       dispatch({ 
         type: 'LOAD_CONVERSATIONS_FAILURE', 
         error: 'Failed to load conversations' 
@@ -101,7 +102,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
       );
       
       if (!Array.isArray(response.messages)) {
-        console.error('Expected messages array, got:', response.messages);
+        logger.error('Expected messages array, got:', response.messages);
         dispatch({ 
           type: 'LOAD_MESSAGES_FAILURE', 
           error: 'Invalid response format' 
@@ -114,7 +115,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
         messages: response.messages 
       });
     } catch (err) {
-      console.error('Load messages error:', err);
+      logger.error('Load messages error:', err);
       dispatch({ 
         type: 'LOAD_MESSAGES_FAILURE', 
         error: 'Failed to load messages' 
@@ -142,7 +143,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
       
       return response.message;
     } catch (err) {
-      console.error('Send message error:', err);
+      logger.error('Send message error:', err);
       const errorMessage = 'Failed to send message';
       dispatch({ 
         type: 'SEND_MESSAGE_FAILURE', 
@@ -172,7 +173,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
 
       return response.message;
     } catch (err) {
-      console.error('Send message with image error:', err);
+      logger.error('Send message with image error:', err);
       const errorMessage = 'Failed to send message with image';
       dispatch({ 
         type: 'SEND_MESSAGE_FAILURE', 
@@ -222,7 +223,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
       
       return response.conversation;
     } catch (err) {
-      console.error('Create conversation error:', err);
+      logger.error('Create conversation error:', err);
       const errorMessage = 'Failed to create conversation';
       dispatch({ 
         type: 'CREATE_CONVERSATION_FAILURE', 
@@ -277,7 +278,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
         dispatch({ type: 'CLEAR_ACTIVE_CONVERSATION' });
       }
     } catch (err) {
-      console.error('Delete conversation error: ', err);
+      logger.error('Delete conversation error:', err);
       dispatch({
         type: 'DELETE_CONVERSATION_FAILURE',
         error: 'Failed to delete conversation'
@@ -295,7 +296,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
         conversationId
       });
     } catch (err) {
-      console.error('Mark conversation as read error: ', err);
+      logger.error('Mark conversation as read error:', err);
     }
   }, []);
 

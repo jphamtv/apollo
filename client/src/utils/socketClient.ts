@@ -1,4 +1,5 @@
 import { io, Socket } from 'socket.io-client';
+import { logger } from './logger';
 
 /**
  * Socket.io event constants used for communication between client and server
@@ -40,7 +41,7 @@ export const initializeSocket = (token: string): Socket => {
   }
 
   const serverUrl = getServerUrl();
-  console.log('Connecting to Socket.io server at: ', serverUrl);
+  logger.info(`Connecting to Socket.io server at: ${serverUrl}`);
   
   // Connect to the socket server with authentication token
   socket = io(serverUrl, {
@@ -51,21 +52,15 @@ export const initializeSocket = (token: string): Socket => {
 
   // Setup basic event handlers
   socket.on(EVENTS.CONNECT, () => {
-    if (import.meta.env.DEV) {
-      console.log('Socket connected: ', socket?.id);
-    }
+    logger.info(`Socket connected: ${socket?.id}`);
   });
 
   socket.on('connect_error', (error) => {
-    if (import.meta.env.DEV) {
-    console.error('Socket connection error: ', error.message);
-    }
+    logger.error(`Socket connection error: ${error.message}`);
   });
 
   socket.on(EVENTS.DISCONNECT, (reason) => {
-    if (import.meta.env.DEV) {
-      console.log('Socket disconnected: ', reason);
-    }
+    logger.info(`Socket disconnected: ${reason}`);
   });
 
   return socket;

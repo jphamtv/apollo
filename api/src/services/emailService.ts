@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { logger } from '../utils/logger';
 
 // Create reusable transporter using Ethereal test account
 const createTransporter = async () => {
@@ -34,7 +35,7 @@ export const sendPasswordResetEmail = async (email: string, resetToken: string) 
   try {
     const transporter = await createTransporter();
     const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
-    console.log(`Reset URL: `, resetUrl)
+    logger.info(`Reset URL: ${resetUrl}`)
 
     // Send mail with defined transport object
     const info = await transporter.sendMail({
@@ -63,12 +64,12 @@ The link will expire in 1 hour.`,
 
     // Log URL for development testing
     if (process.env.NODE_ENV !== 'production') {
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+      logger.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
     }
 
     return true;
   } catch (error) {
-    console.error('Error sending email:', error);
+    logger.error(`Error sending email: ${error}`);
     throw new Error('Failed to send password reset email');
   }
 };

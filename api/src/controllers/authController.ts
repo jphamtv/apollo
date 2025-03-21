@@ -5,6 +5,7 @@ import { body, validationResult } from "express-validator";
 import { jwtConfig } from "../config/jwtConfig";
 import { findByEmail, create, findByUsername } from "../models/authModel";
 import { AuthRequest, LoginResponse } from "../types";
+import { logger } from "../utils/logger";
 
 const validateUser = [
   body("username")
@@ -59,7 +60,7 @@ export const registerUser = [
         user
       });
     } catch (error) {
-      console.error("Registration error:", error);
+      logger.error(`Registration error: ${error}`);
       res.status(500).json({ message: "Error registering user" });
     }
   },
@@ -84,7 +85,7 @@ export const loginUser = async (
       user: req.user
     });
   } catch (err) {
-    console.error("Login error", err);
+    logger.error(`Login error: ${err}`);
     res.status(500).json({ message: "Error during login" });
   }
 };
@@ -116,7 +117,7 @@ export const verifyUser = [
         user: req.user
       });
     } catch (err) {
-      console.error("Verification error: ", err);
+      logger.error(`Verification error: ${err}`);
       res.status(500).json({
         message: "Error during verification",
         token: "",

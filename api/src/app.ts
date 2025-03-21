@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import passport from "passport";
 import path from 'path';
+import { logger } from "./utils/logger";
 import initializePassport from "./config/passportConfig";
 import authRouter from "./routes/authRouter";
 import userProfilesRouter from "./routes/userProfilesRouter";
@@ -40,7 +41,7 @@ app.use("/api/conversations/:conversationId/messages", messagesRouter);
 
 // Error handing
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err); // Log error for debugging
+  logger.error(`Unhandled error: ${err}`); // Log error for debugging
   res.status(500).json({ error: "Something went wrong" }); // Send simple message to user to see
 });
 
