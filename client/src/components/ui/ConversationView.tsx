@@ -60,6 +60,12 @@ export default function ConversationView({ conversation }: Props) {
   
   // Check to determine if the current conversation is with a bot
   const isConversationWithBot = activeRecipient?.isBot || false;
+
+  const resetTextareaHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+  };
   
   // Add typing indicators to dependencies to auto-scroll when they appear/disappear
   useEffect(() => {
@@ -90,23 +96,21 @@ export default function ConversationView({ conversation }: Props) {
   }, []);
 
   useEffect(() => {
-    if (newMessage === '' && textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+    if (newMessage === '') {
+      resetTextareaHeight();
     }    
   }, [newMessage]);
 
   useEffect(() => {
-    if (conversation && textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+    if (conversation) {
+      resetTextareaHeight();
     }
   }, [conversation]);
 
   useEffect(() => {
     // Reset input when conversation changes
     setNewMessage("");
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-    }
+    resetTextareaHeight();
   }, [conversation?.id]);
 
   useEffect(() => {
