@@ -221,7 +221,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
       });
       throw new Error(errorMessage);
     }
-  }, [findConversationByParticipant, dispatch]);
+  }, [dispatch]);
 
   const setActiveConversation = useCallback((conversation: Conversation) => {
     // Save conversation id in localStorage to remember user's context between sessions

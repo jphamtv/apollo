@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigation } from '../../hooks/useNavigation';
 import { useMessaging } from '../../hooks/useMessaging';
@@ -44,20 +44,29 @@ export default function ConversationView({ conversation }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const activeRecipient = conversation ?
-    conversation.participants.find(p => p.userId !== user?.id)?.user : null;
-  
-  // Get typing users for the current conversation
-  const typingUsers = conversation ? getTypingUsers(conversation.id) : [];
+  // Memoize typing users from the current conversation
+  const typingUsers = useMemo(() => {
+    if (!conversation) return [];
+    return getTypingUsers(conversation.id);
+  }, [conversation, getTypingUsers]);
 
-  // Filter out current user from typing indicators
-  const otherTypingUsers = typingUsers.filter(id => id !== user?.id);
+  // Memoize filtered typing users (excluding current user)
+  const otherTypingUsers = useMemo(() => {
+    return typingUsers.filter(id => id !== user?.id);
+  }, [typingUsers, user?.id]);
 
-  // Get display name of the first typing user
-  const typingUserName = otherTypingUsers.length > 0 && activeRecipient
-    ? activeRecipient.profile.displayName || activeRecipient.username
-    : '';
-  
+  // Memoize active recipient
+  const activeRecipient = useMemo(() => {
+    if (!conversation) return null;
+    return conversation.participants.find(p => p.userId !== user?.id)?.user;
+  }, [conversation, user?.id]);
+
+  // Memoize typing username
+  const typingUserName = useMemo(() => {
+    if (otherTypingUsers.length === 0 || !activeRecipient) return '';
+    return activeRecipient.profile.displayName || activeRecipient.username;
+  }, [otherTypingUsers, activeRecipient]);
+
   // Check to determine if the current conversation is with a bot
   const isConversationWithBot = activeRecipient?.isBot || false;
 
