@@ -74,12 +74,6 @@ export default function ConversationView({ conversation }: Props) {
   }, [conversation, isNewConversation, loadMessages, clearMessages]);
 
   useEffect(() => {
-    if (conversation) {
-      loadMessages(conversation.id);
-    }
-  }, [conversation, loadMessages]);
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         profileInfoRef.current &&

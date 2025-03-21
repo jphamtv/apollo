@@ -19,10 +19,10 @@ export default function ProfileInfo({ recipient }: ProfileInfoProps) {
       <div className={styles.userDetails}>
         <div className={styles.avatar}>
           {recipient?.profile.imageUrl ? (
-            <img 
-              src={recipient.profile.imageUrl} 
-              alt="" 
-              className={styles.avatarImage} 
+            <img
+              src={recipient.profile.imageUrl}
+              alt=""
+              className={styles.avatarImage}
             />
           ) : (
             <div className={styles.avatarPlaceholder}>
@@ -36,7 +36,7 @@ export default function ProfileInfo({ recipient }: ProfileInfoProps) {
         </div>
       </div>
       <div className={styles.bio}>
-          {recipient.profile.bio || "No bio available"}
+        {recipient.profile.bio || "No bio available"}
       </div>
     </div>
   );
