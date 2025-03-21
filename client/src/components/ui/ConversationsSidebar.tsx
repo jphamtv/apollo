@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import styles from './ConversationsSidebar.module.css';
 import ConversationItem from './ConversationItem';
 import NewChatButton from './NewChatButton';
@@ -20,6 +21,36 @@ export default function ConversationsSidebar() {
   const { conversations } = useMessaging();
   const { isMobileSidebarOpen, closeMobileSidebar } = useSidebar();
 
+  // Memoize the conversations processing
+  const conversationItems = useMemo(() => {
+    if (!conversations || !user) return [];
+    
+    return conversations.map(conversation => {
+      const otherParticipant = conversation.participants.find(
+        p => p.user.id !== user.id
+      )?.user;
+
+      if (!otherParticipant) return null;
+
+      return {
+        id: conversation.id,
+        conversation,
+        displayName: otherParticipant.profile.displayName ?? otherParticipant.username,
+        lastMessageText: conversation.lastMessage
+          ? (conversation.lastMessage.text.trim() === "" && conversation.lastMessage.hasImage
+            ? "📷 Image"
+            : conversation.lastMessage.text)
+          : 'No messages yet',
+        timestamp: conversation.lastMessage ? 
+          formatLastMessageTimestamp(conversation.lastMessage.createdAt) : 
+          formatLastMessageTimestamp(conversation.createdAt),
+        isActive: activeConversation?.id === conversation.id,
+        hasUnread: conversation.hasUnread,
+        isBot: otherParticipant.isBot
+      };
+    }).filter((item): item is NonNullable<typeof item> => item !== null);
+  }, [conversations, user, activeConversation?.id]);
+
   if (!user?.profile) return null;
 
   const handleConversationClick = (conversation: Conversation) => {
@@ -31,6 +62,7 @@ export default function ConversationsSidebar() {
     startNewConversation();
     closeMobileSidebar();
   };
+
 
   return (
     <aside className={`${styles.container} ${isMobileSidebarOpen ? styles.open : ''}`}>
@@ -47,36 +79,18 @@ export default function ConversationsSidebar() {
       
       <main className={styles.main}>
         <NewChatButton onClick={handleNewChat} />
-        {conversations?.map(conversation => {
-          const otherParticipant = conversation.participants.find(
-            p => p.user.id !== user.id
-          )?.user;
-
-          if (!otherParticipant) return null;
-
-          return (
-            <ConversationItem
-              key={conversation.id}
-              displayName={otherParticipant.profile.displayName ?? otherParticipant.username}
-              lastMessage={
-                conversation.lastMessage
-                  ? (
-                    conversation.lastMessage.text.trim() === "" && conversation.lastMessage.hasImage
-                      ? "📷 Image"
-                      : conversation.lastMessage.text
-                  ) : 'No messages yet'
-              }
-              timestamp={conversation.lastMessage ? 
-                formatLastMessageTimestamp(conversation.lastMessage.createdAt) : 
-                formatLastMessageTimestamp(conversation.createdAt)
-              }
-              isActive={activeConversation?.id === conversation.id}
-              hasUnread={conversation.hasUnread}
-              isBot={otherParticipant.isBot}
-              onClick={() => handleConversationClick(conversation)}
-            />
-          );
-        })}
+        {conversationItems.map(item => (
+          <ConversationItem
+            key={item.conversation.id}
+            displayName={item.displayName}
+            lastMessage={item.lastMessageText}
+            timestamp={item.timestamp}
+            isActive={item.isActive}
+            hasUnread={item.hasUnread}
+            isBot={item.isBot}
+            onClick={() => handleConversationClick(item.conversation)}
+          />
+        ))}
       </main>
       
       <footer className={styles.footer}>

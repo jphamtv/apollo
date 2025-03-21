@@ -1,4 +1,4 @@
-import { ReactNode, useReducer, useCallback, useEffect } from 'react';
+import { ReactNode, useReducer, useCallback, useEffect, useMemo } from 'react';
 import { 
   MessageContext, 
   messageReducer, 
@@ -290,7 +290,7 @@ export function MessageProvider({ children }: MessageProviderProps) {
     }
   }, []);
 
-  const contextValue = {
+  const contextValue = useMemo(() => ({
     state,
     dispatch,
     loadConversations,
@@ -304,7 +304,21 @@ export function MessageProvider({ children }: MessageProviderProps) {
     markConversationAsRead,
     clearMessages,
     findConversationByParticipant
-  };
+  }), [
+    state,
+    dispatch,
+    loadConversations,
+    loadMessages,
+    sendMessage,
+    sendMessageWithImage,
+    createConversation,
+    deleteConversation,
+    setActiveConversation,
+    clearActiveConversation,
+    markConversationAsRead,
+    clearMessages,
+    findConversationByParticipant
+  ]);
 
   return (
     <MessageContext.Provider value={contextValue}>
