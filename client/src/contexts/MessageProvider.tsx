@@ -191,16 +191,6 @@ export function MessageProvider({ children }: MessageProviderProps) {
   }, [state.conversations]);
 
   const createConversation = useCallback(async (userId: string): Promise<Conversation> => {
-    // First, check locally for existing conversation
-    const existingConversation = findConversationByParticipant(userId);
-    if (existingConversation) {
-      dispatch({
-        type: 'SET_ACTIVE_CONVERSATION',
-        conversation: existingConversation
-      });
-      return existingConversation;
-    }
-
     dispatch({ type: 'CREATE_CONVERSATION_REQUEST' });
 
     try {
