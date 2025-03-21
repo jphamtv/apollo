@@ -1,5 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { EVENTS } from './socketEvents';
+import { logger } from '../utils/logger';
 
 /**
  * Registers socket event handlers for a connected client
@@ -14,13 +15,13 @@ export const registerHandlers = (io: Server, socket: Socket) => {
   // Join conversation room
   socket.on(EVENTS.CONVERSATION_JOIN, (conversationId) => {
     socket.join(conversationId);
-    console.log(`User ${userId} joined conversation ${conversationId}`);
+    logger.info(`User ${userId} joined conversation ${conversationId}`);
   });
 
   // Leave conversation room
   socket.on(EVENTS.CONVERSATION_LEAVE, (conversationId) => {
     socket.leave(conversationId);
-    console.log(`User ${userId} left conversation ${conversationId}`);
+    logger.info(`User ${userId} left conversation ${conversationId}`);
   });
 
   // Typing indicators

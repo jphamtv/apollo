@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import { verifySocketToken } from './middleware/socketMiddleware';
 import { initializeSocketService } from "./services/socketService";
 import { registerHandlers } from "./sockets/socketHandlers";
+import { logger } from "./utils/logger";
 
 const PORT = process.env.PORT || 3000;
 const httpServer = createServer(app);
@@ -27,7 +28,7 @@ io.use(verifySocketToken);
 
 // Set up event handlers
 io.on('connection', (socket) => {
-  console.log(`User connected: ${socket.id}`);
+  logger.info(`User connected: ${socket.id}`);
 
   // Join user to their personal room 
   const userId = socket.data.user.id;
@@ -37,10 +38,10 @@ io.on('connection', (socket) => {
   registerHandlers(io, socket);
 
   socket.on('disconnect', () => {
-    console.log(`User disconnected ${socket.id}`);
+    logger.info(`User disconnected ${socket.id}`);
   });
 });
 
 httpServer.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  logger.info(`Server is running on port ${PORT}`);
 });

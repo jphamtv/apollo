@@ -51,15 +51,21 @@ export const initializeSocket = (token: string): Socket => {
 
   // Setup basic event handlers
   socket.on(EVENTS.CONNECT, () => {
-    console.log('Socket connected: ', socket?.id);
+    if (import.meta.env.DEV) {
+      console.log('Socket connected: ', socket?.id);
+    }
   });
 
   socket.on('connect_error', (error) => {
+    if (import.meta.env.DEV) {
     console.error('Socket connection error: ', error.message);
+    }
   });
 
   socket.on(EVENTS.DISCONNECT, (reason) => {
-    console.log('Socket disconnected: ', reason);
+    if (import.meta.env.DEV) {
+      console.log('Socket disconnected: ', reason);
+    }
   });
 
   return socket;
