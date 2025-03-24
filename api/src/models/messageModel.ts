@@ -35,7 +35,7 @@ export const findByConversationId = async (conversationId: string): Promise<Mess
   return prisma.message.findMany({
     where: { conversationId },
     orderBy: { createdAt: 'desc' },
-    take: 25,
+    take: 50,
     include: {
       sender: {
         select: {

@@ -49,7 +49,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
    */
   useEffect(() => {
     if (socket && isConnected && conversations.length > 0) {
-      // Join all conversation rooms, not just the active one
+      // Join all conversation rooms of the logged in user, not just the active one
       conversations.forEach(conversation => {
         joinConversation(conversation.id);
       });
