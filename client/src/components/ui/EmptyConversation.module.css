@@ -32,7 +32,7 @@
 }
 
 /* Mobile styles */
-@media (max-width: 46.875rem) {
+@media (max-width: 46.875em) {
   .mobileNav {
     display: block;
   }

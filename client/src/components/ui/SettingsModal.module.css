@@ -30,16 +30,16 @@
 
 .imagePreviewContainer {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 6.25rem; 
+  height: 6.25rem; 
   border-radius: 50%;
   overflow: hidden;
 }
 
 .avatar {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 6.25rem;
+  height: 6.25rem;
   border-radius: 50%;
   background-color: var(--bg-avatar);
   border: 1px solid var(--border-avatar);
@@ -87,11 +87,11 @@
 .removeButton {
   background-color: var(--btn-secondary);
   color: var(--text-primary);
-  padding: 8px 12px;
+  padding: 0.5rem 0.75rem; 
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.875rem;
   transition: background-color 0.2s;
   text-align: center;
 }
@@ -109,7 +109,7 @@
 .removeButton {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0.25rem; 
   color: var(--error);
 }
 
@@ -121,7 +121,7 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .field label {
@@ -136,7 +136,7 @@
 }
 
 .textarea {
-  padding: 8px 12px;
+  padding: 0.5rem 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   background-color: var(--bg-input);

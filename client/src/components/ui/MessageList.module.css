@@ -8,7 +8,7 @@
 }
 
 /* Mobile styles */
-@media (max-width: 46.875rem) {
+@media (max-width: 46.875em) {
   .messagesContainer {
     padding: 1rem 1.25rem;
   }

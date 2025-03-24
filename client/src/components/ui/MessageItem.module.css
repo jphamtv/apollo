@@ -33,13 +33,13 @@
 
 .messageImage {
   margin: 0.25rem 0 0.5rem;
-  max-width: 300px;
-  border-radius: 8px;
+  max-width: 18.75rem; 
+  border-radius: var(--border-radius-sm);
   overflow: hidden;
 }
 
 .landscape {
-  max-width: 424px !important;
+  max-width: 26.5rem !important; 
 }
 
 .messageImage img {
@@ -49,12 +49,12 @@
 }
 
 .imageOnly {
-  margin: 4px 0;
+  margin: 0.25rem 0; 
 }
 
 .messageImageOnly {
-  max-width: 300px;
-  border-radius: 8px;
+  max-width: 18.75rem; 
+  border-radius: var(--border-radius-sm);
   overflow: hidden;
 }
 

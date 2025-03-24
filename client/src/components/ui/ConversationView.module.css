@@ -129,7 +129,7 @@
 }
 
 /* Mobile styles */
-@media (max-width: 46.875rem) {
+@media (max-width: 46.875em) {
   .headerContainer {
     padding: 1rem 0.5rem;
   }
@@ -142,7 +142,7 @@
   }
 }
 
-@media (min-width: 46.9375rem) {
+@media (min-width: 46.9375em) {
   .mobileMenuContainer {
     display: none; /* Hide menu container on desktop */
   }

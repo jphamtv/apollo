@@ -67,8 +67,8 @@
 }
 
 .unreadIndicator {
-  width: 8px;
-  height: 8px;
+  width: 0.5rem; 
+  height: 0.5rem; 
   border-radius: 50%;
   background-color: #2c86f3;
   flex-shrink: 0;
