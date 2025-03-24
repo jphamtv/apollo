@@ -65,9 +65,9 @@ export default function ConversationsSidebar() {
 
 
   return (
-    <aside className={`${styles.container} ${isMobileSidebarOpen ? styles.open : ''}`}>
+    <aside className={`${styles.container} ${isMobileSidebarOpen ? styles.open : ''}`} aria-label="Conversations sidebar" role="region">
       <header className={styles.header}>
-        <h2>Apollo</h2>
+        <h2 id="app-title">Apollo</h2>
         <button 
           className={styles.closeButton}
           onClick={closeMobileSidebar}
@@ -77,7 +77,7 @@ export default function ConversationsSidebar() {
         </button>
       </header>
       
-      <main className={styles.main}>
+      <main className={styles.main} aria-label="Conversation list">
         <NewChatButton onClick={handleNewChat} />
         {conversationItems.map(item => (
           <ConversationItem
@@ -89,6 +89,8 @@ export default function ConversationsSidebar() {
             hasUnread={item.hasUnread}
             isBot={item.isBot}
             onClick={() => handleConversationClick(item.conversation)}
+            aria-selected={item.isActive}
+            aria-current={item.isActive ? 'page' : undefined}
           />
         ))}
       </main>

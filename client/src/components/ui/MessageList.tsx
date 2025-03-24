@@ -56,7 +56,7 @@ export default function MessageList({
   };
 
   return (
-    <div className={styles.messagesContainer}>
+    <div className={styles.messagesContainer} role="log" aria-label="Message history" aria-live="polite">
       {Array.isArray(messages) && messages.length > 0 && messages.map((message, index) => {
         const prevMessage = index > 0 ? messages[index - 1] : null;
         

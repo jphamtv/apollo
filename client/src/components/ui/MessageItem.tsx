@@ -16,15 +16,24 @@ export default function MessageItem({
 }: Props) {
   const isImageOnly = message.imageUrl && !message.text;
   
+  // For screen readers, identify message sender
+  const messageSender = isCurrentUser ? 'You' : message.sender?.profile?.displayName || message.sender?.username || 'Other user';
+  const timestamp = new Date(message.createdAt).toLocaleString();
+  const messageType = message.imageUrl ? (message.text ? 'message with image' : 'image message') : 'text message';
+  
   return (
-    <div className={`${styles.message} ${
+    <div 
+      className={`${styles.message} ${
       isCurrentUser ? styles.sent : styles.received
-    } ${isImageOnly ? styles.imageOnly : ''}`}>
+    } ${isImageOnly ? styles.imageOnly : ''}`}
+      role="listitem"
+      aria-label={`${messageSender} sent ${messageType} at ${timestamp}`}>
+    
       {isImageOnly ? (
         <div className={`${styles.messageImageOnly} ${landscapeImages.has(message.id) ? styles.landscape : ''}`}>
           <img
             src={message.imageUrl || undefined}
-            alt=""
+            alt="Shared image"
             onLoad={(e) => onImageLoad(e, message.id)}
           />
         </div>
@@ -34,7 +43,7 @@ export default function MessageItem({
             <div className={`${styles.messageImage} ${landscapeImages.has(message.id) ? styles.landscape : ''}`}>
               <img
                 src={message.imageUrl}
-                alt=""
+                alt="Shared image"
                 onLoad={(e) => onImageLoad(e, message.id)}
               />
             </div>

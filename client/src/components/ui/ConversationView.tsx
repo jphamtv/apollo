@@ -188,7 +188,7 @@ export default function ConversationView({ conversation }: Props) {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} role="main" aria-label="Conversation view">
       <div className={styles.headerContainer}>
         {/* Mobile menu button */}
         <div className={styles.mobileMenuContainer}>
@@ -208,20 +208,32 @@ export default function ConversationView({ conversation }: Props) {
           </div>
         ) : (
           <div className={styles.headerContent}>
-            <div className={styles.activeConversationHeader}>
-              {conversation && (
-                <a ref={displayProfileLinkRef} onClick={handleInfoClick} className={styles.profileLink}>
-                  <div className={styles.recipientName}>
-                    {activeRecipient?.profile.displayName || 
-                    activeRecipient?.username || 
-                    'Unknown User'}
-                    {activeRecipient?.isBot && <BotBadge />}
-                  </div>
-                  <ChevronDown size={16} className={styles.chevronIcon} strokeWidth={1}/>
-                </a>
-              )}
+          <div className={styles.activeConversationHeader}>
+          {conversation && (
+          <a 
+          ref={displayProfileLinkRef} 
+          onClick={handleInfoClick} 
+          className={styles.profileLink}
+          role="button"
+          tabIndex={0}
+          aria-label={`View profile for ${activeRecipient?.profile.displayName || activeRecipient?.username || 'Unknown User'}${activeRecipient?.isBot ? ' (AI)' : ''}`}
+          aria-expanded={showProfileInfo}
+            onKeyDown={(e) => e.key === 'Enter' && handleInfoClick()}
+            >
+                    <div className={styles.recipientName}>
+                      {activeRecipient?.profile.displayName || 
+                      activeRecipient?.username || 
+                      'Unknown User'}
+                      {activeRecipient?.isBot && <BotBadge />}
+                    </div>
+                    <ChevronDown size={16} className={styles.chevronIcon} strokeWidth={1}/>
+                  </a>
+                )}
               <div className={styles.actions}>
-                <button onClick={handleDeleteClick}>
+                <button 
+                  onClick={handleDeleteClick}
+                  aria-label="Delete conversation"
+                >
                   <Trash2 size={20} strokeWidth={1} />
                 </button>
               </div>
@@ -277,18 +289,20 @@ export default function ConversationView({ conversation }: Props) {
       {showDeleteModal && conversation && (
         <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} hideCloseButton>
           <div className={styles.confirmationModal}>
-            <h3>Delete Conversation</h3>
+            <h3 id="modal-title">Delete Conversation</h3>
             <p>Are you sure you want to delete this conversation? This action cannot be undone.</p>
             <div className={styles.modalActions}>
               <Button
                 onClick={() => setShowDeleteModal(false)}
                 variant="secondary"
+                tabIndex={0}
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleConfirmDelete}
                 variant="danger"
+                tabIndex={0}
               >
                 Delete
               </Button>

@@ -23,10 +23,14 @@ export default function TypingIndicator({ displayName, isConversationWithBot }: 
   });
 
   return (
-    <div className={styles.container}>
+    <div 
+      className={styles.container} 
+      role="status" 
+      aria-live="polite"
+    >
       <div className={styles.text}>
         {displayName} is {isConversationWithBot ? "replying" : "typing"}
-        <span className={styles.dots}>{dots}</span>            
+        <span className={styles.dots} aria-hidden="true">{dots}</span>            
       </div>
     </div>
   );

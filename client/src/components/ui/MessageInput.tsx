@@ -122,7 +122,7 @@ export default function MessageInput({
   };
 
   return (
-    <div className={styles.inputContainer}>
+    <div className={styles.inputContainer} role="region" aria-label="Message input">
       {imagePreview && (
         <div className={styles.imagePreviewContainer}>
           <img src={imagePreview} className={styles.imagePreview} alt="Preview" />
@@ -147,6 +147,9 @@ export default function MessageInput({
         className={styles.messageInput}
         rows={1}
         disabled={isDisabled || isSending}
+        aria-label="Message text input"
+        aria-multiline="true"
+        aria-disabled={isDisabled || isSending}
       />
 
       <div className={styles.inputActions}>
@@ -183,6 +186,7 @@ export default function MessageInput({
             (!messageText.trim() && !imageFile)
           }
           size='small'
+          aria-label="Send message"
         >
           <ArrowUp size={24} strokeWidth={2}/>
         </Button>

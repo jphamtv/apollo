@@ -9,6 +9,8 @@ interface Props {
   hasUnread?: boolean;
   isBot?: boolean;
   onClick?: () => void;
+  'aria-selected'?: boolean;
+  'aria-current'?: 'page' | 'step' | 'location' | 'date' | 'time' | true | false;
 }
 
 export default function ConversationItem({ 
@@ -32,8 +34,14 @@ export default function ConversationItem({
     <div 
       className={`${styles.container} ${isActive ? styles.active : ''}`}
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      aria-label={`Conversation with ${displayName}${isBot ? ' (AI)' : ''}${hasUnread ? ', unread messages' : ''}`}
+      onKeyDown={(e) => e.key === 'Enter' && onClick && onClick()}
+      aria-selected={isActive}
+      aria-current={isActive ? 'page' : undefined}
     >
-      <div className={styles.avatar}>
+      <div className={styles.avatar} aria-hidden="true">
         {initials}
       </div>
       <div className={styles.content}>
@@ -46,7 +54,7 @@ export default function ConversationItem({
         </div>
         <div className={styles.previewContainer}>
           <p className={styles.preview}>{lastMessage}</p>
-          {hasUnread && <div className={styles.unreadIndicator} />}
+          {hasUnread && <div className={styles.unreadIndicator} aria-label="Unread messages" role="status" />}
         </div>
       </div>
     </div>
