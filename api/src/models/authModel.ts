@@ -119,10 +119,20 @@ export const resetPassword = async (token: string, newPassword: string) => {
   });
 };
 
+export const deleteById = async (id: string): Promise<void> => {
+  // With onDelete: Cascade in the schema, deleting the user will automatically
+  // delete related messages, conversation participants, and user profile
+  await prisma.user.delete({
+    where: { id },
+  });
+};
+
+
 export default {
   create,
   findByEmail,
   findById,
   createResetToken,
   resetPassword,
+  deleteById,
 };

@@ -16,6 +16,7 @@ export interface AuthContextType {
   updateProfile: (data: UpdateProfileData) => Promise<void>;
   uploadProfileImage: (formData: FormData) => Promise<void>;
   deleteProfileImage: () => Promise<void>;
+  deleteUserAccount: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

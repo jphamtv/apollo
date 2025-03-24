@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { body, validationResult } from "express-validator";
 import { jwtConfig } from "../config/jwtConfig";
-import { findByEmail, create, findByUsername } from "../models/authModel";
+import { findByEmail, findById, create, findByUsername, deleteById } from "../models/authModel";
 import { AuthRequest, LoginResponse } from "../types";
 import { logger } from "../utils/logger";
 
@@ -122,6 +122,32 @@ export const verifyUser = [
         message: "Error during verification",
         token: "",
         user: null,
+      });
+    }
+  }
+] as unknown as RequestHandler[];
+
+export const deleteUser = [  
+  async (req: AuthRequest, res: Response) => {
+    try {
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const user = await findById(req.user.id);
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      await deleteById(req.user.id);
+           
+      res.json({ message: "User account deleted successfully" });
+    } catch (err) {
+      logger.error(`Delete error: ${err}`);
+      res.status(500).json({
+        error: "SERVER_ERROR",
+        message: "Error deleting user account"
       });
     }
   }

@@ -68,6 +68,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(response.user);
   };
 
+  const deleteUserAccount = async () => {
+    try {
+      await apiClient.delete("/auth/delete");
+    } finally {
+      apiClient.removeToken();
+      setUser(null);
+    }
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -80,7 +89,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     logout,
     updateProfile,
     uploadProfileImage,
-    deleteProfileImage
+    deleteProfileImage,
+    deleteUserAccount,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

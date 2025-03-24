@@ -9,13 +9,14 @@ import styles from './SettingsModal.module.css';
 import { User as UserIcon, Trash2Icon } from 'lucide-react';
 
 export default function SettingsModal() {
-  const { user, updateProfile, uploadProfileImage, deleteProfileImage } = useAuth();
+  const { user, updateProfile, uploadProfileImage, deleteProfileImage, deleteUserAccount } = useAuth();
   const { isSettingsOpen, closeSettings } = useNavigation();
   const [displayName, setDisplayName] = useState<string>(user?.profile.displayName || '');
   const [bio, setBio] = useState<string>(user?.profile.bio || '');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string | null>(user?.profile.imageUrl || null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -82,14 +83,28 @@ export default function SettingsModal() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUserAccount(); // AuthProvider handles removing token and setting user to null
+    } catch (error) {
+      logger.error('Failed to delete account:', error);
+      setShowDeleteConfirmation(false);
+    }
+  };
+
+  const openDeleteConfirmation = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const closeDeleteConfirmation = () => {
+    setShowDeleteConfirmation(false);
+  };
+
   return (
     <Modal isOpen={isSettingsOpen} onClose={closeSettings}>
       <div className={styles.container}>
-        <header className={styles.header}>
-          <h1 className={styles.title}>Profile Settings</h1>
-        </header>
-
         <form onSubmit={handleSubmit} className={styles.form}>
+          <h2 className={styles.title}>Profile</h2>
           <div className={styles.imageSection}>
             <div className={styles.avatar}>
               {isUploading && (
@@ -172,7 +187,53 @@ export default function SettingsModal() {
             </Button>
           </div>
         </form>
+        
+        <div className={styles.dangerZone}>
+          <h2 className={styles.title}>Account Management</h2>
+          <p className={styles.dangerText}>
+            Deleting your account will permanently remove all your data, including all conversations and messages.
+            Other users will no longer be able to see conversations with you. This action cannot be undone.
+          </p>
+          <Button 
+            onClick={openDeleteConfirmation} 
+            variant="danger"
+            className={styles.deleteButton}
+            aria-label="Delete account"
+          >
+            Delete Account
+          </Button>
+        </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {showDeleteConfirmation && (
+        <Modal 
+          isOpen={showDeleteConfirmation} 
+          onClose={closeDeleteConfirmation}
+          hideCloseButton
+        >
+          <div className={styles.confirmationModal}>
+            <h3 id="modal-title">Delete Account</h3>
+            <p>Are you sure you want to permanently delete your account? This will delete all conversations you are part of. Other users will no longer be able to see any messages you've sent. This action cannot be undone.</p>
+            <div className={styles.modalActions}>
+              <Button
+                onClick={closeDeleteConfirmation}
+                variant="secondary"
+                tabIndex={0}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleDeleteAccount}
+                variant="danger"
+                tabIndex={0}
+              >
+                Delete Account
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </Modal>
   );
 }

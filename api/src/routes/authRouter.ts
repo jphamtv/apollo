@@ -5,6 +5,7 @@ import {
   loginUser,
   logoutUser,
   verifyUser,
+  deleteUser,
 } from "../controllers/authController";
 import { authenticateJWT } from "../middleware/authMiddleware";
 import { requestReset, confirmReset, validateResetRequest, validateResetConfirm } from "../controllers/resetController";
@@ -42,6 +43,7 @@ router.post("/login", loginLimiter, (req: Request, res: Response, next: NextFunc
 // Protected routes
 router.get("/verify", authenticateJWT, verifyUser);
 router.get("/logout", authenticateJWT, logoutUser);
+router.delete('/delete', authenticateJWT, deleteUser);
 
 // Password reset routes
 router.post("/reset-request", generalLimiter, validateResetRequest, requestReset);
