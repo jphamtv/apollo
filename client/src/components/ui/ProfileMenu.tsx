@@ -6,7 +6,7 @@ import styles from './ProfileMenu.module.css';
 interface ProfileMenuProps {
   user: {
     username: string;
-    email?: string;
+    email: string;
     profile: {
       displayName?: string;
       imageUrl?: string;
@@ -42,7 +42,7 @@ export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
         </div>
         <div className={styles.userDetails}>
           <p className={styles.username}>@{user.username}</p>
-          <p className={styles.email}>{user.email || 'No email'}</p>
+          <p className={styles.email}>{user.email}</p>
         </div>
       </div>
 

@@ -1,0 +1,13 @@
+.timestampDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.75rem 0;
+  position: relative;
+}
+
+.timestampText {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  z-index: 1;
+}

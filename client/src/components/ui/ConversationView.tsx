@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigation } from '../../hooks/useNavigation';
 import { useMessaging } from '../../hooks/useMessaging';
@@ -7,16 +7,15 @@ import NewConversationHeader from './NewConversationHeader';
 import Button from './Button';
 import ProfileInfo from './ProfileInfo';
 import Modal from './Modal';
-import TypingIndicators from './TypingIndicators';
 import BotBadge from './BotBadge';
-import { ArrowUp, Trash2, ChevronDown, Image, X } from 'lucide-react';
+import { Trash2, ChevronDown, X } from 'lucide-react';
 import MenuButton from './MenuButton';
 import styles from './ConversationView.module.css';
 import { User } from '../../types/user';
 import { Conversation } from '../../types/conversation';
-import { Message } from '../../types/message';
-import { formatMessageFeedTimestamp } from '../../utils/formatTime';
 import { logger } from '../../utils/logger';
+import MessageList from './MessageList';
+import MessageInput from './MessageInput';
 
 interface Props {
   conversation?: Conversation;
@@ -28,21 +27,14 @@ export default function ConversationView({ conversation }: Props) {
   const { isNewConversation, navigateToConversation } = useNavigation();
   const { handleTyping, getTypingUsers } = useSocket();
 
-  const [newMessage, setNewMessage] = useState<string>('');
   const [showProfileInfo, setShowProfileInfo] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSendingImage, setIsSendingImage] = useState<boolean>(false);
   const [profileInfoPosition, setProfileInfoPosition] = useState<{ top: number, left: number }>({ top: 0, left: 0 });
-  const [landscapeImages, setLandscapeImages] = useState<Set<string>>(new Set());
   const [sendError, setSendError] = useState<string | null>(null);
   
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const profileInfoRef = useRef<HTMLDivElement>(null);
   const displayProfileLinkRef = useRef<HTMLAnchorElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Memoize typing users from the current conversation
   const typingUsers = useMemo(() => {
@@ -69,18 +61,7 @@ export default function ConversationView({ conversation }: Props) {
 
   // Check to determine if the current conversation is with a bot
   const isConversationWithBot = activeRecipient?.isBot || false;
-
-  const resetTextareaHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-    }
-  };
-  
-  // Add typing indicators to dependencies to auto-scroll when they appear/disappear
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView();
-  }, [messages, otherTypingUsers]);
-
+ 
   useEffect(() => {
     if (isNewConversation) {
       clearMessages();
@@ -103,24 +84,6 @@ export default function ConversationView({ conversation }: Props) {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  useEffect(() => {
-    if (newMessage === '') {
-      resetTextareaHeight();
-    }    
-  }, [newMessage]);
-
-  useEffect(() => {
-    if (conversation) {
-      resetTextareaHeight();
-    }
-  }, [conversation]);
-
-  useEffect(() => {
-    // Reset input when conversation changes
-    setNewMessage("");
-    resetTextareaHeight();
-  }, [conversation?.id]);
 
   useEffect(() => {
     if (conversation && !isNewConversation) {
@@ -152,40 +115,24 @@ export default function ConversationView({ conversation }: Props) {
     }
   };
 
-  const handleSendMessage = async () => {
-    if ((!newMessage.trim() && !imageFile) || !conversation) {
+  const handleSendMessage = async (text: string, file: File | null) => {
+    if ((!text.trim() && !file) || !conversation) {
       return;
     }
 
     setSendError(null);
 
-    // Store the current message text to preserve it in case of error
-    const messageText = newMessage.trim();
-
     try {
-      if (imageFile) {
+      if (file) {
         setIsSendingImage(true);
         const formData = new FormData();
-        formData.append('image', imageFile);
-        if (messageText) {
-          formData.append('text', messageText);
+        formData.append('image', file);
+        if (text.trim()) {
+          formData.append('text', text.trim());
         }
         await sendMessageWithImage(conversation.id, formData);
-
-        // Only clear these on success
-        setImageFile(null);
-        setImagePreview(null);
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-
-        // Only clear text on success
-        setNewMessage('');
       } else {
-        await sendMessage(conversation.id, newMessage.trim());
-
-        // Only clear text on success
-        setNewMessage('');
+        await sendMessage(conversation.id, text.trim());
       }
 
       // Stop typing indicator when message is sent
@@ -200,42 +147,9 @@ export default function ConversationView({ conversation }: Props) {
       const errorMessage = err instanceof Error ?
         err.message : 'Failed to send message. Please try again.';
       setSendError(errorMessage);
+      throw err;
     } finally {
       setIsSendingImage(false);
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    } else {
-      // User is typing something other than Enter
-      handleTypingIndicator(true);
-    }
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) {
-      return;
-    }
-
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    
-    reader.onloadend = () => {
-      setImagePreview(reader.result as string);
-    };
-    
-    reader.readAsDataURL(file);
-    setImageFile(file);
-  };
-
-  const handleRemoveImage = () => {
-    setImageFile(null);
-    setImagePreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
     }
   };
 
@@ -271,51 +185,6 @@ export default function ConversationView({ conversation }: Props) {
     if (!conversation) return;
 
     handleTyping(conversation.id, isTyping);
-  };
-
-  const autoResizeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const textarea = e.target;
-    
-    // First update the message state
-    setNewMessage(textarea.value);
-    
-    // Reset height to auto so scrollHeight is correctly calculated based on content
-    textarea.style.height = 'auto';
-
-    // Force a reflow to ensure the browser recalculates dimensions
-    // textarea.scrollHeight;
-    
-    // Then set the height based on the new content (with a max height of 160px)
-    textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
-
-    // Send typing indicator when the user is typing
-    handleTypingIndicator(textarea.value.trim().length > 0);
-  };
-
-  const shouldShowTimestamp = (currentMsg: Message, prevMsg: Message | null): boolean => {
-    if (!prevMsg) return true; // Always show for first message
-    
-    const currentTime = new Date(currentMsg.createdAt);
-    const prevTime = new Date(prevMsg.createdAt);
-    
-    // Show timestamp if more than 2 hours between messages
-    return (currentTime.getTime() - prevTime.getTime()) > 2 * 60 * 60 * 1000;
-  };
-
-  const shouldShowDateDivider = (currentMsg: Message, prevMsg: Message | null): boolean => {
-    if (!prevMsg) return true; // Always show date for first message
-    
-    const currentDate = new Date(currentMsg.createdAt).toDateString();
-    const prevDate = new Date(prevMsg.createdAt).toDateString();
-    
-    return currentDate !== prevDate;
-  };
-  
-  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>, messageId: string) => {
-    const img = e.target as HTMLImageElement;
-    if (img.naturalWidth > img.naturalHeight) {
-      setLandscapeImages(prev => new Set(prev).add(messageId));
-    }
   };
 
   return (
@@ -374,75 +243,14 @@ export default function ConversationView({ conversation }: Props) {
           <ProfileInfo recipient={activeRecipient} />
         </div>
       )}
-      
-      <div className={styles.messagesContainer}>
-        {Array.isArray(messages) && messages.length > 0 && messages.map((message, index) => {
-          const isImageOnly = message.imageUrl && !message.text;
-          const prevMessage = index > 0 ? messages[index - 1] : null;
-          
-          // Check if we need a date divider or timestamp
-          const showDateDivider = shouldShowDateDivider(message, prevMessage);
-          const showTimestamp = !showDateDivider && shouldShowTimestamp(message, prevMessage);
-          
-          return (
-            <React.Fragment key={message.id}>
-              {/* Date divider with time */}
-              {showDateDivider && (
-                <div className={styles.timestampDivider}>
-                  <span className={styles.timestampText}>
-                    {formatMessageFeedTimestamp(message.createdAt)}
-                  </span>
-                </div>
-              )}
-              
-              {/* Time separator with date */}
-              {showTimestamp && (
-                <div className={styles.timestampDivider}>
-                  <span className={styles.timestampText}>
-                    {formatMessageFeedTimestamp(message.createdAt)}
-                  </span>
-                </div>
-              )}
-              
-              {/* Message content */}
-              <div 
-                className={`${styles.message} ${
-                  message.senderId === user?.id ? styles.sent : styles.received
-                } ${isImageOnly ? styles.imageOnly : ''}`}
-              >
-                {isImageOnly ? (
-                  <div className={`${styles.messageImageOnly} ${landscapeImages.has(message.id) ? styles.landscape : ''}`}>
-                    <img
-                      src={message.imageUrl || undefined}
-                      alt=""
-                      onLoad={(e) => handleImageLoad(e, message.id)}
-                    />
-                  </div>
-                ) : (
-                  <div className={styles.messageContent}>
-                    {message.imageUrl && (
-                      <div className={`${styles.messageImage} ${landscapeImages.has(message.id) ? styles.landscape : ''}`}>
-                        <img
-                          src={message.imageUrl}
-                          alt=""
-                          onLoad={(e) => handleImageLoad(e, message.id)}
-                        />
-                      </div>
-                    )}
-                    {message.text}
-                  </div>
-                )}
-              </div>
-            </React.Fragment>
-          );
-        })}
 
-        {otherTypingUsers.length > 0 && typingUserName && (
-          <TypingIndicators displayName={typingUserName} isConversationWithBot={isConversationWithBot} />
-        )}
-
-        <div ref={messagesEndRef} />
-      </div>
+      <MessageList
+        messages={messages}
+        currentUserId={user?.id}
+        typingUserName={typingUserName}
+        isTyping={otherTypingUsers.length > 0}
+        isConversationWithBot={isConversationWithBot}
+      />
 
       {sendError && (
         <div className={styles.errorMessage}>
@@ -457,73 +265,14 @@ export default function ConversationView({ conversation }: Props) {
         </div>
       )}
 
-      <div className={styles.inputContainer}>
-        {imagePreview && (
-          <div className={styles.imagePreviewContainer}>
-            <img src={imagePreview} className={styles.imagePreview} />
-            <button
-              type='button'
-              onClick={handleRemoveImage}
-              className={styles.removeImageButton}
-              aria-label='Remove image'
-            >
-              <X size={16} />
-            </button>
-          </div>
-        )}
-
-        <textarea
-          ref={textareaRef}
-          value={newMessage}
-          onChange={autoResizeTextArea}
-          onKeyDown={handleKeyPress}
-          onPaste={() => handleTypingIndicator(true)}
-          placeholder="Type a message..."
-          className={styles.messageInput}
-          rows={1}
-          disabled={isNewConversation || isCreatingConversation || isSendingImage}
-        />
-
-        <div className={styles.inputActions}>
-          <input
-            ref={fileInputRef}
-            type="file"
-            id='messageImage'
-            accept='image/jpeg,image/png,image/gif,image/webp'
-            className={styles.fileInput}
-            onChange={handleImageChange}
-            disabled={isNewConversation || isCreatingConversation || isSendingImage || isConversationWithBot}
-          />
-
-          {isConversationWithBot ? (
-            <div className={styles.botImageNotice}>
-              <span>Sending images not available with bots</span>
-            </div>
-          ): (
-            <label
-              htmlFor="messageImage"
-              className={styles.imageButton}
-              aria-disabled={isNewConversation || isCreatingConversation || isSendingImage}
-            >
-              <Image size={24} strokeWidth={1} />
-            </label>              
-          )}
-
-          <Button 
-            className={styles.sendButton}
-            onClick={handleSendMessage}
-            disabled={
-              isNewConversation ||
-              isCreatingConversation ||
-              isSendingImage ||
-              (!newMessage.trim() && !imageFile)
-            }
-            size='small'
-            >
-            <ArrowUp size={24} strokeWidth={2}/>
-          </Button>
-        </div>
-      </div>
+      <MessageInput
+        conversationId={conversation?.id}
+        onSendMessage={handleSendMessage}
+        isDisabled={isNewConversation || isCreatingConversation}
+        isSending={isSendingImage}
+        isConversationWithBot={isConversationWithBot}
+        onTyping={handleTypingIndicator}
+      />
 
       {showDeleteModal && conversation && (
         <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} hideCloseButton>

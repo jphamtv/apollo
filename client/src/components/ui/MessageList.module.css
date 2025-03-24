@@ -1,0 +1,15 @@
+.messagesContainer {
+  flex: 1;
+  padding: 1rem 2.75rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Mobile styles */
+@media (max-width: 46.875rem) {
+  .messagesContainer {
+    padding: 1rem 1.25rem;
+  }
+}
