@@ -32,8 +32,8 @@ function initialize() {
         // Remove password before passing to done
         const { password: _, ...userWithoutPassword } = user;
         return done(null, userWithoutPassword);
-      } catch (error) {
-        return done(error);
+      } catch (err) {
+        return done(err);
       }
     })
   );
@@ -52,7 +52,7 @@ function initialize() {
           return done(null, user);
         }
         return done(null, false);
-      } catch (err) {
+      } catch {
         return done(null, false);
       }
     })

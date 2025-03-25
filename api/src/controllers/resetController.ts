@@ -1,4 +1,4 @@
-import { Request, Response, RequestHandler } from 'express';
+import { RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import { createResetToken, resetPassword } from '../models/authModel';
@@ -32,7 +32,7 @@ export const requestReset: RequestHandler = async (req, res): Promise<void> => {
     // This prevents email enumeration
     if (resetToken) {
       try {
-        const emailResult = await sendPasswordResetEmail(email, resetToken);
+        await sendPasswordResetEmail(email, resetToken);
       } catch (emailError) {
         logger.error(`Error sending reset email: ${emailError}`);
       }

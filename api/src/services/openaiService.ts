@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { ChatCompletionAssistantMessageParam } from 'openai/resources';
 import dotenv from 'dotenv';
 import { logger } from '../utils/logger';
 dotenv.config();
@@ -40,7 +41,7 @@ export async function generateBotResponse(
 
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
-      messages: messages as any,
+      messages: messages as ChatCompletionAssistantMessageParam[],
       max_tokens: maxTokens,
       temperature: 0.75,
     });

@@ -40,7 +40,7 @@ app.use('/api/conversations', conversationsRouter);
 app.use('/api/conversations/:conversationId/messages', messagesRouter);
 
 // Error handing
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
   logger.error(`Unhandled error: ${err}`); // Log error for debugging
   res.status(500).json({ error: 'Something went wrong' }); // Send simple message to user to see
 });
