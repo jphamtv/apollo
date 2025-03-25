@@ -1,20 +1,20 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from '@prisma/client';
 
 export type ConversationWithDetails = Prisma.ConversationGetPayload<{
   include: {
-    messages: true,
+    messages: true;
     participants: {
       include: {
         user: {
           select: {
-            id: true,
-            username: true,
-            isBot: true,
-          },
-        },
-      },
-    },
-  },
+            id: true;
+            username: true;
+            isBot: true;
+          };
+        };
+      };
+    };
+  };
 }> & {
   hasUnread?: boolean;
 };

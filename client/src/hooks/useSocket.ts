@@ -13,30 +13,36 @@ export const useSocket = () => {
   const { socket, isConnected, typingUsers } = context;
 
   // Get typing users for a specific conversation
-  const getTypingUsers = useCallback((conversationId: string) => {
-    return typingUsers[conversationId] || [];
-  }, [typingUsers]);
+  const getTypingUsers = useCallback(
+    (conversationId: string) => {
+      return typingUsers[conversationId] || [];
+    },
+    [typingUsers]
+  );
 
   // Handle user typing with debounce
-  const handleTyping = useCallback((conversationId: string, isTyping: boolean) => {
-    // Clear any existing timeout
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-      typingTimeoutRef.current = null;
-    }
-
-    if (isTyping) {
-      startTyping(conversationId);
-
-      // Set timeout to automatically stop typing after 2 seconds of inactivity
-      typingTimeoutRef.current = setTimeout(() => {
-        stopTyping(conversationId);
+  const handleTyping = useCallback(
+    (conversationId: string, isTyping: boolean) => {
+      // Clear any existing timeout
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
         typingTimeoutRef.current = null;
-      }, 2000);
-    } else {
-      stopTyping(conversationId);
-    }
-  }, []);
+      }
+
+      if (isTyping) {
+        startTyping(conversationId);
+
+        // Set timeout to automatically stop typing after 2 seconds of inactivity
+        typingTimeoutRef.current = setTimeout(() => {
+          stopTyping(conversationId);
+          typingTimeoutRef.current = null;
+        }, 2000);
+      } else {
+        stopTyping(conversationId);
+      }
+    },
+    []
+  );
 
   // Clean up timeout on unmount
   useEffect(() => {

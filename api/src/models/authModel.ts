@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 import crypto from 'crypto';
 
 const prisma = new PrismaClient();
@@ -11,17 +11,17 @@ const userWithProfile = {
     select: {
       displayName: true,
       imageUrl: true,
-      bio: true
-    }
-  }
+      bio: true,
+    },
+  },
 };
 
 export const create = async (
   username: string,
   email: string,
-  hashedPassword: string,
+  hashedPassword: string
 ) => {
-  return prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async tx => {
     // Create user
     const user = await tx.user.create({
       data: {
@@ -31,12 +31,12 @@ export const create = async (
         profile: {
           create: {
             displayName: username, // Default to username, can be updated later
-          }
-        }
+          },
+        },
       },
-      select: userWithProfile
+      select: userWithProfile,
     });
-    
+
     return user;
   });
 };
@@ -54,29 +54,31 @@ export const findByEmail = async (email: string) => {
 export const findById = async (id: string) => {
   return prisma.user.findUnique({
     where: { id },
-    select: userWithProfile
+    select: userWithProfile,
   });
 };
 
 export const findBotById = async (id: string) => {
   return prisma.user.findUnique({
     where: { id },
-    select: { 
-      id: true, 
+    select: {
+      id: true,
       botSystemPrompt: true,
-      botQuotes: true
-    }
+      botQuotes: true,
+    },
   });
 };
 
 export const findByUsername = async (username: string) => {
   return prisma.user.findUnique({
     where: { username },
-    select: { id: true }
+    select: { id: true },
   });
 };
 
-export const createResetToken = async (email: string): Promise<string | null> => {
+export const createResetToken = async (
+  email: string
+): Promise<string | null> => {
   const user = await findByEmail(email);
   if (!user) return null;
 
@@ -115,7 +117,7 @@ export const resetPassword = async (token: string, newPassword: string) => {
       resetToken: null,
       resetTokenExpiry: null,
     },
-    select: userWithProfile
+    select: userWithProfile,
   });
 };
 
@@ -126,7 +128,6 @@ export const deleteById = async (id: string): Promise<void> => {
     where: { id },
   });
 };
-
 
 export default {
   create,

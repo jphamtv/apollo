@@ -1,18 +1,18 @@
-import { ComponentProps } from "react";
+import { ComponentProps } from 'react';
 import styles from './Button.module.css';
 
-interface ButtonProps extends ComponentProps<"button"> {
-  variant?: "primary" | "secondary" | "danger";
-  size?: "small" | "medium" | "large";
+interface ButtonProps extends ComponentProps<'button'> {
+  variant?: 'primary' | 'secondary' | 'danger';
+  size?: 'small' | 'medium' | 'large';
   isLoading?: boolean;
 }
 
 export default function Button({
   children,
-  variant = "primary",
-  size = "medium",
+  variant = 'primary',
+  size = 'medium',
   isLoading = false,
-  className = "",
+  className = '',
   disabled,
   ...props
 }: ButtonProps) {
@@ -25,13 +25,13 @@ export default function Button({
         ${styles.button}
         ${variantClass}
         ${sizeClass}
-        ${disabled || isLoading ? styles.disabled : ""}
+        ${disabled || isLoading ? styles.disabled : ''}
         ${className}
       `.trim()}
       disabled={disabled || isLoading}
       {...props}
     >
-      {isLoading ? "Loading..." : children}
+      {isLoading ? 'Loading...' : children}
     </button>
   );
 }

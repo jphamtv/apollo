@@ -3,7 +3,12 @@ import { Socket } from 'socket.io-client';
 import { SocketContext } from './socketContext';
 import { useAuth } from '../hooks/useAuth';
 import { apiClient } from '../utils/apiClient';
-import { EVENTS, initializeSocket, disconnectSocket, joinConversation } from '../utils/socketClient';
+import {
+  EVENTS,
+  initializeSocket,
+  disconnectSocket,
+  joinConversation,
+} from '../utils/socketClient';
 import { useMessaging } from '../hooks/useMessaging';
 import { Message } from '../types/message';
 
@@ -13,7 +18,12 @@ interface SocketProviderProps {
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const { user } = useAuth();
-  const { activeConversation, markConversationAsRead, dispatch, conversations } = useMessaging();
+  const {
+    activeConversation,
+    markConversationAsRead,
+    dispatch,
+    conversations,
+  } = useMessaging();
 
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -67,7 +77,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     socket.on(EVENTS.MESSAGE_RECEIVE, (message: Message) => {
       // Add new message to state
       dispatch({ type: 'RECEIVE_MESSAGE', message });
-      
+
       // If this is the active conversation, mark it as read
       if (activeConversation?.id === message.conversationId) {
         markConversationAsRead(message.conversationId);
@@ -94,7 +104,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
         if (!conversationTypers.includes(userId)) {
           return {
             ...prev,
-            [conversationId]: [...conversationTypers, userId]
+            [conversationId]: [...conversationTypers, userId],
           };
         }
         return prev;
@@ -107,7 +117,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
         return {
           ...prev,
-          [conversationId]: conversationTypers.filter(id => id !== userId)
+          [conversationId]: conversationTypers.filter(id => id !== userId),
         };
       });
     });

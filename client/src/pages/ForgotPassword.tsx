@@ -17,7 +17,7 @@ export default function ForgotPassword() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors([]);
-    
+
     // Validate email
     const emailError = validateEmail(email);
     if (emailError) {
@@ -32,7 +32,7 @@ export default function ForgotPassword() {
     } catch (error) {
       // Not setting validation errors here to prevent email enumeration
       // The backend should always return 200 whether the email exists or not
-      
+
       // But we should handle unexpected errors
       if (isApiError(error) && error.status !== 200) {
         setErrors(['An unexpected error occurred. Please try again.']);
@@ -48,11 +48,12 @@ export default function ForgotPassword() {
         <Link to="/login">
           <h1 className={styles.title}>Apollo</h1>
         </Link>
-        
+
         {isSubmitted ? (
           <>
             <div className={styles.successMessage}>
-              If an account exists with this email, we've sent instructions to reset your password.
+              If an account exists with this email, we've sent instructions to
+              reset your password.
             </div>
             <p className={styles.footer}>
               <Link to="/login">
@@ -63,21 +64,21 @@ export default function ForgotPassword() {
         ) : (
           <form onSubmit={handleSubmit} className={styles.form}>
             {errors.length > 0 && <ErrorBox errors={errors} />}
-            
-            <p>Enter your email address and we'll send you a link to reset your password.</p>
+
+            <p>
+              Enter your email address and we'll send you a link to reset your
+              password.
+            </p>
             <Input
               type="email"
               name="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               autoComplete="email"
               required
-            />              
+            />
             <div className={styles.buttonContainer}>
-              <Button
-                type="submit"
-                isLoading={isLoading}
-              >
+              <Button type="submit" isLoading={isLoading}>
                 Send Reset Link
               </Button>
             </div>

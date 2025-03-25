@@ -1,5 +1,5 @@
-import { Response, RequestHandler } from "express";
-import { body, validationResult } from "express-validator";
+import { Response, RequestHandler } from 'express';
+import { body, validationResult } from 'express-validator';
 import {
   create,
   findById,
@@ -10,29 +10,32 @@ import {
   findExistingConversationByParticipants,
   deleteById,
   markConversationAsRead,
-} from "../models/conversationModel";
-import { AuthRequest } from "../types";
-import { notifyMessageRead } from "../services/socketService";
-import { logger } from "../utils/logger";
+} from '../models/conversationModel';
+import { AuthRequest } from '../types';
+import { notifyMessageRead } from '../services/socketService';
+import { logger } from '../utils/logger';
 
 const validateGroupName = [
-  body("name")
+  body('name')
     .trim()
     .isLength({ min: 1, max: 50 })
-    .withMessage("Group name must be between 1 and 50 characters")
+    .withMessage('Group name must be between 1 and 50 characters')
     .matches(/^[\p{L}\p{N}\p{P}\p{Z}]+$/u)
-    .withMessage("Group name can contain letters, numbers, spaces and punctuation"),
+    .withMessage(
+      'Group name can contain letters, numbers, spaces and punctuation'
+    ),
 ];
 
 export const createConversation = [
   async (req: AuthRequest, res: Response) => {
     try {
-      const { name, isGroup, participantIds } = req.body;  
+      const { name, isGroup, participantIds } = req.body;
 
       // Include the creator in participant check
       const allParticipantIds = [req.user.id, ...participantIds];
 
-      const existingConversation = await findExistingConversationByParticipants(allParticipantIds);
+      const existingConversation =
+        await findExistingConversationByParticipants(allParticipantIds);
       if (existingConversation) {
         return res.json({ conversation: existingConversation });
       }
@@ -44,18 +47,18 @@ export const createConversation = [
         participants: {
           create: [
             { userId: req.user.id }, // Creator
-            ...participantIds.map((id: string) => ({ userId: id }))
-          ]
-        }
+            ...participantIds.map((id: string) => ({ userId: id })),
+          ],
+        },
       };
 
       const conversation = await create(data);
       res.json({ conversation });
     } catch (err) {
       logger.error(`Create conversation error: ${err}`);
-      res.status(500).json({ message: "Error creating conversation" });
+      res.status(500).json({ message: 'Error creating conversation' });
     }
-  }
+  },
 ] as unknown as RequestHandler[];
 
 export const getUserConversations = [
@@ -65,8 +68,8 @@ export const getUserConversations = [
 
       if (!conversations) {
         return res.status(404).json({
-          error: "NOT_FOUND",
-          message: "User's conversations not found"
+          error: 'NOT_FOUND',
+          message: "User's conversations not found",
         });
       }
 
@@ -74,29 +77,29 @@ export const getUserConversations = [
     } catch (err) {
       logger.error(`Fetching error: ${err}`);
       res.status(500).json({
-        error: "SERVER_ERROR",
-        message: "Error getting user's conversations"
+        error: 'SERVER_ERROR',
+        message: "Error getting user's conversations",
       });
     }
-  }
+  },
 ] as unknown as RequestHandler[];
 
-export const getConversationById = [  
+export const getConversationById = [
   async (req: AuthRequest, res: Response) => {
     try {
       const conversation = await findById(req.params.id);
 
       if (!conversation) {
         return res.status(404).json({
-          error: "NOT_FOUND",
-          message: "Conversation not found"
+          error: 'NOT_FOUND',
+          message: 'Conversation not found',
         });
       }
 
       if (!conversation.participants.some(p => p.userId === req.user.id)) {
         return res.status(403).json({
-          error: "FORBIDDEN",
-          message: "Not authorized to view this conversation"
+          error: 'FORBIDDEN',
+          message: 'Not authorized to view this conversation',
         });
       }
 
@@ -104,11 +107,11 @@ export const getConversationById = [
     } catch (err) {
       logger.error(`Fetching error: ${err}`);
       res.status(500).json({
-        error: "SERVER_ERROR",
-        message: "Error getting conversation"
+        error: 'SERVER_ERROR',
+        message: 'Error getting conversation',
       });
     }
-  }
+  },
 ] as unknown as RequestHandler[];
 
 export const updateGroupName = [
@@ -118,35 +121,35 @@ export const updateGroupName = [
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    
+
     try {
       const conversationId = req.params.id;
       const conversation = await findById(conversationId);
 
       if (!conversation) {
-        return res.status(404).json({ message: "Conversation not found" });
+        return res.status(404).json({ message: 'Conversation not found' });
       }
 
       if (!conversation.participants.some(p => p.userId === req.user.id)) {
         return res.status(403).json({
-          error: "FORBIDDEN",
-          message: "Not authorized to update this conversation's name"
+          error: 'FORBIDDEN',
+          message: "Not authorized to update this conversation's name",
         });
       }
 
-      const { name } = req.body;  
+      const { name } = req.body;
 
       const data = {
-        name: conversation.isGroup ? name : undefined
-      }
+        name: conversation.isGroup ? name : undefined,
+      };
 
       const updatedConversation = await update(conversationId, data);
       res.json(updatedConversation);
     } catch (err) {
       logger.error(`Update error: ${err}`);
       res.status(500).json({
-        error: "SERVER_ERROR",
-        message: "Error updating conversation name"
+        error: 'SERVER_ERROR',
+        message: 'Error updating conversation name',
       });
     }
   },
@@ -160,36 +163,41 @@ export const addParticipantToGroup = [
       const conversation = await findById(conversationId);
 
       if (!conversation) {
-        return res.status(404).json({ message: "Conversation not found" });
+        return res.status(404).json({ message: 'Conversation not found' });
       }
-      
+
       if (!conversation.participants.some(p => p.userId === req.user.id)) {
         return res.status(403).json({
-          error: "FORBIDDEN",
-          message: "Not authorized to add participant to this conversation"
+          error: 'FORBIDDEN',
+          message: 'Not authorized to add participant to this conversation',
         });
       }
 
       if (!conversation.isGroup) {
-        return res.status(404).json({ message: "Conversation is not a group chat" });
+        return res
+          .status(404)
+          .json({ message: 'Conversation is not a group chat' });
       }
 
       if (conversation.participants.some(p => p.userId === participantId)) {
         return res.status(400).json({
-          message: "Participant is already in the group chat"
+          message: 'Participant is already in the group chat',
         });
       }
 
-      const updatedConversation = await addParticipant(conversationId, participantId);
+      const updatedConversation = await addParticipant(
+        conversationId,
+        participantId
+      );
       res.json(updatedConversation);
     } catch (err) {
       logger.error(`Add participant error: ${err}`);
       res.status(500).json({
-        error: "SERVER_ERROR",
-        message: "Error adding participant to conversation"
+        error: 'SERVER_ERROR',
+        message: 'Error adding participant to conversation',
       });
     }
-  }
+  },
 ] as unknown as RequestHandler[];
 
 export const removeParticipantFromGroup = [
@@ -198,60 +206,66 @@ export const removeParticipantFromGroup = [
       const conversationId = req.params.id;
       const participantId = req.body.participantId;
       const conversation = await findById(conversationId);
-  
+
       if (!conversation) {
-        return res.status(404).json({ message: "Conversation not found" });
+        return res.status(404).json({ message: 'Conversation not found' });
       }
-  
+
       if (!conversation.participants.some(p => p.userId === req.user.id)) {
         return res.status(403).json({
-          error: "FORBIDDEN",
-          message: "Not authorized to remove participant from this conversation"
+          error: 'FORBIDDEN',
+          message:
+            'Not authorized to remove participant from this conversation',
         });
       }
-  
+
       if (!conversation.isGroup) {
-        return res.status(404).json({ message: "Conversation is not a group chat" });
+        return res
+          .status(404)
+          .json({ message: 'Conversation is not a group chat' });
       }
-  
-      const updatedConversation = await removeParticipant(conversationId, participantId);
+
+      const updatedConversation = await removeParticipant(
+        conversationId,
+        participantId
+      );
       res.json(updatedConversation);
     } catch (err) {
       logger.error(`Remove participant error: ${err}`);
       res.status(500).json({
-        error: "SERVER_ERROR",
-        message: "Error removing participant from conversation"
+        error: 'SERVER_ERROR',
+        message: 'Error removing participant from conversation',
       });
     }
-  }
+  },
 ] as unknown as RequestHandler[];
 
-export const deleteConversation = [  
+export const deleteConversation = [
   async (req: AuthRequest, res: Response) => {
     try {
       const conversation = await findById(req.params.id);
-  
+
       if (!conversation) {
-        return res.status(404).json({ message: "Conversation not found" });
+        return res.status(404).json({ message: 'Conversation not found' });
       }
-  
+
       if (!conversation.participants.some(p => p.userId === req.user.id)) {
         return res.status(403).json({
-          error: "FORBIDDEN",
-          message: "Not authorized to delete this conversation"
+          error: 'FORBIDDEN',
+          message: 'Not authorized to delete this conversation',
         });
       }
-  
+
       await deleteById(req.params.id);
-      res.json({ message: "Conversation deleted successfully" });
+      res.json({ message: 'Conversation deleted successfully' });
     } catch (err) {
       logger.error(`Delete error: ${err}`);
       res.status(500).json({
-        error: "SERVER_ERROR",
-        message: "Error deleting conversation"
+        error: 'SERVER_ERROR',
+        message: 'Error deleting conversation',
       });
     }
-  }
+  },
 ] as unknown as RequestHandler[];
 
 export const markAsRead = [
@@ -263,27 +277,29 @@ export const markAsRead = [
       // First check if the user is a participant
       const conversation = await findById(conversationId);
       if (!conversation) {
-        return res.status(404).json({ message: "Conversation not found" });
+        return res.status(404).json({ message: 'Conversation not found' });
       }
 
-      const isParticipant = conversation.participants.some(p => p.userId === userId);
+      const isParticipant = conversation.participants.some(
+        p => p.userId === userId
+      );
       if (!isParticipant) {
         return res.status(403).json({
-          error: "FORBIDDEN",
-          message: "Not authorized to access this conversation"
+          error: 'FORBIDDEN',
+          message: 'Not authorized to access this conversation',
         });
       }
-      
+
       // Mark all messages as read
       const updatedCount = await markConversationAsRead(conversationId, userId);
 
       // Notify message was read
       notifyMessageRead(conversationId, userId);
 
-      res.json({ updated: updatedCount })
+      res.json({ updated: updatedCount });
     } catch (err) {
       logger.error(`Mark conversation as read error: ${err}`);
-      res.status(500).json({ message: "Error marking conversation as read" });
+      res.status(500).json({ message: 'Error marking conversation as read' });
     }
-  }
+  },
 ] as unknown as RequestHandler[];

@@ -7,9 +7,10 @@ interface SidebarProviderProps {
 }
 
 export function SidebarProvider({ children }: SidebarProviderProps) {
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] =
+    useState<boolean>(false);
   const { user } = useAuth();
-  
+
   const toggleMobileSidebar = () => {
     setIsMobileSidebarOpen(prev => !prev);
   };
@@ -43,7 +44,9 @@ export function SidebarProvider({ children }: SidebarProviderProps) {
   }, []);
 
   return (
-    <SidebarContext.Provider value={{ isMobileSidebarOpen, toggleMobileSidebar, closeMobileSidebar }}>
+    <SidebarContext.Provider
+      value={{ isMobileSidebarOpen, toggleMobileSidebar, closeMobileSidebar }}
+    >
       {children}
     </SidebarContext.Provider>
   );

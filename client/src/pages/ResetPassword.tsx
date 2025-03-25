@@ -34,7 +34,7 @@ export default function ResetPassword() {
 
     // Validation
     const validationErrors: string[] = [];
-    
+
     // Check password length
     if (newPassword.length < 8) {
       validationErrors.push('Password must be at least 8 characters long');
@@ -42,7 +42,9 @@ export default function ResetPassword() {
 
     // Check if passwords match
     if (newPassword !== confirmPassword) {
-      validationErrors.push("Passwords don't match. Please make sure both passwords are identical.");
+      validationErrors.push(
+        "Passwords don't match. Please make sure both passwords are identical."
+      );
     }
 
     if (validationErrors.length > 0) {
@@ -83,7 +85,8 @@ export default function ResetPassword() {
         <div className={styles.container}>
           <h1 className={styles.title}>Password Reset Successful</h1>
           <div className={styles.successMessage}>
-            Your password has been reset successfully. You will be redirected to the login page shortly.
+            Your password has been reset successfully. You will be redirected to
+            the login page shortly.
           </div>
           <p className={styles.footer}>
             <Link to="/login">
@@ -99,7 +102,7 @@ export default function ResetPassword() {
     <div className={styles.wrapper}>
       <div className={styles.container}>
         <h1 className={styles.title}>Set New Password</h1>
-        
+
         {!token ? (
           <div className={styles.errorMessage}>
             {errors.length > 0 && <ErrorBox errors={errors} />}
@@ -112,13 +115,13 @@ export default function ResetPassword() {
         ) : (
           <form onSubmit={handleSubmit} className={styles.form}>
             {errors.length > 0 && <ErrorBox errors={errors} />}
-            
+
             <Input
               label="New Password"
               type="password"
               name="newPassword"
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={e => setNewPassword(e.target.value)}
               autoComplete="new-password"
               required
             />
@@ -127,7 +130,7 @@ export default function ResetPassword() {
               type="password"
               name="confirmPassword"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={e => setConfirmPassword(e.target.value)}
               autoComplete="new-password"
               required
             />

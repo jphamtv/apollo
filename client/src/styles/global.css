@@ -7,16 +7,17 @@
   --bg-input: #2e2f30;
   --bg-hover: #1d1e1f;
   --bg-selected: #141415;
-  --bg-avatar: #363f46;
-  --bg-messageContainer: #3A3C3D;
+  --bg-avatar: #3d474e;
+  --bg-messageContainer: #3a3c3d;
 
   --text-primary: #f8fafc;
   --text-secondary: #bcc2cb;
+  --text-avatar: #f8fafc;
 
   --accent-primary: #0b89e9;
   --accent-primary-hover: #097bd3;
 
-  --border-avatar: #5c5c5c;
+  --border-avatar: #3d474e;
   --border-color: #353639;
   --border-color-hover: #3f4043;
   --border-color-focus: var(--accent-primary);
@@ -37,16 +38,17 @@
   --border-radius-xlg: 1.25rem;
   --box-shadow-header: 0px 2px 2px 0px rgba(0, 0, 0, 0.08);
   --box-shadow-input: 0px -2px 2px 0px rgba(0, 0, 0, 0.08);
-  --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04),
-                0 1px 1px -0.5px rgba(0, 0, 0, 0.04), 
-                0 3px 3px -1.5px rgba(0, 0, 0, 0.04),
-                0 6px 6px -3px rgba(0, 0, 0, 0.04), 
-                0 12px 12px -6px rgba(0, 0, 0, 0.04),
-                0 24px 24px -12px rgba(0, 0, 0, 0.04);
+  --box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.04), 
+    0 1px 1px -0.5px rgba(0, 0, 0, 0.04),
+    0 3px 3px -1.5px rgba(0, 0, 0, 0.04), 
+    0 6px 6px -3px rgba(0, 0, 0, 0.04),
+    0 12px 12px -6px rgba(0, 0, 0, 0.04), 
+    0 24px 24px -12px rgba(0, 0, 0, 0.04);
 }
 
 /* Light theme */
-[data-theme="light"] {
+[data-theme='light'] {
   --bg-primary: #e9eef2;
   --bg-secondary: #dee4e9;
   --bg-sender: #f5f9fc;
@@ -54,13 +56,14 @@
   --bg-input: #ffffff;
   --bg-hover: #f0f4f9;
   --bg-selected: #cfd4d9;
-  --bg-avatar: #eaeff3;
+  --bg-avatar: #72808b;
   --bg-messageContainer: #fff;
 
   --text-primary: #1d2024;
   --text-secondary: #4f5967;
+  --text-avatar: #f8fafc;
 
-  --border-avatar: #b6c1cb;
+  --border-avatar: #72808b;
   --border-color: #d1d7de;
   --border-color-hover: #bfc9d5;
   --border-color-focus: var(--accent-primary);
@@ -71,17 +74,25 @@
 
   --box-shadow-header: 0px 2px 2px 0px rgba(0, 0, 0, 0.02);
   --box-shadow-input: 0px -2px 2px 0px rgba(0, 0, 0, 0.02);
-  --box-shadow: 0 0 0 1px rgba(14, 62, 124, 0.04),
-                0 1px 1px -0.5px rgba(43, 52, 70, 0.04),
-                0 3px 3px -1.5px rgba(43, 52, 70, 0.04),
-                0 6px 6px -3px rgba(42, 51, 69, 0.04),
-                0 12px 12px -6px rgba(14, 63, 126, 0.04),
-                0 24px 24px -12px rgba(14, 63, 126, 0.04);
+  --box-shadow:
+    0 0 0 1px rgba(14, 62, 124, 0.04), 
+    0 1px 1px -0.5px rgba(43, 52, 70, 0.04),
+    0 3px 3px -1.5px rgba(43, 52, 70, 0.04),
+    0 6px 6px -3px rgba(42, 51, 69, 0.04),
+    0 12px 12px -6px rgba(14, 63, 126, 0.04),
+    0 24px 24px -12px rgba(14, 63, 126, 0.04);
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    'Helvetica Neue',
+    Arial,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   color: var(--text-primary);
   background-color: var(--bg-secondary);
   font-size: 16px;

@@ -28,7 +28,11 @@ const messageStorage = multer.diskStorage({
 });
 
 // File filter for images
-const imageFilter = (req: Express.Request, file: Express.Multer.File, callback: multer.FileFilterCallback) => {
+const imageFilter = (
+  req: Express.Request,
+  file: Express.Multer.File,
+  callback: multer.FileFilterCallback
+) => {
   const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
   if (allowedTypes.includes(file.mimetype)) {
@@ -42,7 +46,7 @@ const imageFilter = (req: Express.Request, file: Express.Multer.File, callback: 
 export const uploadUserProfileImage = multer({
   storage: profileStorage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB max
+    fileSize: 5 * 1024 * 1024, // 5MB max
   },
   fileFilter: imageFilter,
 }).single('image');
@@ -50,16 +54,20 @@ export const uploadUserProfileImage = multer({
 export const uploadMessageImage = multer({
   storage: messageStorage,
   limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB max
+    fileSize: 10 * 1024 * 1024, // 10MB max
   },
   fileFilter: imageFilter,
 }).single('image');
 
 // Helper function to get the URL for an uploaded file
-export const getFileUrl = (filename: string, type: 'profile' | 'message'): string => {
-  const baseUrl = process.env.NODE_ENV === 'production'
-    ? process.env.API_URL || 'http://localhost:3000'
-    : 'http://localhost:3000';
-  
+export const getFileUrl = (
+  filename: string,
+  type: 'profile' | 'message'
+): string => {
+  const baseUrl =
+    process.env.NODE_ENV === 'production'
+      ? process.env.API_URL || 'http://localhost:3000'
+      : 'http://localhost:3000';
+
   return `${baseUrl}/uploads/${type}s/${filename}`;
 };

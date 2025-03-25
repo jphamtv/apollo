@@ -1,16 +1,16 @@
-import bcrypt from "bcryptjs";
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import { jwtConfig } from "./jwtConfig";
-import { findByEmail, findById } from "../models/authModel";
-import { JwtPayload } from "../types";
+import bcrypt from 'bcryptjs';
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { jwtConfig } from './jwtConfig';
+import { findByEmail, findById } from '../models/authModel';
+import { JwtPayload } from '../types';
 
 function initialize() {
   // Local Strategy - for login
   const options = {
-    usernameField: "email",
-    passwordField: "password",
+    usernameField: 'email',
+    passwordField: 'password',
   };
 
   passport.use(
@@ -20,13 +20,13 @@ function initialize() {
         const user = await findByEmail(email);
 
         if (!user) {
-          return done(null, false, { message: "Incorrect email" });
+          return done(null, false, { message: 'Incorrect email' });
         }
 
         // Check if password matches
         const match = await bcrypt.compare(password, user.password);
         if (!match) {
-          return done(null, false, { message: "Incorrect password" });
+          return done(null, false, { message: 'Incorrect password' });
         }
 
         // Remove password before passing to done
@@ -35,7 +35,7 @@ function initialize() {
       } catch (error) {
         return done(error);
       }
-    }),
+    })
   );
 
   // JWT Strategy - for protected routes
@@ -55,7 +55,7 @@ function initialize() {
       } catch (err) {
         return done(null, false);
       }
-    }),
+    })
   );
 }
 

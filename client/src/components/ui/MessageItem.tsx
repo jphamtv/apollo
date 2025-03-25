@@ -5,46 +5,61 @@ interface Props {
   message: Message;
   isCurrentUser: boolean;
   landscapeImages: Set<string>;
-  onImageLoad: (e: React.SyntheticEvent<HTMLImageElement>, messageId: string) => void;
+  onImageLoad: (
+    e: React.SyntheticEvent<HTMLImageElement>,
+    messageId: string
+  ) => void;
 }
 
 export default function MessageItem({
   message,
   isCurrentUser,
   landscapeImages,
-  onImageLoad
+  onImageLoad,
 }: Props) {
   const isImageOnly = message.imageUrl && !message.text;
-  
+
   // For screen readers, identify message sender
-  const messageSender = isCurrentUser ? 'You' : message.sender?.profile?.displayName || message.sender?.username || 'Other user';
+  const messageSender = isCurrentUser
+    ? 'You'
+    : message.sender?.profile?.displayName ||
+      message.sender?.username ||
+      'Other user';
   const timestamp = new Date(message.createdAt).toLocaleString();
-  const messageType = message.imageUrl ? (message.text ? 'message with image' : 'image message') : 'text message';
-  
+  const messageType = message.imageUrl
+    ? message.text
+      ? 'message with image'
+      : 'image message'
+    : 'text message';
+
   return (
-    <div 
+    <div
       className={`${styles.message} ${
-      isCurrentUser ? styles.sent : styles.received
-    } ${isImageOnly ? styles.imageOnly : ''}`}
+        isCurrentUser ? styles.sent : styles.received
+      } ${isImageOnly ? styles.imageOnly : ''}`}
       role="listitem"
-      aria-label={`${messageSender} sent ${messageType} at ${timestamp}`}>
-    
+      aria-label={`${messageSender} sent ${messageType} at ${timestamp}`}
+    >
       {isImageOnly ? (
-        <div className={`${styles.messageImageOnly} ${landscapeImages.has(message.id) ? styles.landscape : ''}`}>
+        <div
+          className={`${styles.messageImageOnly} ${landscapeImages.has(message.id) ? styles.landscape : ''}`}
+        >
           <img
             src={message.imageUrl || undefined}
             alt="Shared image"
-            onLoad={(e) => onImageLoad(e, message.id)}
+            onLoad={e => onImageLoad(e, message.id)}
           />
         </div>
       ) : (
         <div className={styles.messageContent}>
           {message.imageUrl && (
-            <div className={`${styles.messageImage} ${landscapeImages.has(message.id) ? styles.landscape : ''}`}>
+            <div
+              className={`${styles.messageImage} ${landscapeImages.has(message.id) ? styles.landscape : ''}`}
+            >
               <img
                 src={message.imageUrl}
                 alt="Shared image"
-                onLoad={(e) => onImageLoad(e, message.id)}
+                onLoad={e => onImageLoad(e, message.id)}
               />
             </div>
           )}

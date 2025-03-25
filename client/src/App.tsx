@@ -22,13 +22,13 @@ function App() {
               <SocketProvider>
                 <Routes>
                   {/* Public routes */}
-                  <Route path='/login' element={<Login />} />
-                  <Route path='/register' element={<Register />} />
-                  <Route path='/forgot-password' element={<ForgotPassword />} />
-                  <Route path='/reset-password' element={<ResetPassword />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                   {/* Protected routes */}
                   <Route element={<ProtectedRoute />}>
-                    <Route path='/*' element={<MessagesLayout />} />
+                    <Route path="/*" element={<MessagesLayout />} />
                   </Route>
                 </Routes>
               </SocketProvider>
@@ -37,7 +37,7 @@ function App() {
         </NavigationProvider>
       </AuthProvider>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;

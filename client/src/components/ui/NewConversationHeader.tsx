@@ -10,7 +10,10 @@ interface Props {
   disabled?: boolean;
 }
 
-export default function NewConversationHeader({ onUserSelect, disabled = false }: Props) {
+export default function NewConversationHeader({
+  onUserSelect,
+  disabled = false,
+}: Props) {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const { users, isLoading, searchUsers } = useUserSearch();
@@ -18,7 +21,10 @@ export default function NewConversationHeader({ onUserSelect, disabled = false }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShowDropdown(false);
       }
     };
@@ -61,9 +67,9 @@ export default function NewConversationHeader({ onUserSelect, disabled = false }
       <div className={styles.searchContainer}>
         <Input
           type="text"
-          placeholder={disabled ? "Creating conversation..." : "Type a name..."}
+          placeholder={disabled ? 'Creating conversation...' : 'Type a name...'}
           value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
+          onChange={e => handleSearch(e.target.value)}
           onFocus={() => !disabled && setShowDropdown(true)}
           className={styles.searchInput}
           disabled={disabled}
@@ -81,15 +87,15 @@ export default function NewConversationHeader({ onUserSelect, disabled = false }
                   onClick={() => handleSelectUser(user)}
                 >
                   {user.profile.imageUrl ? (
-                    <img 
-                      src={user.profile.imageUrl} 
-                      alt="" 
+                    <img
+                      src={user.profile.imageUrl}
+                      alt=""
                       className={styles.avatar}
                     />
                   ) : (
                     <div className={styles.avatarPlaceholder}>
-                      {user.profile.displayName?.[0].toUpperCase() || 
-                       user.username[0].toUpperCase()}
+                      {user.profile.displayName?.[0].toUpperCase() ||
+                        user.username[0].toUpperCase()}
                     </div>
                   )}
                   <div className={styles.userInfo}>

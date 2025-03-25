@@ -7,7 +7,7 @@ const createTransporter = async () => {
   if (process.env.NODE_ENV !== 'production') {
     // Generate test SMTP service account from ethereal.email
     const testAccount = await nodemailer.createTestAccount();
-    
+
     return nodemailer.createTransport({
       host: 'smtp.ethereal.email',
       port: 587,
@@ -31,11 +31,14 @@ const createTransporter = async () => {
   }
 };
 
-export const sendPasswordResetEmail = async (email: string, resetToken: string) => {
+export const sendPasswordResetEmail = async (
+  email: string,
+  resetToken: string
+) => {
   try {
     const transporter = await createTransporter();
     const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
-    logger.info(`Reset URL: ${resetUrl}`)
+    logger.info(`Reset URL: ${resetUrl}`);
 
     // Send mail with defined transport object
     const info = await transporter.sendMail({

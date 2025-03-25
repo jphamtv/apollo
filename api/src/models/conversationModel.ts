@@ -1,5 +1,5 @@
-import { PrismaClient, Prisma } from "@prisma/client";
-import { ConversationWithDetails } from "../types";
+import { PrismaClient, Prisma } from '@prisma/client';
+import { ConversationWithDetails } from '../types';
 
 const prisma = new PrismaClient();
 
@@ -11,12 +11,14 @@ const userSelect = {
     select: {
       displayName: true,
       imageUrl: true,
-      bio: true
-    }
-  }
-}
+      bio: true,
+    },
+  },
+};
 
-export const create = async (data: Prisma.ConversationCreateInput): Promise<ConversationWithDetails> => {
+export const create = async (
+  data: Prisma.ConversationCreateInput
+): Promise<ConversationWithDetails> => {
   return prisma.conversation.create({
     data,
     include: {
@@ -69,7 +71,7 @@ export const findConversationsByUserId = async (userId: string) => {
 
   // Calculate unread status for each conversation
   const conversationsWithUnreadStatus = await Promise.all(
-    conversations.map(async (conversation) => {
+    conversations.map(async conversation => {
       const hasUnread = await hasUnreadMessages(conversation.id, userId);
       return {
         ...conversation,
@@ -81,7 +83,9 @@ export const findConversationsByUserId = async (userId: string) => {
   return conversationsWithUnreadStatus;
 };
 
-export const findById = async (id: string): Promise<ConversationWithDetails | null> => {
+export const findById = async (
+  id: string
+): Promise<ConversationWithDetails | null> => {
   return prisma.conversation.findUnique({
     where: { id },
     include: {
@@ -99,7 +103,9 @@ export const findById = async (id: string): Promise<ConversationWithDetails | nu
   });
 };
 
-export const findExistingConversationByParticipants = async (participantIds: string[]) => {
+export const findExistingConversationByParticipants = async (
+  participantIds: string[]
+) => {
   // Special case for direct (non-group) conversations
   if (participantIds.length === 2) {
     return prisma.conversation.findFirst({
@@ -110,13 +116,13 @@ export const findExistingConversationByParticipants = async (participantIds: str
           { participants: { some: { userId: participantIds[0] } } },
           { participants: { some: { userId: participantIds[1] } } },
           // Total participant count must be exactly 2
-          { participants: { none: { userId: { notIn: participantIds } } } }
-        ]
+          { participants: { none: { userId: { notIn: participantIds } } } },
+        ],
       },
       include: {
         messages: {
           take: 1,
-          orderBy: { createdAt: 'desc' }
+          orderBy: { createdAt: 'desc' },
         },
         participants: {
           include: {
@@ -127,31 +133,31 @@ export const findExistingConversationByParticipants = async (participantIds: str
         },
       },
     });
-  };
-  
-  // For group conversations 
+  }
+
+  // For group conversations
   return prisma.conversation.findFirst({
     where: {
       isGroup: true,
       // All specified participants must be in the conversation
       AND: [
         ...participantIds.map(id => ({
-          participants: { some: { userId: id } }
+          participants: { some: { userId: id } },
         })),
         // For groups, ensure ONLY these participants exist
         {
           participants: {
             none: {
-              userId: { notIn: participantIds }
-            }
-          }
-        }
-      ]
+              userId: { notIn: participantIds },
+            },
+          },
+        },
+      ],
     },
     include: {
       messages: {
         take: 1,
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
       },
       participants: {
         include: {
@@ -220,9 +226,9 @@ export const isParticipant = async (
     where: {
       userId_conversationId: {
         userId,
-        conversationId
-      }
-    }
+        conversationId,
+      },
+    },
   });
   return !!participant; // "!!"" converts to boolean
 };
@@ -241,7 +247,10 @@ export const deleteById = async (id: string): Promise<void> => {
   ]);
 };
 
-export const hasUnreadMessages = async (conversationId: string, userId: string): Promise<boolean> => {
+export const hasUnreadMessages = async (
+  conversationId: string,
+  userId: string
+): Promise<boolean> => {
   const unreadCount = await prisma.message.count({
     where: {
       conversationId,
@@ -252,7 +261,7 @@ export const hasUnreadMessages = async (conversationId: string, userId: string):
     },
   });
 
-return unreadCount > 0;
+  return unreadCount > 0;
 };
 
 export const markConversationAsRead = async (
@@ -270,7 +279,7 @@ export const markConversationAsRead = async (
   });
 
   if (!participant) {
-    throw new Error("User is not a participant in this conversation");
+    throw new Error('User is not a participant in this conversation');
   }
 
   // Mark all messages as read
@@ -284,7 +293,7 @@ export const markConversationAsRead = async (
     },
     data: {
       isRead: true,
-    }
+    },
   });
 
   return result.count;

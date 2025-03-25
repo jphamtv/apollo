@@ -1,29 +1,32 @@
-import { Request, Response, RequestHandler } from "express";
-import { body, validationResult } from "express-validator";
-import { findByUsername, findByUserId, findByQuery, update } from "../models/userProfileModel";
-import { AuthRequest } from "../types";
-import { getFileUrl } from "../middleware/uploadMiddleware";
+import { Request, Response, RequestHandler } from 'express';
+import { body, validationResult } from 'express-validator';
+import {
+  findByUsername,
+  findByUserId,
+  findByQuery,
+  update,
+} from '../models/userProfileModel';
+import { AuthRequest } from '../types';
+import { getFileUrl } from '../middleware/uploadMiddleware';
 import fs from 'fs';
 import path from 'path';
 import { logger } from '../utils/logger';
 
 const validateUserProfile = [
-  body("displayName")
+  body('displayName')
     .trim()
     .isLength({ min: 2, max: 50 })
     .withMessage(`Display name must between 2 and 50 characters`)
     .matches(/^[\p{L}\p{N}\p{P}\p{Z}\p{S}]+$/u)
-    .withMessage("Display name can contain letters, numbers, spaces, and special characters"),
-  body("bio")
+    .withMessage(
+      'Display name can contain letters, numbers, spaces, and special characters'
+    ),
+  body('bio')
     .optional()
     .trim()
     .isLength({ max: 500 })
     .withMessage(`Bio must not exceed 500 characters`),
-  body("imageUrl")
-    .optional()
-    .trim()
-    .isURL()
-    .withMessage(`Invalid image URL`),
+  body('imageUrl').optional().trim().isURL().withMessage(`Invalid image URL`),
 ];
 
 export const updateUserProfile = [
@@ -35,19 +38,19 @@ export const updateUserProfile = [
     }
 
     try {
-      const userId = req.user.id;      
+      const userId = req.user.id;
 
       const existingProfile = await findByUserId(userId);
 
       if (!existingProfile) {
-        return res.status(404).json({ message: "Profile not found" });
+        return res.status(404).json({ message: 'Profile not found' });
       }
-     
+
       const { displayName, bio, imageUrl } = req.body;
       const userProfile = await update(userId, {
         displayName,
         bio,
-        imageUrl
+        imageUrl,
       });
 
       // Only send back safe user data
@@ -55,13 +58,13 @@ export const updateUserProfile = [
         id: req.user.id,
         username: req.user.username,
         email: req.user.email,
-        profile: userProfile
+        profile: userProfile,
       };
-      
+
       res.json({ user: safeUser });
     } catch (error) {
       logger.error(`Update error: ${error}`);
-      res.status(500).json({ message: "Error updating profile" });
+      res.status(500).json({ message: 'Error updating profile' });
     }
   },
 ] as RequestHandler[];
@@ -73,8 +76,8 @@ export const getUserProfile = [
 
       if (!userProfile) {
         return res.status(404).json({
-          error: "NOT_FOUND",
-          message: "Profile not found"
+          error: 'NOT_FOUND',
+          message: 'Profile not found',
         });
       }
 
@@ -82,11 +85,11 @@ export const getUserProfile = [
     } catch (err) {
       logger.error(`Fetching error: ${err}`);
       res.status(500).json({
-        error: "SERVER_ERROR",
-        message: "Error getting profile"
+        error: 'SERVER_ERROR',
+        message: 'Error getting profile',
       });
     }
-  }
+  },
 ] as RequestHandler[];
 
 export const searchUsers = [
@@ -94,7 +97,7 @@ export const searchUsers = [
     const query = req.query.q as string;
 
     if (!query) {
-      return res.status(400).json({ message: "Search query is required" });
+      return res.status(400).json({ message: 'Search query is required' });
     }
 
     try {
@@ -102,9 +105,9 @@ export const searchUsers = [
       res.json({ users });
     } catch (error) {
       logger.error(`User search error: ${error}`);
-      res.status(500).json({ message: "Error searching users" });
+      res.status(500).json({ message: 'Error searching users' });
     }
-  }
+  },
 ] as unknown as RequestHandler[];
 
 export const uploadProfileImage = [
@@ -129,7 +132,11 @@ export const uploadProfileImage = [
         try {
           const oldImagePath = existingProfile.imageUrl.split('/').pop();
           if (oldImagePath) {
-            const fullPath = path.join(__dirname, '../../uploads/profiles', oldImagePath);
+            const fullPath = path.join(
+              __dirname,
+              '../../uploads/profiles',
+              oldImagePath
+            );
             if (fs.existsSync(fullPath)) {
               fs.unlinkSync(fullPath);
             }
@@ -147,7 +154,7 @@ export const uploadProfileImage = [
         id: req.user.id,
         username: req.user.username,
         email: req.user.email,
-        profile: userProfile
+        profile: userProfile,
       };
 
       res.json({ user: safeUser });
@@ -155,7 +162,7 @@ export const uploadProfileImage = [
       logger.error(`Upload error: ${err}`);
       res.status(500).json({ message: 'Error uploading profile image' });
     }
-  }
+  },
 ] as unknown as RequestHandler[];
 
 export const deleteProfileImage = [
@@ -173,7 +180,11 @@ export const deleteProfileImage = [
         try {
           const oldImagePath = existingProfile.imageUrl.split('/').pop();
           if (oldImagePath) {
-            const fullPath = path.join(__dirname, '../../uploads/profiles', oldImagePath);
+            const fullPath = path.join(
+              __dirname,
+              '../../uploads/profiles',
+              oldImagePath
+            );
             if (fs.existsSync(fullPath)) {
               fs.unlinkSync(fullPath);
             }
@@ -191,7 +202,7 @@ export const deleteProfileImage = [
         id: req.user.id,
         username: req.user.username,
         email: req.user.email,
-        profile: userProfile
+        profile: userProfile,
       };
 
       res.json({ user: safeUser });
@@ -199,5 +210,5 @@ export const deleteProfileImage = [
       logger.error(`Delete image error: ${err}`);
       res.status(500).json({ message: 'Error deleting profile image' });
     }
-  }
+  },
 ] as unknown as RequestHandler[];

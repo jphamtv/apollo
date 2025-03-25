@@ -1,9 +1,11 @@
-import { PrismaClient, Prisma } from "@prisma/client";
-import { MessageWithDetails } from "../types";
+import { PrismaClient, Prisma } from '@prisma/client';
+import { MessageWithDetails } from '../types';
 
 const prisma = new PrismaClient();
 
-export const create = async (data: Prisma.MessageCreateInput): Promise<MessageWithDetails> => {
+export const create = async (
+  data: Prisma.MessageCreateInput
+): Promise<MessageWithDetails> => {
   return prisma.message.create({
     data,
     include: {
@@ -17,7 +19,9 @@ export const create = async (data: Prisma.MessageCreateInput): Promise<MessageWi
   });
 };
 
-export const findById = async (id: string): Promise<MessageWithDetails | null> => {
+export const findById = async (
+  id: string
+): Promise<MessageWithDetails | null> => {
   return prisma.message.findUnique({
     where: { id },
     include: {
@@ -31,7 +35,9 @@ export const findById = async (id: string): Promise<MessageWithDetails | null> =
   });
 };
 
-export const findByConversationId = async (conversationId: string): Promise<MessageWithDetails[]> => {
+export const findByConversationId = async (
+  conversationId: string
+): Promise<MessageWithDetails[]> => {
   return prisma.message.findMany({
     where: { conversationId },
     orderBy: { createdAt: 'desc' },
@@ -44,13 +50,11 @@ export const findByConversationId = async (conversationId: string): Promise<Mess
           isBot: true,
         },
       },
-    }
+    },
   });
 };
 
-export const markAsRead = async (
-  id: string
-): Promise<MessageWithDetails> => {
+export const markAsRead = async (id: string): Promise<MessageWithDetails> => {
   return prisma.message.update({
     where: { id },
     data: { isRead: true },

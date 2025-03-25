@@ -1,5 +1,5 @@
-import { createContext } from "react";
-import { User, LoginCredentials, RegisterCredentials } from "../types/user";
+import { createContext } from 'react';
+import { User, LoginCredentials, RegisterCredentials } from '../types/user';
 
 export interface UpdateProfileData {
   displayName: string;
@@ -19,4 +19,6 @@ export interface AuthContextType {
   deleteUserAccount: () => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);

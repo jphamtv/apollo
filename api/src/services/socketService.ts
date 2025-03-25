@@ -15,7 +15,11 @@ export const initializeSocketService = (socketServer: Server) => {
  * @param conversationId - ID of the conversation
  * @param senderId - ID of the message sender (excluded from notification)
  */
-export const notifyNewMessage = (message: MessageWithDetails, conversationId: string, senderId: string) => {
+export const notifyNewMessage = (
+  message: MessageWithDetails,
+  conversationId: string,
+  senderId: string
+) => {
   // Notify everyone in the conversation EXCEPT sender
   io.to(conversationId).except(senderId).emit(EVENTS.MESSAGE_RECEIVE, message);
 };
@@ -23,7 +27,7 @@ export const notifyNewMessage = (message: MessageWithDetails, conversationId: st
 export const notifyMessageRead = (conversationId: string, userId: string) => {
   io.to(conversationId).emit(EVENTS.MESSAGE_READ, {
     conversationId,
-    userId
+    userId,
   });
 };
 

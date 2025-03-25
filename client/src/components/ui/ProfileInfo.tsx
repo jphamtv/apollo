@@ -36,7 +36,7 @@ export default function ProfileInfo({ recipient }: ProfileInfoProps) {
         </div>
       </div>
       <div className={styles.bio}>
-        {recipient.profile.bio || "No bio available"}
+        {recipient.profile.bio || 'No bio available'}
       </div>
     </div>
   );

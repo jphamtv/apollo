@@ -30,8 +30,8 @@
 
 .imagePreviewContainer {
   position: relative;
-  width: 6.25rem; 
-  height: 6.25rem; 
+  width: 6.25rem;
+  height: 6.25rem;
   border-radius: 50%;
   overflow: hidden;
 }
@@ -62,7 +62,7 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  color: var(--text-primary);
+  color: var(--text-avatar);
 }
 
 .imageControls {
@@ -87,7 +87,7 @@
 .removeButton {
   background-color: var(--btn-secondary);
   color: var(--text-primary);
-  padding: 0.5rem 0.75rem; 
+  padding: 0.5rem 0.75rem;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
   cursor: pointer;
@@ -101,7 +101,7 @@
   background-color: var(--btn-secondary-hover);
 }
 
-.uploadButton[aria-disabled="true"] {
+.uploadButton[aria-disabled='true'] {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -109,7 +109,7 @@
 .removeButton {
   display: flex;
   align-items: center;
-  gap: 0.25rem; 
+  gap: 0.25rem;
   color: var(--error);
 }
 

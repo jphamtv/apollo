@@ -25,7 +25,11 @@ export class ApiError extends Error {
   status: number;
   data?: ValidationErrorResponse | ErrorResponse;
 
-  constructor(status: number, message: string, data?: ValidationErrorResponse | ErrorResponse) {
+  constructor(
+    status: number,
+    message: string,
+    data?: ValidationErrorResponse | ErrorResponse
+  ) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
@@ -35,17 +39,23 @@ export class ApiError extends Error {
 
 // Type guard to check if an error is an ApiError
 export function isApiError(error: unknown): error is ApiError {
-  return error instanceof Error && 
-         'status' in error && 
-         typeof (error as ApiError).status === 'number';
+  return (
+    error instanceof Error &&
+    'status' in error &&
+    typeof (error as ApiError).status === 'number'
+  );
 }
 
 // Type guard to check if an error response contains validation errors
-export function hasValidationErrors(data: unknown): data is ValidationErrorResponse {
-  return !!data && 
-         typeof data === 'object' &&
-         'errors' in data &&
-         Array.isArray((data as ValidationErrorResponse).errors) && 
-         (data as ValidationErrorResponse).errors.length > 0 && 
-         typeof (data as ValidationErrorResponse).errors[0].msg === 'string';
+export function hasValidationErrors(
+  data: unknown
+): data is ValidationErrorResponse {
+  return (
+    !!data &&
+    typeof data === 'object' &&
+    'errors' in data &&
+    Array.isArray((data as ValidationErrorResponse).errors) &&
+    (data as ValidationErrorResponse).errors.length > 0 &&
+    typeof (data as ValidationErrorResponse).errors[0].msg === 'string'
+  );
 }

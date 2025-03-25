@@ -1,37 +1,37 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import { validateForm } from "../utils/validation";
-import Button from "../components/ui/Button";
-import Input from "../components/ui/Input";
-import ErrorBox from "../components/ui/ErrorBox";
-import { isApiError, hasValidationErrors } from "../types/error";
-import styles from './Login.module.css'
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import { validateForm } from '../utils/validation';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
+import ErrorBox from '../components/ui/ErrorBox';
+import { isApiError, hasValidationErrors } from '../types/error';
+import styles from './Login.module.css';
 
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
-  const [values, setValues] = useState <{ email: string, password: string }>({
-    email: "",
-    password: "",
+  const [values, setValues] = useState<{ email: string; password: string }>({
+    email: '',
+    password: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Reset errors
     setErrors([]);
 
     // Validate form
     const validationErrors: string[] = [];
     const formErrors = validateForm(values);
-    
+
     if (Object.keys(formErrors).length > 0) {
       validationErrors.push(...Object.values(formErrors));
     }
-    
+
     // If there are errors, display them and stop
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
@@ -41,7 +41,7 @@ export default function Login() {
     setIsLoading(true);
     try {
       await login(values);
-      navigate("/");
+      navigate('/');
     } catch (error) {
       if (isApiError(error)) {
         if (error.data && hasValidationErrors(error.data)) {
@@ -53,7 +53,7 @@ export default function Login() {
         }
       } else {
         // Handle unknown errors
-        setErrors(["An unexpected error occurred. Please try again."]);
+        setErrors(['An unexpected error occurred. Please try again.']);
       }
     } finally {
       setIsLoading(false);
@@ -61,7 +61,7 @@ export default function Login() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValues((prev) => ({
+    setValues(prev => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
@@ -71,10 +71,10 @@ export default function Login() {
     <div className={styles.wrapper}>
       <div className={styles.container}>
         <h1 className={styles.title}>Apollo</h1>
-          
+
         <form onSubmit={handleSubmit} className={styles.form}>
           {errors.length > 0 && <ErrorBox errors={errors} />}
-          
+
           <Input
             label="Email"
             type="email"
@@ -110,7 +110,7 @@ export default function Login() {
         </form>
 
         <p className={styles.footer}>
-          Don't have an account?{" "}
+          Don't have an account?{' '}
           <Link to="/register">
             <span className={styles.signUpLink}>Sign up</span>
           </Link>

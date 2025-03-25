@@ -59,7 +59,7 @@
   border-radius: 50%;
   background-color: var(--bg-avatar);
   border: 1px solid var(--border-avatar);
-  color: var(--text-primary);
+  color: var(--text-avatar);
   display: flex;
   align-items: center;
   justify-content: center;

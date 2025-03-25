@@ -22,11 +22,13 @@ export function useUserSearch() {
     }
 
     setIsLoading(true);
-    
+
     // Set new timeout
     timeoutRef.current = window.setTimeout(async () => {
       try {
-        const response = await apiClient.get<{ users: User[] }>(`/users/search?q=${encodeURIComponent(query)}`);
+        const response = await apiClient.get<{ users: User[] }>(
+          `/users/search?q=${encodeURIComponent(query)}`
+        );
         setUsers(response.users);
       } catch (err) {
         setError('Failed to search users');
@@ -48,6 +50,6 @@ export function useUserSearch() {
     users,
     isLoading,
     error,
-    searchUsers
+    searchUsers,
   };
 }

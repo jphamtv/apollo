@@ -5,7 +5,7 @@ export const logger = {
       console.log(`[INFO] ${message}`, ...args);
     }
   },
-  
+
   error: (message: string, ...args: unknown[]) => {
     // Always log errors, but only with details in development
     if (import.meta.env.DEV) {
@@ -14,5 +14,5 @@ export const logger = {
       // In production, log minimal info without potentially sensitive details
       console.error(`[ERROR] ${message}`);
     }
-  }
+  },
 };

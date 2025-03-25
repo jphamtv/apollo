@@ -6,7 +6,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(navigationReducer, {
     view: 'messages',
     isNewConversation: false,
-    isSettingsOpen: false
+    isSettingsOpen: false,
   });
 
   const { user } = useAuth();

@@ -19,7 +19,7 @@ export const EVENTS = {
   CONVERSATION_LEAVE: 'conversation:leave',
 
   NOTIFICATION_NEW: 'notification:new',
-  NOTIFICATION_READ: 'notification:read'
+  NOTIFICATION_READ: 'notification:read',
 };
 
 let socket: Socket | null = null;
@@ -27,7 +27,7 @@ let socket: Socket | null = null;
 const getServerUrl = () => {
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
   return apiUrl.endsWith('/api') ? apiUrl.slice(0, -4) : apiUrl;
-}
+};
 
 /**
  * Initializes a Socket.io connection with authentication token
@@ -42,7 +42,7 @@ export const initializeSocket = (token: string): Socket => {
 
   const serverUrl = getServerUrl();
   logger.info(`Connecting to Socket.io server at: ${serverUrl}`);
-  
+
   // Connect to the socket server with authentication token
   socket = io(serverUrl, {
     auth: { token },
@@ -55,11 +55,11 @@ export const initializeSocket = (token: string): Socket => {
     logger.info(`Socket connected: ${socket?.id}`);
   });
 
-  socket.on('connect_error', (error) => {
+  socket.on('connect_error', error => {
     logger.error(`Socket connection error: ${error.message}`);
   });
 
-  socket.on(EVENTS.DISCONNECT, (reason) => {
+  socket.on(EVENTS.DISCONNECT, reason => {
     logger.info(`Socket disconnected: ${reason}`);
   });
 

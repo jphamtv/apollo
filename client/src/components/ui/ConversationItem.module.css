@@ -22,7 +22,7 @@
   align-items: center;
   justify-content: center;
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-avatar);
 }
 
 .content {
@@ -67,8 +67,8 @@
 }
 
 .unreadIndicator {
-  width: 0.5rem; 
-  height: 0.5rem; 
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 50%;
   background-color: #2c86f3;
   flex-shrink: 0;

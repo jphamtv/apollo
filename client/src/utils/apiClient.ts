@@ -1,7 +1,11 @@
-import { ApiError, ErrorResponse, ValidationErrorResponse } from "../types/error";
+import {
+  ApiError,
+  ErrorResponse,
+  ValidationErrorResponse,
+} from '../types/error';
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+  import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 interface RequestConfig extends RequestInit {
   data?: unknown;
@@ -9,22 +13,19 @@ interface RequestConfig extends RequestInit {
 }
 
 export const apiClient = {
-  getToken: () => localStorage.getItem("token"),
+  getToken: () => localStorage.getItem('token'),
 
-  setToken: (token: string) => localStorage.setItem("token", token),
+  setToken: (token: string) => localStorage.setItem('token', token),
 
   removeToken: () => {
-    const keysToRemove = [
-      "token",
-      "lastViewedConversationId",
-    ];
-    
+    const keysToRemove = ['token', 'lastViewedConversationId'];
+
     keysToRemove.forEach(key => localStorage.removeItem(key));
   },
 
   request: async <T>(
     endpoint: string,
-    { data, ...customConfig }: RequestConfig = {},
+    { data, ...customConfig }: RequestConfig = {}
   ): Promise<T> => {
     const token = apiClient.getToken();
     const headers: HeadersInit = {};
@@ -35,7 +36,7 @@ export const apiClient = {
 
     // Only set Content-Type for non-FormData requests
     if (!(data instanceof FormData)) {
-      headers["Content-Type"] = "application/json";
+      headers['Content-Type'] = 'application/json';
     }
 
     const config: RequestConfig = {
@@ -60,20 +61,20 @@ export const apiClient = {
       }
 
       // Determine if we have validation errors or a general error
-      const errorData = Array.isArray(responseData.errors) 
-        ? responseData as ValidationErrorResponse 
-        : responseData as ErrorResponse;
+      const errorData = Array.isArray(responseData.errors)
+        ? (responseData as ValidationErrorResponse)
+        : (responseData as ErrorResponse);
 
       throw new ApiError(
         response.status,
-        errorData.message || "Something went wrong",
+        errorData.message || 'Something went wrong',
         errorData
       );
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(500, "Network error");
+      throw new ApiError(500, 'Network error');
     }
   },
 
@@ -81,22 +82,30 @@ export const apiClient = {
   get: <T>(endpoint: string, config: RequestConfig = {}) => {
     return apiClient.request<T>(endpoint, {
       ...config,
-      method: "GET",
+      method: 'GET',
     });
   },
 
-  post: <T, D = unknown>(endpoint: string, data: D, config: RequestConfig = {}) => {
+  post: <T, D = unknown>(
+    endpoint: string,
+    data: D,
+    config: RequestConfig = {}
+  ) => {
     return apiClient.request<T>(endpoint, {
       ...config,
-      method: "POST",
+      method: 'POST',
       data,
     });
   },
 
-  put: <T, D = unknown>(endpoint: string, data: D, config: RequestConfig = {}) => {
+  put: <T, D = unknown>(
+    endpoint: string,
+    data: D,
+    config: RequestConfig = {}
+  ) => {
     return apiClient.request<T>(endpoint, {
       ...config,
-      method: "PUT",
+      method: 'PUT',
       data,
     });
   },
@@ -104,7 +113,7 @@ export const apiClient = {
   delete: <T>(endpoint: string, config: RequestConfig = {}) => {
     return apiClient.request<T>(endpoint, {
       ...config,
-      method: "DELETE",
+      method: 'DELETE',
     });
   },
 };

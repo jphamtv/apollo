@@ -1,10 +1,10 @@
-import app from "./app";
+import app from './app';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { verifySocketToken } from './middleware/socketMiddleware';
-import { initializeSocketService } from "./services/socketService";
-import { registerHandlers } from "./sockets/socketHandlers";
-import { logger } from "./utils/logger";
+import { initializeSocketService } from './services/socketService';
+import { registerHandlers } from './sockets/socketHandlers';
+import { logger } from './utils/logger';
 
 const PORT = process.env.PORT || 3000;
 const httpServer = createServer(app);
@@ -12,12 +12,13 @@ const httpServer = createServer(app);
 // Initialize Socket.io with CORS settings
 export const io = new Server(httpServer, {
   cors: {
-    origin: process.env.NODE_ENV === "production"
-      ? process.env.CLIENT_URL
-      : ["http://localhost:5173", "http://localhost:5174"],
-    methods: ["GET", "POST"],
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? process.env.CLIENT_URL
+        : ['http://localhost:5173', 'http://localhost:5174'],
+    methods: ['GET', 'POST'],
     credentials: true,
-  }
+  },
 });
 
 // Initialize socket service
@@ -27,10 +28,10 @@ initializeSocketService(io);
 io.use(verifySocketToken);
 
 // Set up event handlers
-io.on('connection', (socket) => {
+io.on('connection', socket => {
   logger.info(`User connected: ${socket.id}`);
 
-  // Join user to their personal room 
+  // Join user to their personal room
   const userId = socket.data.user.id;
   socket.join(userId);
 

@@ -23,16 +23,29 @@ interface Props {
 
 export default function ConversationView({ conversation }: Props) {
   const { user } = useAuth();
-  const { messages, sendMessage, sendMessageWithImage, loadMessages, clearMessages, createConversation, deleteConversation, markConversationAsRead, isCreatingConversation } = useMessaging();
+  const {
+    messages,
+    sendMessage,
+    sendMessageWithImage,
+    loadMessages,
+    clearMessages,
+    createConversation,
+    deleteConversation,
+    markConversationAsRead,
+    isCreatingConversation,
+  } = useMessaging();
   const { isNewConversation, navigateToConversation } = useNavigation();
   const { handleTyping, getTypingUsers } = useSocket();
 
   const [showProfileInfo, setShowProfileInfo] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [isSendingImage, setIsSendingImage] = useState<boolean>(false);
-  const [profileInfoPosition, setProfileInfoPosition] = useState<{ top: number, left: number }>({ top: 0, left: 0 });
+  const [profileInfoPosition, setProfileInfoPosition] = useState<{
+    top: number;
+    left: number;
+  }>({ top: 0, left: 0 });
   const [sendError, setSendError] = useState<string | null>(null);
-  
+
   const profileInfoRef = useRef<HTMLDivElement>(null);
   const displayProfileLinkRef = useRef<HTMLAnchorElement>(null);
 
@@ -61,7 +74,7 @@ export default function ConversationView({ conversation }: Props) {
 
   // Check to determine if the current conversation is with a bot
   const isConversationWithBot = activeRecipient?.isBot || false;
- 
+
   useEffect(() => {
     if (isNewConversation) {
       clearMessages();
@@ -99,14 +112,14 @@ export default function ConversationView({ conversation }: Props) {
       const timer = setTimeout(() => {
         setSendError(null);
       }, 5000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [sendError]);
 
   const handleUserSelect = async (selected: User) => {
     if (isCreatingConversation) return;
-    
+
     try {
       const newConversation = await createConversation(selected.id);
       navigateToConversation(newConversation);
@@ -139,13 +152,14 @@ export default function ConversationView({ conversation }: Props) {
       if (conversation) {
         handleTyping(conversation.id, false);
       }
-
     } catch (err) {
       logger.error('Failed to send message:', err);
 
       // Set user-friendly error message
-      const errorMessage = err instanceof Error ?
-        err.message : 'Failed to send message. Please try again.';
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : 'Failed to send message. Please try again.';
       setSendError(errorMessage);
       throw err;
     } finally {
@@ -160,12 +174,12 @@ export default function ConversationView({ conversation }: Props) {
       // Position just below the name with a small offset for the triangle
       setProfileInfoPosition({
         top: rect.bottom + window.scrollY + 8, // Add extra space for the triangle
-        left: Math.max(rect.left + window.scrollX - 20, 10) // Offset so triangle points to middle of name
+        left: Math.max(rect.left + window.scrollX - 20, 10), // Offset so triangle points to middle of name
       });
     }
     setShowProfileInfo(prev => !prev);
   };
-  
+
   const handleDeleteClick = () => {
     setShowDeleteModal(true);
   };
@@ -188,49 +202,55 @@ export default function ConversationView({ conversation }: Props) {
   };
 
   return (
-    <div className={styles.container} role="main" aria-label="Conversation view">
+    <div
+      className={styles.container}
+      role="main"
+      aria-label="Conversation view"
+    >
       <div className={styles.headerContainer}>
         {/* Mobile menu button */}
         <div className={styles.mobileMenuContainer}>
           <MenuButton />
         </div>
-        
-        <div className={styles.label}>
-          To:
-        </div>
-        
+
+        <div className={styles.label}>To:</div>
+
         {isNewConversation ? (
           <div className={styles.headerContent}>
-            <NewConversationHeader 
-              onUserSelect={handleUserSelect} 
+            <NewConversationHeader
+              onUserSelect={handleUserSelect}
               disabled={isCreatingConversation || false}
             />
           </div>
         ) : (
           <div className={styles.headerContent}>
-          <div className={styles.activeConversationHeader}>
-          {conversation && (
-          <a 
-          ref={displayProfileLinkRef} 
-          onClick={handleInfoClick} 
-          className={styles.profileLink}
-          role="button"
-          tabIndex={0}
-          aria-label={`View profile for ${activeRecipient?.profile.displayName || activeRecipient?.username || 'Unknown User'}${activeRecipient?.isBot ? ' (AI)' : ''}`}
-          aria-expanded={showProfileInfo}
-            onKeyDown={(e) => e.key === 'Enter' && handleInfoClick()}
-            >
-                    <div className={styles.recipientName}>
-                      {activeRecipient?.profile.displayName || 
-                      activeRecipient?.username || 
+            <div className={styles.activeConversationHeader}>
+              {conversation && (
+                <a
+                  ref={displayProfileLinkRef}
+                  onClick={handleInfoClick}
+                  className={styles.profileLink}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View profile for ${activeRecipient?.profile.displayName || activeRecipient?.username || 'Unknown User'}${activeRecipient?.isBot ? ' (AI)' : ''}`}
+                  aria-expanded={showProfileInfo}
+                  onKeyDown={e => e.key === 'Enter' && handleInfoClick()}
+                >
+                  <div className={styles.recipientName}>
+                    {activeRecipient?.profile.displayName ||
+                      activeRecipient?.username ||
                       'Unknown User'}
-                      {activeRecipient?.isBot && <BotBadge />}
-                    </div>
-                    <ChevronDown size={16} className={styles.chevronIcon} strokeWidth={1}/>
-                  </a>
-                )}
+                    {activeRecipient?.isBot && <BotBadge />}
+                  </div>
+                  <ChevronDown
+                    size={16}
+                    className={styles.chevronIcon}
+                    strokeWidth={1}
+                  />
+                </a>
+              )}
               <div className={styles.actions}>
-                <button 
+                <button
                   onClick={handleDeleteClick}
                   aria-label="Delete conversation"
                 >
@@ -241,10 +261,10 @@ export default function ConversationView({ conversation }: Props) {
           </div>
         )}
       </div>
-      
+
       {showProfileInfo && activeRecipient && (
-        <div 
-          ref={profileInfoRef} 
+        <div
+          ref={profileInfoRef}
           className={styles.profileInfoContainer}
           style={{
             position: 'absolute',
@@ -267,7 +287,7 @@ export default function ConversationView({ conversation }: Props) {
       {sendError && (
         <div className={styles.errorMessage}>
           <p>{sendError}</p>
-          <button 
+          <button
             className={styles.dismissButton}
             onClick={() => setSendError(null)}
             aria-label="Dismiss error"
@@ -287,10 +307,17 @@ export default function ConversationView({ conversation }: Props) {
       />
 
       {showDeleteModal && conversation && (
-        <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} hideCloseButton>
+        <Modal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          hideCloseButton
+        >
           <div className={styles.confirmationModal}>
             <h3 id="modal-title">Delete Conversation</h3>
-            <p>Are you sure you want to delete this conversation? This action cannot be undone.</p>
+            <p>
+              Are you sure you want to delete this conversation? This action
+              cannot be undone.
+            </p>
             <div className={styles.modalActions}>
               <Button
                 onClick={() => setShowDeleteModal(false)}

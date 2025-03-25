@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import ConversationsSidebar from "../components/ui/ConversationsSidebar";
-import ConversationView from "../components/ui/ConversationView";
-import SettingsModal from "../components/ui/SettingsModal";
-import EmptyConversation from "../components/ui/EmptyConversation";
-import SidebarOverlay from "../components/ui/SidebarOverlay";
-import { useMessaging } from "../hooks/useMessaging";
+import { useEffect, useState } from 'react';
+import ConversationsSidebar from '../components/ui/ConversationsSidebar';
+import ConversationView from '../components/ui/ConversationView';
+import SettingsModal from '../components/ui/SettingsModal';
+import EmptyConversation from '../components/ui/EmptyConversation';
+import SidebarOverlay from '../components/ui/SidebarOverlay';
+import { useMessaging } from '../hooks/useMessaging';
 import { useNavigation } from '../hooks/useNavigation';
 import styles from './MessagesLayout.module.css';
 
@@ -64,12 +64,10 @@ export default function MessagesLayout() {
   };
 
   return (
-    <div className={styles.container}>    
+    <div className={styles.container}>
       <SidebarOverlay />
       <ConversationsSidebar />
-      <main className={styles.main}>
-        {renderMainContent()}
-      </main>
+      <main className={styles.main}>{renderMainContent()}</main>
       <SettingsModal />
     </div>
   );

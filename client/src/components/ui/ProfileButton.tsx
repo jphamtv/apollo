@@ -11,12 +11,16 @@ interface Props {
 export default function ProfileButton({ user }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const initial = user.profile.displayName?.charAt(0).toUpperCase() || 
-                 user.username.charAt(0).toUpperCase();
+  const initial =
+    user.profile.displayName?.charAt(0).toUpperCase() ||
+    user.username.charAt(0).toUpperCase();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
@@ -31,14 +35,14 @@ export default function ProfileButton({ user }: Props) {
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
-      <button 
-        className={styles.container}
-        onClick={handleToggle}
-        type="button"
-      >
+      <button className={styles.container} onClick={handleToggle} type="button">
         <div className={styles.avatar}>
           {user.profile.imageUrl ? (
-            <img src={user.profile.imageUrl} alt="" className={styles.avatarImage} />
+            <img
+              src={user.profile.imageUrl}
+              alt=""
+              className={styles.avatarImage}
+            />
           ) : (
             initial
           )}
@@ -46,19 +50,10 @@ export default function ProfileButton({ user }: Props) {
         <span className={styles.displayName}>
           {user.profile.displayName || user.username}
         </span>
-        <ChevronUp 
-          size={16} 
-          strokeWidth={1}
-          className={styles.chevron}
-        />
+        <ChevronUp size={16} strokeWidth={1} className={styles.chevron} />
       </button>
-      
-      {isOpen && (
-        <ProfileMenu 
-          user={user} 
-          onClose={() => setIsOpen(false)} 
-        />
-      )}
+
+      {isOpen && <ProfileMenu user={user} onClose={() => setIsOpen(false)} />}
     </div>
   );
 }

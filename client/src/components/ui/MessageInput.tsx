@@ -4,7 +4,7 @@ import Button from './Button';
 import styles from './MessageInput.module.css';
 
 interface Props {
-  conversationId?: string
+  conversationId?: string;
   onSendMessage: (text: string, imageFile: File | null) => Promise<void>;
   isDisabled: boolean;
   isSending: boolean;
@@ -23,7 +23,7 @@ export default function MessageInput({
   const [messageText, setMessageText] = useState<string>('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,7 +36,7 @@ export default function MessageInput({
 
   // Reset input when conversation changes
   useEffect(() => {
-    setMessageText("");
+    setMessageText('');
     resetTextareaHeight();
   }, [conversationId]);
 
@@ -44,7 +44,7 @@ export default function MessageInput({
   useEffect(() => {
     if (messageText === '') {
       resetTextareaHeight();
-    }    
+    }
   }, [messageText]);
 
   const handleSendMessage = async () => {
@@ -54,7 +54,7 @@ export default function MessageInput({
 
     try {
       await onSendMessage(messageText, imageFile);
-      
+
       // Clear the input on success
       setMessageText('');
       setImageFile(null);
@@ -62,10 +62,9 @@ export default function MessageInput({
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
-      
+
       // Stop typing indicator
       onTyping(false);
-      
     } catch {
       // Error is handled by parent component
     }
@@ -83,13 +82,13 @@ export default function MessageInput({
 
   const autoResizeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target;
-    
+
     // Update the message state
     setMessageText(textarea.value);
-    
+
     // Reset height to auto
     textarea.style.height = 'auto';
-    
+
     // Set the height based on the new content (with a max height)
     textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
 
@@ -104,11 +103,11 @@ export default function MessageInput({
 
     const file = e.target.files[0];
     const reader = new FileReader();
-    
+
     reader.onloadend = () => {
       setImagePreview(reader.result as string);
     };
-    
+
     reader.readAsDataURL(file);
     setImageFile(file);
   };
@@ -122,15 +121,23 @@ export default function MessageInput({
   };
 
   return (
-    <div className={styles.inputContainer} role="region" aria-label="Message input">
+    <div
+      className={styles.inputContainer}
+      role="region"
+      aria-label="Message input"
+    >
       {imagePreview && (
         <div className={styles.imagePreviewContainer}>
-          <img src={imagePreview} className={styles.imagePreview} alt="Preview" />
+          <img
+            src={imagePreview}
+            className={styles.imagePreview}
+            alt="Preview"
+          />
           <button
-            type='button'
+            type="button"
             onClick={handleRemoveImage}
             className={styles.removeImageButton}
-            aria-label='Remove image'
+            aria-label="Remove image"
           >
             <X size={16} />
           </button>
@@ -156,8 +163,8 @@ export default function MessageInput({
         <input
           ref={fileInputRef}
           type="file"
-          id='messageImage'
-          accept='image/jpeg,image/png,image/gif,image/webp'
+          id="messageImage"
+          accept="image/jpeg,image/png,image/gif,image/webp"
           className={styles.fileInput}
           onChange={handleImageChange}
           disabled={isDisabled || isSending || isConversationWithBot}
@@ -167,28 +174,26 @@ export default function MessageInput({
           <div className={styles.botImageNotice}>
             <span>Sending images not available with bots</span>
           </div>
-        ): (
+        ) : (
           <label
             htmlFor="messageImage"
             className={styles.imageButton}
             aria-disabled={isDisabled || isSending}
           >
             <Image size={24} strokeWidth={1} />
-          </label>              
+          </label>
         )}
 
-        <Button 
+        <Button
           className={styles.sendButton}
           onClick={handleSendMessage}
           disabled={
-            isDisabled ||
-            isSending ||
-            (!messageText.trim() && !imageFile)
+            isDisabled || isSending || (!messageText.trim() && !imageFile)
           }
-          size='small'
+          size="small"
           aria-label="Send message"
         >
-          <ArrowUp size={24} strokeWidth={2}/>
+          <ArrowUp size={24} strokeWidth={2} />
         </Button>
       </div>
     </div>

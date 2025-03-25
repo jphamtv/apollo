@@ -1,5 +1,9 @@
-import { PrismaClient, Prisma } from "@prisma/client";
-import { UserWithProfile, UserProfileDetails, SearchUserResult } from '../types';
+import { PrismaClient, Prisma } from '@prisma/client';
+import {
+  UserWithProfile,
+  UserProfileDetails,
+  SearchUserResult,
+} from '../types';
 
 const prisma = new PrismaClient();
 
@@ -27,11 +31,11 @@ export const findByUserId = async (
 ): Promise<UserProfileDetails | null> => {
   return prisma.userProfile.findUnique({
     where: { userId },
-      select: {
-        displayName: true,
-        bio: true,
-        imageUrl: true,
-      },
+    select: {
+      displayName: true,
+      bio: true,
+      imageUrl: true,
+    },
   });
 };
 
@@ -45,21 +49,21 @@ export const findByQuery = async (
         {
           username: {
             contains: query,
-            mode: 'insensitive'
-          }
+            mode: 'insensitive',
+          },
         },
         {
           profile: {
             displayName: {
               contains: query,
-              mode: 'insensitive'
-            }
-          }
-        }
+              mode: 'insensitive',
+            },
+          },
+        },
       ],
       NOT: {
-        id: currentUserId
-      }
+        id: currentUserId,
+      },
     },
     select: {
       id: true,
@@ -68,11 +72,11 @@ export const findByQuery = async (
       profile: {
         select: {
           displayName: true,
-          imageUrl: true
-        }
-      }
+          imageUrl: true,
+        },
+      },
     },
-    take: 10
+    take: 10,
   });
 };
 
@@ -86,14 +90,14 @@ export const update = async (
     select: {
       displayName: true,
       bio: true,
-      imageUrl: true
+      imageUrl: true,
     },
   });
-} 
+};
 
 export default {
   findByUsername,
   findByUserId,
   findByQuery,
-  update
+  update,
 };

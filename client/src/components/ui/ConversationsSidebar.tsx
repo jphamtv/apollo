@@ -13,42 +13,43 @@ import { Conversation } from '../../types/conversation';
 
 export default function ConversationsSidebar() {
   const { user } = useAuth();
-  const { 
-    activeConversation, 
-    navigateToConversation,
-    startNewConversation
-  } = useNavigation();
+  const { activeConversation, navigateToConversation, startNewConversation } =
+    useNavigation();
   const { conversations } = useMessaging();
   const { isMobileSidebarOpen, closeMobileSidebar } = useSidebar();
 
   // Memoize the conversations processing
   const conversationItems = useMemo(() => {
     if (!conversations || !user) return [];
-    
-    return conversations.map(conversation => {
-      const otherParticipant = conversation.participants.find(
-        p => p.user.id !== user.id
-      )?.user;
 
-      if (!otherParticipant) return null;
+    return conversations
+      .map(conversation => {
+        const otherParticipant = conversation.participants.find(
+          p => p.user.id !== user.id
+        )?.user;
 
-      return {
-        id: conversation.id,
-        conversation,
-        displayName: otherParticipant.profile.displayName ?? otherParticipant.username,
-        lastMessageText: conversation.lastMessage
-          ? (conversation.lastMessage.text.trim() === "" && conversation.lastMessage.hasImage
-            ? "📷 Image"
-            : conversation.lastMessage.text)
-          : 'No messages yet',
-        timestamp: conversation.lastMessage ? 
-          formatLastMessageTimestamp(conversation.lastMessage.createdAt) : 
-          formatLastMessageTimestamp(conversation.createdAt),
-        isActive: activeConversation?.id === conversation.id,
-        hasUnread: conversation.hasUnread,
-        isBot: otherParticipant.isBot
-      };
-    }).filter((item): item is NonNullable<typeof item> => item !== null);
+        if (!otherParticipant) return null;
+
+        return {
+          id: conversation.id,
+          conversation,
+          displayName:
+            otherParticipant.profile.displayName ?? otherParticipant.username,
+          lastMessageText: conversation.lastMessage
+            ? conversation.lastMessage.text.trim() === '' &&
+              conversation.lastMessage.hasImage
+              ? '📷 Image'
+              : conversation.lastMessage.text
+            : 'No messages yet',
+          timestamp: conversation.lastMessage
+            ? formatLastMessageTimestamp(conversation.lastMessage.createdAt)
+            : formatLastMessageTimestamp(conversation.createdAt),
+          isActive: activeConversation?.id === conversation.id,
+          hasUnread: conversation.hasUnread,
+          isBot: otherParticipant.isBot,
+        };
+      })
+      .filter((item): item is NonNullable<typeof item> => item !== null);
   }, [conversations, user, activeConversation?.id]);
 
   if (!user?.profile) return null;
@@ -63,12 +64,15 @@ export default function ConversationsSidebar() {
     closeMobileSidebar();
   };
 
-
   return (
-    <aside className={`${styles.container} ${isMobileSidebarOpen ? styles.open : ''}`} aria-label="Conversations sidebar" role="region">
+    <aside
+      className={`${styles.container} ${isMobileSidebarOpen ? styles.open : ''}`}
+      aria-label="Conversations sidebar"
+      role="region"
+    >
       <header className={styles.header}>
         <h2 id="app-title">Apollo</h2>
-        <button 
+        <button
           className={styles.closeButton}
           onClick={closeMobileSidebar}
           aria-label="Close menu"
@@ -76,7 +80,7 @@ export default function ConversationsSidebar() {
           <X size={24} strokeWidth={1.5} />
         </button>
       </header>
-      
+
       <main className={styles.main} aria-label="Conversation list">
         <NewChatButton onClick={handleNewChat} />
         {conversationItems.map(item => (
@@ -94,7 +98,7 @@ export default function ConversationsSidebar() {
           />
         ))}
       </main>
-      
+
       <footer className={styles.footer}>
         <ProfileButton user={user} />
       </footer>

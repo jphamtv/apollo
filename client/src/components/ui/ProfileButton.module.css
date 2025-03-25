@@ -32,7 +32,7 @@
   align-items: center;
   justify-content: center;
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-avatar);
   overflow: hidden;
 }
 

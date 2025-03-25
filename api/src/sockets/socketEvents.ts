@@ -13,5 +13,5 @@ export const EVENTS = {
   CONVERSATION_LEAVE: 'conversation:leave',
 
   NOTIFICATION_NEW: 'notification:new',
-  NOTIFICATION_READ: 'notification:read'
+  NOTIFICATION_READ: 'notification:read',
 };

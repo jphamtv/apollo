@@ -6,7 +6,7 @@ export type NavigationState = {
   isSettingsOpen: boolean;
 };
 
-export type NavigationAction = 
+export type NavigationAction =
   | { type: 'START_NEW_CONVERSATION' }
   | { type: 'NAVIGATE_TO_CONVERSATION' }
   | { type: 'NAVIGATE_TO_MESSAGES' }
@@ -14,25 +14,28 @@ export type NavigationAction =
   | { type: 'CLOSE_SETTINGS' }
   | { type: 'RESET' };
 
-export function navigationReducer(state: NavigationState, action: NavigationAction): NavigationState {
+export function navigationReducer(
+  state: NavigationState,
+  action: NavigationAction
+): NavigationState {
   switch (action.type) {
     case 'START_NEW_CONVERSATION':
       return {
         ...state,
         view: 'messages',
-        isNewConversation: true
+        isNewConversation: true,
       };
     case 'NAVIGATE_TO_CONVERSATION':
       return {
         ...state,
         view: 'messages',
-        isNewConversation: false
+        isNewConversation: false,
       };
     case 'NAVIGATE_TO_MESSAGES':
-      return { 
-        ...state, 
-        view: 'messages', 
-        isNewConversation: false 
+      return {
+        ...state,
+        view: 'messages',
+        isNewConversation: false,
       };
     case 'OPEN_SETTINGS':
       return { ...state, isSettingsOpen: true };
@@ -42,7 +45,7 @@ export function navigationReducer(state: NavigationState, action: NavigationActi
       return {
         view: 'messages',
         isNewConversation: false,
-        isSettingsOpen: false
+        isSettingsOpen: false,
       };
     default:
       return state;

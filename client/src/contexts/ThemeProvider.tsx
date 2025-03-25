@@ -15,7 +15,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   useEffect(() => {
     // Save to localStorage
     localStorage.setItem('theme', theme);
-    
+
     // Apply to HTML element
     if (theme === 'light') {
       document.documentElement.setAttribute('data-theme', 'light');
@@ -25,7 +25,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark');
+    setTheme(prevTheme => (prevTheme === 'dark' ? 'light' : 'dark'));
   };
 
   return (

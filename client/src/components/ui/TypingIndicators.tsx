@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
-import styles from './TypingIndicators.module.css'
+import { useEffect, useState } from 'react';
+import styles from './TypingIndicators.module.css';
 
 interface TypingIndicatorProps {
   displayName: string;
   isConversationWithBot: boolean;
 }
 
-export default function TypingIndicator({ displayName, isConversationWithBot }: TypingIndicatorProps) {
+export default function TypingIndicator({
+  displayName,
+  isConversationWithBot,
+}: TypingIndicatorProps) {
   const [dots, setDots] = useState<string>('...');
 
   // Animate the dots
@@ -23,14 +26,12 @@ export default function TypingIndicator({ displayName, isConversationWithBot }: 
   });
 
   return (
-    <div 
-      className={styles.container} 
-      role="status" 
-      aria-live="polite"
-    >
+    <div className={styles.container} role="status" aria-live="polite">
       <div className={styles.text}>
-        {displayName} is {isConversationWithBot ? "replying" : "typing"}
-        <span className={styles.dots} aria-hidden="true">{dots}</span>            
+        {displayName} is {isConversationWithBot ? 'replying' : 'typing'}
+        <span className={styles.dots} aria-hidden="true">
+          {dots}
+        </span>
       </div>
     </div>
   );

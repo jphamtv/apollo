@@ -16,7 +16,7 @@
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   position: relative;
-  width: 37.5rem; 
+  width: 37.5rem;
   max-height: 90vh;
   overflow-y: auto;
   margin: 0 0.5rem;
@@ -24,8 +24,8 @@
 
 .closeButton {
   position: absolute;
-  right: 1rem; 
-  top: 1rem; 
+  right: 1rem;
+  top: 1rem;
   background-color: none;
   border: none;
   font-size: 1.5rem;

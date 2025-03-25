@@ -1,38 +1,41 @@
-import { Response, RequestHandler } from "express";
-import { body, validationResult } from "express-validator";
+import { Response, RequestHandler } from 'express';
+import { body, validationResult } from 'express-validator';
 import {
   create,
   markAsRead,
   deleteById,
   findByConversationId,
-} from "../models/messageModel";
-import { findById, isParticipant } from "../models/conversationModel";
-import { findBotById } from "../models/authModel";
-import { AuthRequest } from "../types";
-import { getFileUrl } from "../middleware/uploadMiddleware";
-import { notifyNewMessage } from "../services/socketService";
-import { logger } from "../utils/logger";
-import { generateBotResponse } from "../services/openaiService";
-import { notifyTypingStarted, notifyTypingStopped } from "../services/socketService";
+} from '../models/messageModel';
+import { findById, isParticipant } from '../models/conversationModel';
+import { findBotById } from '../models/authModel';
+import { AuthRequest } from '../types';
+import { getFileUrl } from '../middleware/uploadMiddleware';
+import { notifyNewMessage } from '../services/socketService';
+import { logger } from '../utils/logger';
+import { generateBotResponse } from '../services/openaiService';
+import {
+  notifyTypingStarted,
+  notifyTypingStopped,
+} from '../services/socketService';
 
 export const getConversationMessages = [
   async (req: AuthRequest, res: Response) => {
     try {
       const conversation = await findById(req.params.conversationId);
-      
+
       if (!conversation) {
-        return res.status(404).json({ message: "Conversation not found" });
+        return res.status(404).json({ message: 'Conversation not found' });
       }
 
       // Authorization check
       const isParticipant = conversation.participants.some(
         p => p.userId === req.user.id
       );
-      
+
       if (!isParticipant) {
         return res.status(403).json({
-          error: "FORBIDDEN",
-          message: "Not authorized to view these messages"
+          error: 'FORBIDDEN',
+          message: 'Not authorized to view these messages',
         });
       }
 
@@ -41,20 +44,20 @@ export const getConversationMessages = [
       logger.error(`Get messages error: ${err}`);
       res.status(500).json({ message: 'Error getting messages' });
     }
-  }
+  },
 ] as unknown as RequestHandler[];
 
 export const createMessage = [
-  body("text")
+  body('text')
     .if((value, { req }) => !req.file) // Only apply this validation if there's no image file
     .trim()
     .isLength({ min: 1, max: 5000 })
-    .withMessage("Message must be between 1 and 5000 characters"),
-  body("text")
+    .withMessage('Message must be between 1 and 5000 characters'),
+  body('text')
     .if((value, { req }) => req.file) // Apply this validation if there's an image file
     .optional() // Make text optional
     .isLength({ max: 5000 }) // Still enforce text length if provided
-    .withMessage("Message text cannot exceed 5000 characters"),
+    .withMessage('Message text cannot exceed 5000 characters'),
   async (req: AuthRequest, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -68,7 +71,9 @@ export const createMessage = [
 
       // Allow either, text, image, or both
       if (!text && !req.file) {
-        return res.status(400).json({ message: 'Message must contain text or an image' });
+        return res
+          .status(400)
+          .json({ message: 'Message must contain text or an image' });
       }
 
       // Process image if present
@@ -80,16 +85,16 @@ export const createMessage = [
       const isUserParticipant = await isParticipant(senderId, conversationId);
       if (!isUserParticipant) {
         return res.status(403).json({
-        error: "FORBIDDEN",
-        message: "Not authorized to send messages to this conversation"
+          error: 'FORBIDDEN',
+          message: 'Not authorized to send messages to this conversation',
         });
       }
 
       const message = await create({
-        text: text || "", 
+        text: text || '',
         imageUrl,
         conversation: { connect: { id: conversationId } },
-        sender: { connect: { id: senderId } }
+        sender: { connect: { id: senderId } },
       });
 
       // Notify about new message via socket
@@ -101,7 +106,7 @@ export const createMessage = [
       // Get conversation for bot check
       const conversation = await findById(conversationId);
       if (!conversation) {
-        logger.error('Conversation not found for bot processing')
+        logger.error('Conversation not found for bot processing');
         return;
       }
 
@@ -118,43 +123,47 @@ export const createMessage = [
             // Get bot user with its system prompt
             const botUser = await findBotById(botId);
             if (!botUser) return;
-  
+
             // Get conversation history (last 10 messages for context)
             const messageHistory = await findByConversationId(conversationId);
-    
+
             // Format history for OpenAI API
             const conversationHistory = messageHistory
               .map(msg => ({
                 role: msg.sender.id === botUser.id ? 'assistant' : 'user',
-                content: msg.text
+                content: msg.text,
               }))
               .reverse();
-            
-            await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 1500) + 750));
-            
+
+            await new Promise(resolve =>
+              setTimeout(resolve, Math.floor(Math.random() * 1500) + 750)
+            );
+
             // Send typing indicator via socket
             notifyTypingStarted(botId, conversationId);
             typingStarted = true;
-  
+
             // Generate bot response
             const botResponse = await generateBotResponse(
-              botUser.botSystemPrompt || "You are a helpful assistant",
+              botUser.botSystemPrompt || 'You are a helpful assistant',
               botUser.botQuotes || [],
               conversationHistory
             );
 
-            await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 3000) + 1500));
-      
+            await new Promise(resolve =>
+              setTimeout(resolve, Math.floor(Math.random() * 3000) + 1500)
+            );
+
             // Stop typing indicator
             notifyTypingStopped(botId, conversationId);
-      
+
             // Save bot message response as message
             const botMessage = await create({
               text: botResponse,
               conversation: { connect: { id: conversationId } },
-              sender: { connect: { id: botUser.id } }
+              sender: { connect: { id: botUser.id } },
             });
-        
+
             // Notify about bot message
             notifyNewMessage(botMessage, conversationId, botId);
           } catch (err) {
@@ -163,16 +172,15 @@ export const createMessage = [
             // Always stop typing if it was started
             if (typingStarted) {
               notifyTypingStopped(botId, conversationId);
-            }            
+            }
           }
         })();
       }
-
     } catch (err) {
       logger.error(`Create message error: ${err}`);
-      res.status(500).json({ message: "Error creating message" });
+      res.status(500).json({ message: 'Error creating message' });
     }
-  }
+  },
 ] as unknown as RequestHandler[];
 
 export const markMessageAsRead = [
@@ -183,9 +191,9 @@ export const markMessageAsRead = [
       res.json({ message });
     } catch (err) {
       logger.error(`Mark as read error: ${err}`);
-      res.status(500).json({ message: "Error marking message as read" });
+      res.status(500).json({ message: 'Error marking message as read' });
     }
-  }
+  },
 ] as unknown as RequestHandler[];
 
 export const deleteMessage = [
@@ -193,10 +201,10 @@ export const deleteMessage = [
     try {
       const messageId = req.params.id;
       await deleteById(messageId);
-      res.json({ message: "Message deleted successfully" });
+      res.json({ message: 'Message deleted successfully' });
     } catch (err) {
       logger.error(`Delete message error: ${err}`);
-      res.status(500).json({ message: "Error deleting message" });
+      res.status(500).json({ message: 'Error deleting message' });
     }
-  }
+  },
 ] as unknown as RequestHandler[];

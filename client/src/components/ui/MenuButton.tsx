@@ -8,24 +8,22 @@ export default function MenuButton() {
   const { toggleMobileSidebar } = useSidebar();
   const { conversations } = useMessaging();
   const { user } = useAuth();
-  
+
   // Count unread conversations
-  const unreadCount = conversations.filter(conv => 
+  const unreadCount = conversations.filter(conv =>
     conv.messages.some(msg => !msg.isRead && msg.senderId !== user?.id)
   ).length;
 
   return (
     <div className={styles.buttonContainer}>
-      <button 
-        className={styles.menuButton} 
+      <button
+        className={styles.menuButton}
         onClick={toggleMobileSidebar}
         aria-label={`Toggle menu${unreadCount > 0 ? `, ${unreadCount} unread conversations` : ''}`}
       >
         <Menu size={24} strokeWidth={1.5} />
       </button>
-      {unreadCount > 0 && (
-        <span className={styles.badge}>{unreadCount}</span>
-      )}
+      {unreadCount > 0 && <span className={styles.badge}>{unreadCount}</span>}
     </div>
   );
 }
