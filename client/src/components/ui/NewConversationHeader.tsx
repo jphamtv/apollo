@@ -100,7 +100,9 @@ export default function NewConversationHeader({
                   )}
                   <div className={styles.userInfo}>
                     <div className={styles.displayName}>
-                      {user.profile.displayName || user.username}
+                      <span className={styles.nameText}>
+                        {user.profile.displayName || user.username}
+                      </span>
                       {user.isBot && <BotBadge />}
                     </div>
                   </div>
