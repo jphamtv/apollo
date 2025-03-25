@@ -22,6 +22,7 @@
   --border-color-hover: #3f4043;
   --border-color-focus: var(--accent-primary);
   --border-messageContainer: #474a4c;
+  --border-messageContainer-hover: #5a5e61;
 
   --btn-primary: var(--accent-primary);
   --btn-primary-hover: var(--accent-primary-hover);
@@ -68,6 +69,7 @@
   --border-color-hover: #bfc9d5;
   --border-color-focus: var(--accent-primary);
   --border-messageContainer: var(--border-color);
+  --border-messageContainer-hover: var(--border-color-hover);
 
   --btn-secondary: #e7edf2;
   --btn-secondary-hover: #edf3f7;

@@ -11,6 +11,11 @@
   z-index: 100;
 }
 
+.inputContainer:hover,
+.inputContainer:focus-within {
+  border-color: var(--border-messageContainer-hover);
+}
+
 .imagePreviewContainer {
   position: relative;
   margin-top: 0.5rem;
@@ -147,5 +152,8 @@
     margin: 0;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
   }
 }
