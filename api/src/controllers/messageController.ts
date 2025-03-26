@@ -1,3 +1,25 @@
+/**
+ * Message controller handling all message-related operations
+ * 
+ * Architecture highlights:
+ * 
+ * 1. Message creation with advanced features:
+ *    - Supports text-only, image-only, or combined messages
+ *    - Performs permission validation to ensure sender is a conversation participant
+ *    - Handles real-time notifications through Socket.io
+ *    - Implements AI bot response system with typing indicators
+ * 
+ * 2. Security considerations:
+ *    - Validates all inputs with express-validator
+ *    - Enforces authorization checks before any data access
+ *    - Sanitizes inputs to prevent injection attacks
+ * 
+ * 3. Performance optimizations:
+ *    - Immediately responds to user with their message before processing bot response
+ *    - Uses asynchronous processing for bot responses to prevent blocking
+ *    - Implements rate limiting (via middleware) to prevent abuse
+ *    - Includes realistic typing delays for AI bots
+ */
 import { Response, RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
 import {
@@ -18,6 +40,17 @@ import {
   notifyTypingStopped,
 } from '../services/socketService';
 
+/**
+ * Retrieves all messages for a conversation
+ * 
+ * Security flow:
+ * 1. Verify conversation exists
+ * 2. Verify current user is a participant
+ * 3. Return messages if authorized
+ * 
+ * @route GET /api/conversations/:conversationId/messages
+ * @authenticated Required
+ */
 export const getConversationMessages = [
   async (req: AuthRequest, res: Response) => {
     try {
@@ -47,6 +80,24 @@ export const getConversationMessages = [
   },
 ] as unknown as RequestHandler[];
 
+/**
+ * Creates a new message in a conversation
+ * 
+ * Complex implementation handling:
+ * 1. Message validation (text and/or image)
+ * 2. Participant verification
+ * 3. Image processing if provided
+ * 4. Real-time notification to other participants
+ * 5. Asynchronous bot response processing
+ * 
+ * Note on bot processing:
+ * - Uses a self-executing async function to avoid blocking the response
+ * - Implements simulated typing indicators and delays for realistic UX
+ * - Gracefully handles bot processing errors without affecting user response
+ * 
+ * @route POST /api/conversations/:conversationId/messages
+ * @authenticated Required
+ */
 export const createMessage = [
   body('text')
     .if((value, { req }) => !req.file) // Only apply this validation if there's no image file
@@ -76,7 +127,7 @@ export const createMessage = [
           .json({ message: 'Message must contain text or an image' });
       }
 
-      // Process image if present
+      // Process uploaded image if present and generate URL for storage
       let imageUrl = null;
       if (req.file) {
         imageUrl = getFileUrl(req.file.filename, 'message');
@@ -115,6 +166,9 @@ export const createMessage = [
         p => p.user.isBot === true && p.user.id !== senderId
       );
 
+      // IMPORTANT: Handle bot response asynchronously to avoid delaying user's message
+      // This self-executing async function allows the main request to complete
+      // while bot processing continues in the background
       if (botParticipant && senderId !== botParticipant.user.id) {
         (async () => {
           const botId = botParticipant.user.id;

@@ -1,3 +1,4 @@
+// Server entry point - sets up HTTP server with Socket.io integration for real-time messaging
 import app from './app';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
@@ -9,7 +10,7 @@ import { logger } from './utils/logger';
 const PORT = process.env.PORT || 3000;
 const httpServer = createServer(app);
 
-// Initialize Socket.io with CORS settings
+// Initialize Socket.io with CORS settings matching Express CORS configuration
 export const io = new Server(httpServer, {
   cors: {
     origin:
@@ -31,7 +32,7 @@ io.use(verifySocketToken);
 io.on('connection', socket => {
   logger.info(`User connected: ${socket.id}`);
 
-  // Join user to their personal room
+  // Join user to their personal room for direct user-specific events
   const userId = socket.data.user.id;
   socket.join(userId);
 

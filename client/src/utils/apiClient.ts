@@ -1,3 +1,8 @@
+/**
+ * Utility for making API requests
+ * Handles authentication, request formatting, and error handling
+ * Provides convenience methods for common HTTP verbs
+ */
 import {
   ApiError,
   ErrorResponse,
@@ -12,17 +17,33 @@ interface RequestConfig extends RequestInit {
   headers?: HeadersInit;
 }
 
+/**
+ * Main API client object with methods for authentication and HTTP requests
+ */
 export const apiClient = {
+  /**
+   * Retrieves JWT token from localStorage
+   */
   getToken: () => localStorage.getItem('token'),
 
+  /**
+   * Stores JWT token in localStorage
+   */
   setToken: (token: string) => localStorage.setItem('token', token),
 
+  /**
+   * Removes auth token and related data from localStorage during logout
+   */
   removeToken: () => {
     const keysToRemove = ['token', 'lastViewedConversationId'];
 
     keysToRemove.forEach(key => localStorage.removeItem(key));
   },
 
+  /**
+   * Core request method that handles fetch API calls with proper headers and error handling
+   * Automatically adds authentication token if available
+   */
   request: async <T>(
     endpoint: string,
     { data, ...customConfig }: RequestConfig = {}

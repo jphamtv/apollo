@@ -1,3 +1,9 @@
+/**
+ * Main application component that configures providers and routing
+ * The provider order is important to prevent circular dependencies:
+ * - AuthProvider must be outside NavigationProvider and MessageProvider
+ * - SocketProvider depends on MessageProvider and must be innermost
+ */
 import { NavigationProvider } from './contexts/NavigationProvider';
 import { MessageProvider } from './contexts/MessageProvider';
 import { Routes, Route } from 'react-router-dom';

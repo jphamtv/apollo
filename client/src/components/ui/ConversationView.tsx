@@ -1,3 +1,24 @@
+/**
+ * ConversationView component - the primary message display and interaction screen
+ * 
+ * Component architecture:
+ * 
+ * This is one of the most complex components in the application with several key features:
+ * 1. Displays messages for the active conversation with real-time updates
+ * 2. Shows typing indicators with proper user attribution
+ * 3. Manages profile information display with popover positioning
+ * 4. Handles message sending with text and image support
+ * 5. Implements proper accessibility attributes throughout
+ * 
+ * Performance optimizations:
+ * - Uses useMemo for computationally derived values to prevent unnecessary recalculations
+ * - Implements manual message pagination if needed (currently limited to most recent 50 messages)
+ * - Uses refs to directly access DOM elements for accurate popup positioning
+ * 
+ * State management approach:
+ * - Local state for UI elements (modals, popovers, errors)
+ * - Context state for data (messages, conversations, active users)
+ */
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigation } from '../../hooks/useNavigation';
@@ -37,6 +58,14 @@ export default function ConversationView({ conversation }: Props) {
   const { isNewConversation, navigateToConversation } = useNavigation();
   const { handleTyping, getTypingUsers } = useSocket();
 
+  /**
+   * State for UI elements
+   * - showProfileInfo: Controls visibility of the profile info popover
+   * - showDeleteModal: Controls visibility of the delete confirmation modal
+   * - isSendingImage: Tracks image upload state for UI feedback
+   * - profileInfoPosition: Stores calculated position for the profile popover
+   * - sendError: Tracks message sending errors with auto-clearing behavior
+   */
   const [showProfileInfo, setShowProfileInfo] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [isSendingImage, setIsSendingImage] = useState<boolean>(false);
@@ -46,10 +75,15 @@ export default function ConversationView({ conversation }: Props) {
   }>({ top: 0, left: 0 });
   const [sendError, setSendError] = useState<string | null>(null);
 
+  /**
+   * DOM references for positioning and interaction
+   * - profileInfoRef: References the profile info popover for click-away detection
+   * - displayProfileLinkRef: References the profile link for positioning calculations
+   */
   const profileInfoRef = useRef<HTMLDivElement>(null);
   const displayProfileLinkRef = useRef<HTMLAnchorElement>(null);
 
-  // Memoize typing users from the current conversation
+  // ---- Memoized computations to prevent unnecessary re-rendering ----
   const typingUsers = useMemo(() => {
     if (!conversation) return [];
     return getTypingUsers(conversation.id);

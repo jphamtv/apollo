@@ -1,3 +1,8 @@
+/**
+ * Navigation provider that manages app navigation state
+ * Used instead of URL-based routing for better SPA experience
+ * Handles views for messages, settings, and new conversation states
+ */
 import { useReducer, ReactNode, useEffect } from 'react';
 import { NavigationContext, navigationReducer } from './navigationContext';
 import { useAuth } from '../hooks/useAuth';

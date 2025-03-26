@@ -1,3 +1,4 @@
+// Authentication controller handling user registration, login, verification, and account deletion
 import { Request, Response, RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
@@ -13,6 +14,7 @@ import {
 import { AuthRequest, LoginResponse } from '../types';
 import { logger } from '../utils/logger';
 
+// Validation rules for user registration
 const validateUser = [
   body('username')
     .trim()
@@ -29,12 +31,14 @@ const validateUser = [
     .withMessage(`Password must be longer than 8 characters`),
 ];
 
+// Creates a JWT token for authenticated users
 const generateToken = (id: string) => {
   return jwt.sign({ id }, jwtConfig.secret as jwt.Secret, {
     expiresIn: jwtConfig.expiresIn as jwt.SignOptions['expiresIn'],
   });
 };
 
+// Handles user registration with validation and duplicate checking
 export const registerUser = [
   ...validateUser,
   async (req: Request, res: Response) => {
@@ -83,6 +87,7 @@ export const registerUser = [
   },
 ] as RequestHandler[];
 
+// Handles user login (actual authentication happens in Passport middleware)
 export const loginUser = async (
   req: AuthRequest,
   res: Response<LoginResponse | { message: string }>
@@ -111,6 +116,7 @@ export const logoutUser = (_req: Request, res: Response) => {
   res.json({ message: 'Logged out successfully' });
 };
 
+// Verifies an existing token and refreshes it
 export const verifyUser = [
   async (req: AuthRequest, res: Response<LoginResponse>) => {
     try {
@@ -141,6 +147,7 @@ export const verifyUser = [
   },
 ] as unknown as RequestHandler[];
 
+// Handles user account deletion
 export const deleteUser = [
   async (req: AuthRequest, res: Response) => {
     try {

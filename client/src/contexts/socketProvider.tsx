@@ -1,3 +1,15 @@
+/**
+ * Socket.io Provider for real-time communication
+ * 
+ * Architecture decision:
+ * This provider sits at the innermost layer of the context hierarchy because it
+ * depends on all other contexts (auth, messaging) but nothing depends on it.
+ * 
+ * Key optimizations:
+ * 1. Automatically joins all conversation rooms at once to avoid manual room management
+ * 2. Updates state directly through dispatch rather than separate API calls
+ * 3. Implements a "conversation room" pattern to properly isolate events
+ */
 import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
 import { SocketContext } from './socketContext';
@@ -25,11 +37,22 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     conversations,
   } = useMessaging();
 
+  /**
+   * Socket state management with three key pieces:
+   * - socket: The actual socket.io instance
+   * - isConnected: Connection status for UI indicators
+   * - typingUsers: Map of conversation IDs to arrays of user IDs currently typing
+   */
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [typingUsers, setTypingUsers] = useState<Record<string, string[]>>({});
 
-  // Initialize socket connection when user is authenticated
+  /**
+   * Socket initialization on auth change
+   * 
+   * Technical detail: We intentionally don't connect/disconnect on every component render
+   * by properly tracking the socket reference and using disconnectSocket on cleanup
+   */
   useEffect(() => {
     if (user) {
       const token = apiClient.getToken();

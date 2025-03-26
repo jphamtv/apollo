@@ -1,3 +1,24 @@
+/**
+ * Component that renders the messages area with advanced features:
+ * 
+ * UI optimizations:
+ * 1. Auto-scrolling - Automatically scrolls to newest messages
+ * 2. Timestamp grouping - Shows timestamps only when time gaps are significant
+ * 3. Date separators - Groups messages by date for better context
+ * 4. Image orientation detection - Renders landscape/portrait images appropriately
+ * 5. Typing indicators - Shows when users are typing with different styling for bots
+ * 
+ * Performance considerations:
+ * - Uses refs for smooth scrolling without layout thrashing
+ * - Minimal re-renders with proper dependency arrays
+ * - Efficient image dimension detection after loading
+ * - Uses Set for landscape image tracking to avoid array scans
+ * 
+ * Accessibility features:
+ * - Proper ARIA roles (log, live region)
+ * - Semantic structure with fragments
+ * - Descriptive labels for screen readers
+ */
 import React, { useState, useRef, useEffect } from 'react';
 import { Message } from '../../types/message';
 import { formatMessageFeedTimestamp } from '../../utils/formatTime';
@@ -21,16 +42,31 @@ export default function MessageList({
   isTyping,
   isConversationWithBot,
 }: Props) {
+  /**
+   * References and state:
+   * - messagesEndRef: Used for scrolling to the latest message
+   * - landscapeImages: Tracks which images are landscape orientation for proper styling
+   */
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [landscapeImages, setLandscapeImages] = useState<Set<string>>(
     new Set()
   );
 
-  // Scroll to bottom when messages change or typing status changes
+  /**
+   * Automatic scrolling effect
+   * Scrolls to the bottom of the messages container whenever:
+   * - New messages are received
+   * - Someone starts/stops typing
+   */
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView();
   }, [messages, isTyping]);
 
+  /**
+   * Image orientation detection handler
+   * Uses the native image dimensions to determine if an image is landscape
+   * or portrait, then stores the result in state for styling purposes
+   */
   const handleImageLoad = (
     e: React.SyntheticEvent<HTMLImageElement>,
     messageId: string
@@ -41,6 +77,12 @@ export default function MessageList({
     }
   };
 
+  /**
+   * Timestamp display logic
+   * Determines if a timestamp should be shown between messages
+   * Shows timestamp if there's a gap of more than 2 hours between messages
+   * for better conversation context without excessive timestamps
+   */
   const shouldShowTimestamp = (
     currentMsg: Message,
     prevMsg: Message | null
@@ -54,6 +96,11 @@ export default function MessageList({
     return currentTime.getTime() - prevTime.getTime() > 2 * 60 * 60 * 1000;
   };
 
+  /**
+   * Date divider display logic
+   * Determines if a date divider should be shown between messages
+   * Shows a divider whenever the date changes (midnight boundary)
+   */
   const shouldShowDateDivider = (
     currentMsg: Message,
     prevMsg: Message | null

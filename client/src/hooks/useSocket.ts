@@ -1,3 +1,7 @@
+/**
+ * Custom hook for socket.io functionality
+ * Provides access to the socket connection and typing indicator functionality
+ */
 import { useContext, useCallback, useRef, useEffect } from 'react';
 import { SocketContext } from '../contexts/socketContext';
 import { startTyping, stopTyping } from '../utils/socketClient';
@@ -12,7 +16,10 @@ export const useSocket = () => {
 
   const { socket, isConnected, typingUsers } = context;
 
-  // Get typing users for a specific conversation
+  /**
+   * Returns a list of users currently typing in a specific conversation
+   * Used to show typing indicators in the UI
+   */
   const getTypingUsers = useCallback(
     (conversationId: string) => {
       return typingUsers[conversationId] || [];
@@ -20,7 +27,10 @@ export const useSocket = () => {
     [typingUsers]
   );
 
-  // Handle user typing with debounce
+  /**
+   * Manages typing indicator state with debouncing
+   * Automatically stops typing status after 2 seconds of inactivity
+   */
   const handleTyping = useCallback(
     (conversationId: string, isTyping: boolean) => {
       // Clear any existing timeout

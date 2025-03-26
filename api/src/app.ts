@@ -1,3 +1,4 @@
+// Main application setup file that configures Express middleware, CORS, and routes
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import passport from 'passport';
@@ -16,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Updated CORS setup to allow both client ports
+// CORS setup to allow both development ports (5173, 5174) and production client URL
 const corsOptions = {
   origin:
     process.env.NODE_ENV === 'production'
@@ -39,7 +40,7 @@ app.use('/api/users', userProfilesRouter);
 app.use('/api/conversations', conversationsRouter);
 app.use('/api/conversations/:conversationId/messages', messagesRouter);
 
-// Error handing
+// Global error handler for unhandled exceptions
 app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
   logger.error(`Unhandled error: ${err}`); // Log error for debugging
   res.status(500).json({ error: 'Something went wrong' }); // Send simple message to user to see

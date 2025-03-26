@@ -1,3 +1,4 @@
+// OpenAI service for generating AI chatbot responses
 import OpenAI from 'openai';
 import { ChatCompletionAssistantMessageParam } from 'openai/resources';
 import dotenv from 'dotenv';
@@ -8,6 +9,14 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+/**
+ * Generates an AI response using OpenAI's GPT model
+ * @param systemPrompt - The bot's persona/character description
+ * @param quotes - Array of quotes that can be incorporated into responses
+ * @param conversationHistory - Previous messages in the conversation
+ * @param maxTokens - Maximum response length 
+ * @returns The generated response text
+ */
 export async function generateBotResponse(
   systemPrompt: string,
   quotes: string[],

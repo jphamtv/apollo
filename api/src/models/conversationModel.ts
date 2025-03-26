@@ -3,6 +3,7 @@ import { ConversationWithDetails } from '../types';
 
 const prisma = new PrismaClient();
 
+// Common user selection fields to include with conversation data
 const userSelect = {
   id: true,
   username: true,
@@ -103,6 +104,7 @@ export const findById = async (
   });
 };
 
+// Finds an existing conversation between participants (handles both direct and group chats)
 export const findExistingConversationByParticipants = async (
   participantIds: string[]
 ) => {
@@ -218,6 +220,7 @@ export const removeParticipant = async (
   });
 };
 
+// Verifies if a user is a participant in a conversation (used for permission checks)
 export const isParticipant = async (
   userId: string,
   conversationId: string
@@ -233,6 +236,7 @@ export const isParticipant = async (
   return !!participant; // "!!"" converts to boolean
 };
 
+// Deletes a conversation and all related data (participants and messages) in a transaction
 export const deleteById = async (id: string): Promise<void> => {
   await prisma.$transaction([
     prisma.conversationParticipant.deleteMany({
@@ -247,6 +251,7 @@ export const deleteById = async (id: string): Promise<void> => {
   ]);
 };
 
+// Checks if a conversation has any unread messages for a specific user
 export const hasUnreadMessages = async (
   conversationId: string,
   userId: string
@@ -264,6 +269,8 @@ export const hasUnreadMessages = async (
   return unreadCount > 0;
 };
 
+// Marks all messages in a conversation as read for a specific user
+// Returns the count of messages that were marked as read
 export const markConversationAsRead = async (
   conversationId: string,
   userId: string

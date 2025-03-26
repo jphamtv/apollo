@@ -1,3 +1,16 @@
+/**
+ * Core messaging state management using Context API with Reducer pattern
+ * 
+ * Architecture decisions:
+ * 1. Uses Context+Reducer instead of a third-party state management library to reduce dependencies
+ * 2. Combines conversations and messages in a single context to prevent synchronization issues
+ * 3. Implements a uniform action pattern similar to Redux for predictable state updates
+ * 
+ * Performance considerations:
+ * - State is normalized to minimize re-renders when messages are updated
+ * - Conversations are sorted by most recent activity on each state change
+ * - Messages are loaded only for the active conversation
+ */
 import { createContext } from 'react';
 import { Conversation } from '../types/conversation';
 import { Message } from '../types/message';
@@ -52,7 +65,18 @@ export type MessageAction =
   | { type: 'RESET_STATE' }
   | { type: 'RECEIVE_MESSAGE'; message: Message };
 
-// Helper function to update conversations with a new message
+/**
+ * Optimized helper function for updating conversation state with new messages
+ * 
+ * This function handles two key tasks:
+ * 1. Updates the lastMessage property for immediate UI updates
+ * 2. Re-sorts conversations to keep the most active ones at the top
+ * 3. Manages the unread status based on whether the conversation is active
+ * 
+ * @param state Current state object
+ * @param message New message to integrate
+ * @param isReceived Whether this is a received message (affects unread status)
+ */
 const updateConversationsWithMessage = (
   state: MessageState,
   message: Message,
@@ -86,7 +110,17 @@ const updateConversationsWithMessage = (
   });
 };
 
-// Message reducer function
+/**
+ * Comprehensive reducer that manages all messaging state transitions
+ * 
+ * The structure follows standard reducer patterns with actions organized by domain:
+ * - Conversation loading/management
+ * - Message loading/sending
+ * - Read status handling
+ * - Real-time message reception
+ *
+ * Each case carefully updates only the necessary parts of state to avoid unnecessary renders
+ */
 export function messageReducer(
   state: MessageState,
   action: MessageAction

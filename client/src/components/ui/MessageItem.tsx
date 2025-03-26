@@ -1,3 +1,8 @@
+/**
+ * Component for rendering individual message bubbles in a conversation
+ * Handles different message types: text-only, image-only, or text with image
+ * Includes proper accessibility attributes
+ */
 import { Message } from '../../types/message';
 import styles from './MessageItem.module.css';
 
@@ -17,9 +22,10 @@ export default function MessageItem({
   landscapeImages,
   onImageLoad,
 }: Props) {
+  // Determine if this is an image-only message for special styling
   const isImageOnly = message.imageUrl && !message.text;
 
-  // For screen readers, identify message sender
+  // Set accessibility attributes for screen readers
   const messageSender = isCurrentUser
     ? 'You'
     : message.sender?.profile?.displayName ||
