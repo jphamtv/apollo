@@ -190,7 +190,7 @@ export const createMessage = [
               .reverse();
 
             await new Promise(resolve =>
-              setTimeout(resolve, Math.floor(Math.random() * 1500) + 750)
+              setTimeout(resolve, Math.floor(Math.random() * 1000) + 500)
             );
 
             // Send typing indicator via socket
@@ -205,7 +205,7 @@ export const createMessage = [
             );
 
             await new Promise(resolve =>
-              setTimeout(resolve, Math.floor(Math.random() * 3000) + 1500)
+              setTimeout(resolve, Math.floor(Math.random() * 1500) + 750)
             );
 
             // Stop typing indicator
