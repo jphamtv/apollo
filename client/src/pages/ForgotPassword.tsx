@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '../utils/apiClient';
+import Logo from '../components/ui/Logo';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import ErrorBox from '../components/ui/ErrorBox';
@@ -46,7 +47,7 @@ export default function ForgotPassword() {
     <div className={styles.wrapper}>
       <div className={styles.container}>
         <Link to="/login">
-          <h1 className={styles.title}>Apollo</h1>
+          <h1 className={styles.logo}><Logo height='5rem' /></h1>
         </Link>
 
         {isSubmitted ? (
@@ -57,7 +58,7 @@ export default function ForgotPassword() {
             </div>
             <p className={styles.footer}>
               <Link to="/login">
-                <span className={styles.link}>Back to login</span>
+                <Button type="submit" >Back to Login</Button>
               </Link>
             </p>
           </>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { RegisterCredentials } from '../types/user';
 import { useAuth } from '../hooks/useAuth';
+import Logo from '../components/ui/Logo';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import ErrorBox from '../components/ui/ErrorBox';
@@ -89,7 +90,7 @@ export default function Register() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Apollo</h1>
+        <h1 className={styles.logo}><Logo height='5rem' /></h1>
 
         <form onSubmit={handleSubmit} className={styles.form}>
           {errors.length > 0 && <ErrorBox errors={errors} />}

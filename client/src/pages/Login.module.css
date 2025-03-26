@@ -1,16 +1,18 @@
 .wrapper {
-  height: 85vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .container {
-  margin: 0 auto;
+  margin: 0 1rem;
   width: 25rem;
 }
 
-.title,
+.logo {
+  margin: 5rem 0 2rem;
+}
+
 .footer {
   text-align: center;
 }

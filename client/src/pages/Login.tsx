@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { validateForm } from '../utils/validation';
+import Logo from '../components/ui/Logo';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import ErrorBox from '../components/ui/ErrorBox';
@@ -70,7 +71,7 @@ export default function Login() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Apollo</h1>
+        <h1 className={styles.logo}><Logo height='5rem' /></h1>
 
         <form onSubmit={handleSubmit} className={styles.form}>
           {errors.length > 0 && <ErrorBox errors={errors} />}

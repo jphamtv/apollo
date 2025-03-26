@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import styles from './ConversationsSidebar.module.css';
 import ConversationItem from './ConversationItem';
 import NewChatButton from './NewChatButton';
 import ProfileButton from './ProfileButton';
+import Logo from './Logo';
 import { X } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigation } from '../../hooks/useNavigation';
@@ -10,6 +10,7 @@ import { useMessaging } from '../../hooks/useMessaging';
 import { useSidebar } from '../../hooks/useSidebar';
 import { formatLastMessageTimestamp } from '../../utils/formatTime';
 import { Conversation } from '../../types/conversation';
+import styles from './ConversationsSidebar.module.css';
 
 export default function ConversationsSidebar() {
   const { user } = useAuth();
@@ -71,7 +72,7 @@ export default function ConversationsSidebar() {
       role="region"
     >
       <header className={styles.header}>
-        <h2 id="app-title">Apollo</h2>
+        <h1 className={styles.logo}><Logo height='2.2rem'/></h1>
         <button
           className={styles.closeButton}
           onClick={closeMobileSidebar}
