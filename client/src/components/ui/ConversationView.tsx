@@ -1,20 +1,20 @@
 /**
  * ConversationView component - the primary message display and interaction screen
- * 
+ *
  * Component architecture:
- * 
+ *
  * This is one of the most complex components in the application with several key features:
  * 1. Displays messages for the active conversation with real-time updates
  * 2. Shows typing indicators with proper user attribution
  * 3. Manages profile information display with popover positioning
  * 4. Handles message sending with text and image support
  * 5. Implements proper accessibility attributes throughout
- * 
+ *
  * Performance optimizations:
  * - Uses useMemo for computationally derived values to prevent unnecessary recalculations
  * - Implements manual message pagination if needed (currently limited to most recent 50 messages)
  * - Uses refs to directly access DOM elements for accurate popup positioning
- * 
+ *
  * State management approach:
  * - Local state for UI elements (modals, popovers, errors)
  * - Context state for data (messages, conversations, active users)

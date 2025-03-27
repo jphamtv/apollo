@@ -4,9 +4,9 @@ export default function Logo({ height = '3rem', className = '' }) {
   return (
     <LogoSvg
       height={height}
-      width='100%'
+      width="100%"
       className={className}
-      aria-label='App Logo'
+      aria-label="App Logo"
     />
   );
 }

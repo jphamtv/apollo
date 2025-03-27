@@ -51,20 +51,14 @@ export default function ConversationItem({
     >
       <div className={styles.avatar} aria-hidden="true">
         {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt=""
-            className={styles.avatarImage}
-          />
+          <img src={imageUrl} alt="" className={styles.avatarImage} />
         ) : (
           <span className={styles.initials}>{initials}</span>
         )}
       </div>
       <div className={styles.content}>
         <div className={styles.header}>
-          <span className={styles.name}>
-            {displayName}
-          </span>
+          <span className={styles.name}>{displayName}</span>
           <span className={styles.time}>{timestamp}</span>
         </div>
         <div className={styles.previewContainer}>

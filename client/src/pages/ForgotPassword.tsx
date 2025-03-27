@@ -46,9 +46,13 @@ export default function ForgotPassword() {
 
   return (
     <div className={sharedStyles.wrapper}>
-      <div className={`${sharedStyles.container} ${styles.forgotPasswordContainer}`}>
+      <div
+        className={`${sharedStyles.container} ${styles.forgotPasswordContainer}`}
+      >
         <Link to="/login">
-          <h1 className={sharedStyles.logo}><Logo height='5rem' /></h1>
+          <h1 className={sharedStyles.logo}>
+            <Logo height="5rem" />
+          </h1>
         </Link>
 
         {isSubmitted ? (
@@ -59,12 +63,15 @@ export default function ForgotPassword() {
             </div>
             <div className={sharedStyles.centeredButton}>
               <Link to="/login">
-                <Button type="submit" >Back to Login</Button>
+                <Button type="submit">Back to Login</Button>
               </Link>
             </div>
           </>
         ) : (
-          <form onSubmit={handleSubmit} className={`${sharedStyles.form} ${styles.forgotPasswordForm}`}>
+          <form
+            onSubmit={handleSubmit}
+            className={`${sharedStyles.form} ${styles.forgotPasswordForm}`}
+          >
             {errors.length > 0 && <ErrorBox errors={errors} />}
 
             <p>

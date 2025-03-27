@@ -1,14 +1,14 @@
 /**
  * Form validation utilities
- * 
- * Design pattern: 
+ *
+ * Design pattern:
  * - Modular validation functions (validateRequired, validateEmail, etc.)
  * - Composite validation through validateForm
- * 
+ *
  * We intentionally use this lightweight custom validation approach instead of
  * a form library like Formik or React Hook Form to minimize dependencies,
  * while maintaining consistent validation across all forms in the application.
- * 
+ *
  * Security consideration: We validate on both client and server - client validation
  * is for UX, server validation (in controllers) is the security boundary.
  */
@@ -68,15 +68,15 @@ export const validatePassword = (password: string): string | undefined => {
 /**
  * Comprehensive form validation for any form values object
  * Uses appropriate specialized validators based on field name
- * 
- * Usage example: 
+ *
+ * Usage example:
  * ```ts
  * const errors = validateForm({ email: 'user@example.com', password: 'password123' });
  * if (Object.keys(errors).length === 0) {
  *   // Form is valid, proceed
  * }
  * ```
- * 
+ *
  * @param values Object containing form field values with field names as keys
  * @returns Object with field names as keys and error messages as values (empty if all valid)
  */

@@ -85,8 +85,10 @@ export default function ResetPassword() {
     return (
       <div className={sharedStyles.wrapper}>
         <div className={sharedStyles.container}>
-          <Link to='/login'>
-            <h1 className={sharedStyles.logo}><Logo height='5rem' /></h1> 
+          <Link to="/login">
+            <h1 className={sharedStyles.logo}>
+              <Logo height="5rem" />
+            </h1>
           </Link>
           <div className={sharedStyles.successMessage}>
             Your password has been reset successfully. You will be redirected to
@@ -94,7 +96,7 @@ export default function ResetPassword() {
           </div>
           <p className={sharedStyles.centeredButton}>
             <Link to="/login">
-              <Button type="submit" >Go to login page</Button>
+              <Button type="submit">Go to login page</Button>
             </Link>
           </p>
         </div>
@@ -105,8 +107,10 @@ export default function ResetPassword() {
   return (
     <div className={sharedStyles.wrapper}>
       <div className={sharedStyles.container}>
-        <Link to='/login'>
-          <h1 className={sharedStyles.logo}><Logo height='5rem' /></h1> 
+        <Link to="/login">
+          <h1 className={sharedStyles.logo}>
+            <Logo height="5rem" />
+          </h1>
         </Link>
 
         {!token ? (
@@ -114,7 +118,7 @@ export default function ResetPassword() {
             {errors.length > 0 && <ErrorBox errors={errors} />}
             <div className={sharedStyles.centeredButton}>
               <Link to="/forgot-password">
-                <Button type="submit" >Request a new reset link</Button>
+                <Button type="submit">Request a new reset link</Button>
               </Link>
             </div>
           </div>
@@ -141,7 +145,9 @@ export default function ResetPassword() {
               autoComplete="new-password"
               required
             />
-            <div className={`${sharedStyles.buttonContainer} ${styles.resetButton}`}>
+            <div
+              className={`${sharedStyles.buttonContainer} ${styles.resetButton}`}
+            >
               <Button type="submit" isLoading={isLoading}>
                 Reset Password
               </Button>

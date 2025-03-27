@@ -20,11 +20,11 @@ export default function NewConversationHeader({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const initials = (displayName: string) => {
     return displayName
-    .split(' ')
-    .slice(0, 2)
-    .map(n => n[0])
-    .join('')
-    .toUpperCase();
+      .split(' ')
+      .slice(0, 2)
+      .map(n => n[0])
+      .join('')
+      .toUpperCase();
   };
 
   useEffect(() => {
@@ -75,7 +75,9 @@ export default function NewConversationHeader({
       <div className={styles.searchContainer}>
         <Input
           type="text"
-          placeholder={disabled ? 'Creating conversation...' : 'Type to search...'}
+          placeholder={
+            disabled ? 'Creating conversation...' : 'Type to search...'
+          }
           value={searchQuery}
           onChange={e => handleSearch(e.target.value)}
           onFocus={() => !disabled && setShowDropdown(true)}

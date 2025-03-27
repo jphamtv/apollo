@@ -19,11 +19,11 @@ export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
   const { logout } = useAuth();
   const { openSettings } = useNavigation();
   const initials = user.profile.displayName
-  .split(' ')
-  .slice(0, 2)
-  .map(n => n[0])
-  .join('')
-  .toUpperCase();
+    .split(' ')
+    .slice(0, 2)
+    .map(n => n[0])
+    .join('')
+    .toUpperCase();
 
   const handleSettingsClick = () => {
     openSettings();

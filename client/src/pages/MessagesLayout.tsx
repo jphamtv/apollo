@@ -1,15 +1,15 @@
 /**
  * Main layout component for the messaging interface
- * 
+ *
  * Architecture decisions:
  * 1. Uses a single-page application (SPA) approach with context-based routing
  *    instead of URL-based routing for better state persistence between views
- * 
+ *
  * 2. Component structure:
  *    - ConversationsSidebar: Always visible list of conversations
  *    - Main content area: Dynamically shows EmptyConversation or ConversationView
  *    - Settings modal: Only visible when triggered
- * 
+ *
  * 3. Time-based rendering optimizations:
  *    - Tracks date changes at midnight to refresh time displays
  *    - Updates time displays when tab becomes visible after being hidden

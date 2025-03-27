@@ -72,7 +72,9 @@ export default function Login() {
   return (
     <div className={sharedStyles.wrapper}>
       <div className={sharedStyles.container}>
-        <h1 className={sharedStyles.logo}><Logo height='5rem' /></h1>
+        <h1 className={sharedStyles.logo}>
+          <Logo height="5rem" />
+        </h1>
 
         <form onSubmit={handleSubmit} className={sharedStyles.form}>
           {errors.length > 0 && <ErrorBox errors={errors} />}

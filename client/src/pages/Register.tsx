@@ -91,7 +91,9 @@ export default function Register() {
   return (
     <div className={sharedStyles.wrapper}>
       <div className={sharedStyles.container}>
-        <h1 className={sharedStyles.logo}><Logo height='5rem' /></h1>
+        <h1 className={sharedStyles.logo}>
+          <Logo height="5rem" />
+        </h1>
 
         <form onSubmit={handleSubmit} className={sharedStyles.form}>
           {errors.length > 0 && <ErrorBox errors={errors} />}
@@ -138,7 +140,9 @@ export default function Register() {
             autoComplete="new-password"
             required
           />
-          <div className={`${sharedStyles.buttonContainer} ${styles.createAccountButton}`}>
+          <div
+            className={`${sharedStyles.buttonContainer} ${styles.createAccountButton}`}
+          >
             <Button
               type="submit"
               isLoading={isLoading}

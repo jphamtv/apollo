@@ -1,11 +1,11 @@
 /**
  * Authentication provider that manages user state and auth operations
- * 
+ *
  * Architecture decisions:
  * 1. Positioned as the outermost provider in the context hierarchy
  * 2. Centralizes all auth-related operations to avoid code duplication
  * 3. Automatically handles token verification on app initialization
- * 
+ *
  * Security considerations:
  * - JWT token is stored in localStorage for persistence (trade-off with XSS vulnerability)
  * - Token is verified on application start to prevent using expired tokens
@@ -29,7 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Auto-authentication on application initialization
-   * 
+   *
    * This effect runs only once when the app starts and:
    * 1. Checks if a token exists in localStorage
    * 2. Verifies the token validity with the server
@@ -88,7 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Updates user profile data
-   * 
+   *
    * Important implementation detail: This updates the local user state immediately
    * after API call success to prevent stale data if other components reference
    * this state before a re-fetch occurs

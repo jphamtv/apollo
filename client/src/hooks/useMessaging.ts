@@ -1,15 +1,15 @@
 /**
  * Custom hook for accessing the messaging system functionality
- * 
+ *
  * Architecture design pattern:
  * - Implements facade pattern over the messaging context
  * - Provides a simpler interface by destructuring complex context state
  * - Renames some functions for better semantic clarity (setActiveConversation -> selectConversation)
- * 
+ *
  * This hook is the primary way components interact with the messaging system.
  * It encapsulates all functionality related to conversations and messages
  * while hiding the complexity of the context implementation.
- * 
+ *
  * Usage considerations:
  * - Use for all messaging-related operations
  * - Exposes loading/error states for proper UI feedback
@@ -73,7 +73,7 @@ export function useMessaging() {
     deleteConversation,
     markConversationAsRead,
     findConversationByParticipant,
-    
+
     // Message operations
     loadMessages,
     sendMessage,

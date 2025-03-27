@@ -1,19 +1,19 @@
 /**
  * Component that renders the messages area with advanced features:
- * 
+ *
  * UI optimizations:
  * 1. Auto-scrolling - Automatically scrolls to newest messages
  * 2. Timestamp grouping - Shows timestamps only when time gaps are significant
  * 3. Date separators - Groups messages by date for better context
  * 4. Image orientation detection - Renders landscape/portrait images appropriately
  * 5. Typing indicators - Shows when users are typing with different styling for bots
- * 
+ *
  * Performance considerations:
  * - Uses refs for smooth scrolling without layout thrashing
  * - Minimal re-renders with proper dependency arrays
  * - Efficient image dimension detection after loading
  * - Uses Set for landscape image tracking to avoid array scans
- * 
+ *
  * Accessibility features:
  * - Proper ARIA roles (log, live region)
  * - Semantic structure with fragments

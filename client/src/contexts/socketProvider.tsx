@@ -1,10 +1,10 @@
 /**
  * Socket.io Provider for real-time communication
- * 
+ *
  * Architecture decision:
  * This provider sits at the innermost layer of the context hierarchy because it
  * depends on all other contexts (auth, messaging) but nothing depends on it.
- * 
+ *
  * Key optimizations:
  * 1. Automatically joins all conversation rooms at once to avoid manual room management
  * 2. Updates state directly through dispatch rather than separate API calls
@@ -49,7 +49,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
   /**
    * Socket initialization on auth change
-   * 
+   *
    * Technical detail: We intentionally don't connect/disconnect on every component render
    * by properly tracking the socket reference and using disconnectSocket on cleanup
    */

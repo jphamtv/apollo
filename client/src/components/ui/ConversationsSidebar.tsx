@@ -73,7 +73,9 @@ export default function ConversationsSidebar() {
       role="region"
     >
       <header className={styles.header}>
-        <h1><Logo height='2.2rem' /></h1>
+        <h1>
+          <Logo height="2.2rem" />
+        </h1>
         <button
           className={styles.closeButton}
           onClick={closeMobileSidebar}

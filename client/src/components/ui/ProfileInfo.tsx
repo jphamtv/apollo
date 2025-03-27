@@ -26,7 +26,7 @@ export default function ProfileInfo({ recipient }: ProfileInfoProps) {
             />
           ) : (
             <div className={styles.avatarPlaceholder}>
-              <UserIcon size={40} strokeWidth={1}/>
+              <UserIcon size={40} strokeWidth={1} />
             </div>
           )}
         </div>
