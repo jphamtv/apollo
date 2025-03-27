@@ -8,7 +8,7 @@ interface ProfileMenuProps {
     username: string;
     email?: string;
     profile: {
-      displayName?: string;
+      displayName: string;
       imageUrl?: string;
     };
   };
@@ -18,7 +18,12 @@ interface ProfileMenuProps {
 export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
   const { logout } = useAuth();
   const { openSettings } = useNavigation();
-  const initial = user.profile.displayName?.charAt(0).toUpperCase() || '';
+  const initials = user.profile.displayName
+  .split(' ')
+  .slice(0, 2)
+  .map(n => n[0])
+  .join('')
+  .toUpperCase();
 
   const handleSettingsClick = () => {
     openSettings();
@@ -41,7 +46,7 @@ export default function ProfileMenu({ user, onClose }: ProfileMenuProps) {
               className={styles.avatarImage}
             />
           ) : (
-            initial
+            <span className={styles.initials}>{initials}</span>
           )}
         </div>
         <div className={styles.userDetails}>

@@ -15,8 +15,8 @@ import { logger } from '../utils/logger';
 const validateUserProfile = [
   body('displayName')
     .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage(`Display name must between 2 and 50 characters`)
+    .isLength({ min: 1, max: 50 })
+    .withMessage(`Display name must between 1 and 50 characters`)
     .matches(/^[\p{L}\p{N}\p{P}\p{Z}\p{S}]+$/u)
     .withMessage(
       'Display name can contain letters, numbers, spaces, and special characters'

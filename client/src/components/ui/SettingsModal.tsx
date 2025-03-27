@@ -170,7 +170,7 @@ export default function SettingsModal() {
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="displayName">Full Name</label>
+            <label htmlFor="displayName">Display Name</label>
             <Input
               id="displayName"
               value={displayName}

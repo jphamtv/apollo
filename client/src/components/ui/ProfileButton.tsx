@@ -11,9 +11,12 @@ interface Props {
 export default function ProfileButton({ user }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const initial =
-    user.profile.displayName?.charAt(0).toUpperCase() ||
-    user.username.charAt(0).toUpperCase();
+  const initials = user.profile.displayName
+    .split(' ')
+    .slice(0, 2)
+    .map(n => n[0])
+    .join('')
+    .toUpperCase();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -44,7 +47,7 @@ export default function ProfileButton({ user }: Props) {
               className={styles.avatarImage}
             />
           ) : (
-            initial
+            <span className={styles.initials}>{initials}</span>
           )}
         </div>
         <span className={styles.displayName}>

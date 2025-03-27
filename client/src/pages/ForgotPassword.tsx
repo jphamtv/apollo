@@ -7,6 +7,7 @@ import Input from '../components/ui/Input';
 import ErrorBox from '../components/ui/ErrorBox';
 import { validateEmail } from '../utils/validation';
 import { isApiError } from '../types/error';
+import sharedStyles from './authPage.module.css';
 import styles from './ForgotPassword.module.css';
 
 export default function ForgotPassword() {
@@ -44,10 +45,10 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.container}>
+    <div className={sharedStyles.wrapper}>
+      <div className={`${sharedStyles.container} ${styles.forgotPasswordContainer}`}>
         <Link to="/login">
-          <h1 className={styles.logo}><Logo height='5rem' /></h1>
+          <h1 className={sharedStyles.logo}><Logo height='5rem' /></h1>
         </Link>
 
         {isSubmitted ? (

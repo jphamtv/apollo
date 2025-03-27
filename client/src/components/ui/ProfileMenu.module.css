@@ -25,13 +25,10 @@
   height: 2.5rem;
   border-radius: 50%;
   background-color: var(--bg-avatar);
-  border: 1px solid var(--border-avatar);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 0.75rem;
-  font-weight: 500;
-  color: var(--text-avatar);
   overflow: hidden;
 }
 
@@ -40,6 +37,12 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.initials {
+  color: var(--text-avatar);
+  font-size: 1.125rem;
+  font-weight: 500;
 }
 
 .userDetails {

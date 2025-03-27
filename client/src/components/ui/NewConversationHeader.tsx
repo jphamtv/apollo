@@ -18,6 +18,14 @@ export default function NewConversationHeader({
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const { users, isLoading, searchUsers } = useUserSearch();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const initials = (displayName: string) => {
+    return displayName
+    .split(' ')
+    .slice(0, 2)
+    .map(n => n[0])
+    .join('')
+    .toUpperCase();
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -67,7 +75,7 @@ export default function NewConversationHeader({
       <div className={styles.searchContainer}>
         <Input
           type="text"
-          placeholder={disabled ? 'Creating conversation...' : 'Type a name...'}
+          placeholder={disabled ? 'Creating conversation...' : 'Type to search...'}
           value={searchQuery}
           onChange={e => handleSearch(e.target.value)}
           onFocus={() => !disabled && setShowDropdown(true)}
@@ -94,8 +102,7 @@ export default function NewConversationHeader({
                     />
                   ) : (
                     <div className={styles.avatarPlaceholder}>
-                      {user.profile.displayName?.[0].toUpperCase() ||
-                        user.username[0].toUpperCase()}
+                      {initials(user.profile.displayName)}
                     </div>
                   )}
                   <div className={styles.userInfo}>

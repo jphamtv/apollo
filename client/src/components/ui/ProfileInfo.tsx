@@ -1,12 +1,12 @@
 import styles from './ProfileInfo.module.css';
-import { UserIcon } from 'lucide-react';
+import { User as UserIcon } from 'lucide-react';
 
 interface ProfileInfoProps {
   recipient: {
     username: string;
     email?: string;
     profile: {
-      displayName?: string;
+      displayName: string;
       imageUrl?: string;
       bio?: string;
     };
@@ -26,7 +26,7 @@ export default function ProfileInfo({ recipient }: ProfileInfoProps) {
             />
           ) : (
             <div className={styles.avatarPlaceholder}>
-              <UserIcon size={40} />
+              <UserIcon size={40} strokeWidth={1}/>
             </div>
           )}
         </div>

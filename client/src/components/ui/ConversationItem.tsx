@@ -3,6 +3,7 @@ import styles from './ConversationItem.module.css';
 
 interface Props {
   displayName: string;
+  imageUrl: string;
   lastMessage: string;
   timestamp: string;
   isActive?: boolean;
@@ -22,6 +23,7 @@ interface Props {
 
 export default function ConversationItem({
   displayName,
+  imageUrl,
   lastMessage,
   timestamp,
   isActive = false,
@@ -48,13 +50,20 @@ export default function ConversationItem({
       aria-current={isActive ? 'page' : undefined}
     >
       <div className={styles.avatar} aria-hidden="true">
-        {initials}
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt=""
+            className={styles.avatarImage}
+          />
+        ) : (
+          <span className={styles.initials}>{initials}</span>
+        )}
       </div>
       <div className={styles.content}>
         <div className={styles.header}>
           <span className={styles.name}>
             {displayName}
-            {/* {isBot && <BotBadge />} */}
           </span>
           <span className={styles.time}>{timestamp}</span>
         </div>

@@ -1,0 +1,48 @@
+/* Common layout */
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  margin: 0 1rem;
+  width: 25rem;
+}
+
+.logo {
+  margin: 5rem 0 2rem;
+}
+
+.form {
+  margin: 1rem 0;
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--bg-primary);
+}
+
+/* Common elements */
+.footer {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.link {
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
+.errorMessage {
+  color: var(--error);
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button {
+  min-width: 25%;
+}

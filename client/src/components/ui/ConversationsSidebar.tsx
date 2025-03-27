@@ -42,6 +42,7 @@ export default function ConversationsSidebar() {
               ? '📷 Image'
               : conversation.lastMessage.text
             : 'No messages yet',
+          imageUrl: otherParticipant.profile.imageUrl ?? '',
           timestamp: conversation.lastMessage
             ? formatLastMessageTimestamp(conversation.lastMessage.createdAt)
             : formatLastMessageTimestamp(conversation.createdAt),
@@ -72,7 +73,7 @@ export default function ConversationsSidebar() {
       role="region"
     >
       <header className={styles.header}>
-        <h1 className={styles.logo}><Logo height='2.2rem'/></h1>
+        <h1><Logo height='2.2rem' /></h1>
         <button
           className={styles.closeButton}
           onClick={closeMobileSidebar}
@@ -88,6 +89,7 @@ export default function ConversationsSidebar() {
           <ConversationItem
             key={item.conversation.id}
             displayName={item.displayName}
+            imageUrl={item.imageUrl}
             lastMessage={item.lastMessageText}
             timestamp={item.timestamp}
             isActive={item.isActive}
