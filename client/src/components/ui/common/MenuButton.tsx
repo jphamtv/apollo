@@ -1,8 +1,8 @@
 import styles from './MenuButton.module.css';
 import { Menu } from 'lucide-react';
-import { useSidebar } from '../../hooks/useSidebar';
-import { useMessaging } from '../../hooks/useMessaging';
-import { useAuth } from '../../hooks/useAuth';
+import { useSidebar } from '../../../hooks/useSidebar';
+import { useMessaging } from '../../../hooks/useMessaging';
+import { useAuth } from '../../../hooks/useAuth';
 
 export default function MenuButton() {
   const { toggleMobileSidebar } = useSidebar();

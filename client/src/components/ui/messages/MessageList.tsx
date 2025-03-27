@@ -20,8 +20,8 @@
  * - Descriptive labels for screen readers
  */
 import React, { useState, useRef, useEffect } from 'react';
-import { Message } from '../../types/message';
-import { formatMessageFeedTimestamp } from '../../utils/formatTime';
+import { Message } from '../../../types/message';
+import { formatMessageFeedTimestamp } from '../../../utils/formatTime';
 import MessageItem from './MessageItem';
 import TimestampDivider from './TimestampDivider';
 import TypingIndicators from './TypingIndicators';

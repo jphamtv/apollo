@@ -3,7 +3,7 @@
  * Handles different message types: text-only, image-only, or text with image
  * Includes proper accessibility attributes
  */
-import { Message } from '../../types/message';
+import { Message } from '../../../types/message';
 import styles from './MessageItem.module.css';
 
 interface Props {

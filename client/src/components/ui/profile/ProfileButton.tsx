@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronUp } from 'lucide-react';
 import styles from './ProfileButton.module.css';
 import ProfileMenu from './ProfileMenu';
-import { User } from '../../types/user';
+import { User } from '../../../types/user';
 
 interface Props {
   user: User;

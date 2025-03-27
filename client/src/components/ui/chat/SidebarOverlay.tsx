@@ -1,4 +1,4 @@
-import { useSidebar } from '../../hooks/useSidebar';
+import { useSidebar } from '../../../hooks/useSidebar';
 import styles from './SidebarOverlay.module.css';
 
 export default function SidebarOverlay() {

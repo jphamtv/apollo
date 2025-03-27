@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '../utils/apiClient';
-import Logo from '../components/ui/Logo';
-import Button from '../components/ui/Button';
-import Input from '../components/ui/Input';
-import ErrorBox from '../components/ui/ErrorBox';
+import Logo from '../components/ui/common/Logo';
+import Button from '../components/ui/common/Button';
+import Input from '../components/ui/common/Input';
+import ErrorBox from '../components/ui/common/ErrorBox';
 import { validateEmail } from '../utils/validation';
 import { isApiError } from '../types/error';
 import sharedStyles from './authPage.module.css';

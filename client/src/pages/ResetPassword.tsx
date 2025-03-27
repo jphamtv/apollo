@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { apiClient } from '../utils/apiClient';
 import { isApiError, hasValidationErrors } from '../types/error';
-import Logo from '../components/ui/Logo';
-import Button from '../components/ui/Button';
-import Input from '../components/ui/Input';
-import ErrorBox from '../components/ui/ErrorBox';
+import Logo from '../components/ui/common/Logo';
+import Button from '../components/ui/common/Button';
+import Input from '../components/ui/common/Input';
+import ErrorBox from '../components/ui/common/ErrorBox';
 import sharedStyles from './authPage.module.css';
 import styles from './ResetPassword.module.css';
 

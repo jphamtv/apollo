@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUp, Image, X } from 'lucide-react';
-import Button from './Button';
+import Button from '../common/Button';
 import styles from './MessageInput.module.css';
 
 interface Props {

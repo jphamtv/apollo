@@ -1,5 +1,5 @@
-import { useAuth } from '../../hooks/useAuth';
-import { useNavigation } from '../../hooks/useNavigation';
+import { useAuth } from '../../../hooks/useAuth';
+import { useNavigation } from '../../../hooks/useNavigation';
 import ThemeToggle from './ThemeToggle';
 import styles from './ProfileMenu.module.css';
 

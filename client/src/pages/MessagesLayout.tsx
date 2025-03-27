@@ -16,11 +16,11 @@
  *      to avoid stale timestamps
  */
 import { useEffect, useState } from 'react';
-import ConversationsSidebar from '../components/ui/ConversationsSidebar';
-import ConversationView from '../components/ui/ConversationView';
-import SettingsModal from '../components/ui/SettingsModal';
-import EmptyConversation from '../components/ui/EmptyConversation';
-import SidebarOverlay from '../components/ui/SidebarOverlay';
+import ConversationsSidebar from '../components/ui/chat/ConversationsSidebar';
+import ConversationView from '../components/ui/chat/ConversationView';
+import SettingsModal from '../components/ui/profile/SettingsModal';
+import EmptyConversation from '../components/ui/chat/EmptyConversation';
+import SidebarOverlay from '../components/ui/chat/SidebarOverlay';
 import { useMessaging } from '../hooks/useMessaging';
 import { useNavigation } from '../hooks/useNavigation';
 import styles from './MessagesLayout.module.css';

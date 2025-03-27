@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { useUserSearch } from '../../hooks/useUserSearch';
-import Input from './Input';
+import { useUserSearch } from '../../../hooks/useUserSearch';
+import Input from '../common/Input';
 import styles from './NewConversationHeader.module.css';
-import { User } from '../../types/user';
-import BotBadge from './BotBadge';
+import { User } from '../../../types/user';
+import BotBadge from '../common/BotBadge';
 
 interface Props {
   onUserSelect: (user: User) => void;

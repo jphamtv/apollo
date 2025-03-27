@@ -1,7 +1,7 @@
 import styles from './EmptyConversation.module.css';
-import Button from './Button';
-import { useNavigation } from '../../hooks/useNavigation';
-import MenuButton from './MenuButton';
+import Button from '../common/Button';
+import { useNavigation } from '../../../hooks/useNavigation';
+import MenuButton from '../common/MenuButton';
 import { MessageCirclePlus } from 'lucide-react';
 
 export default function EmptyConversation() {

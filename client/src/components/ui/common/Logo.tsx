@@ -1,4 +1,4 @@
-import LogoSvg from '../../assets/logo_apollo.svg?react';
+import LogoSvg from '../../../assets/logo_apollo.svg?react';
 
 export default function Logo({ height = '3rem', className = '' }) {
   return (

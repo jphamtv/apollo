@@ -1,10 +1,10 @@
 import { useState, useRef } from 'react';
-import { useAuth } from '../../hooks/useAuth';
-import { useNavigation } from '../../hooks/useNavigation';
-import Button from '../ui/Button';
-import Input from '../ui/Input';
-import Modal from './Modal';
-import { logger } from '../../utils/logger';
+import { useAuth } from '../../../hooks/useAuth';
+import { useNavigation } from '../../../hooks/useNavigation';
+import Button from '../common/Button';
+import Input from '../common/Input';
+import Modal from '../common/Modal';
+import { logger } from '../../../utils/logger';
 import styles from './SettingsModal.module.css';
 import { User as UserIcon, Trash2Icon } from 'lucide-react';
 

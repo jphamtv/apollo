@@ -20,23 +20,23 @@
  * - Context state for data (messages, conversations, active users)
  */
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { useAuth } from '../../hooks/useAuth';
-import { useNavigation } from '../../hooks/useNavigation';
-import { useMessaging } from '../../hooks/useMessaging';
-import { useSocket } from '../../hooks/useSocket';
-import NewConversationHeader from './NewConversationHeader';
-import Button from './Button';
-import ProfileInfo from './ProfileInfo';
-import Modal from './Modal';
-import BotBadge from './BotBadge';
+import { useAuth } from '../../../hooks/useAuth';
+import { useNavigation } from '../../../hooks/useNavigation';
+import { useMessaging } from '../../../hooks/useMessaging';
+import { useSocket } from '../../../hooks/useSocket';
+import NewConversationHeader from '../chat/NewConversationHeader';
+import Button from '../common/Button';
+import ProfileInfo from '../profile/ProfileInfo';
+import Modal from '../common/Modal';
+import BotBadge from '../common/BotBadge';
 import { Trash2, ChevronDown, X } from 'lucide-react';
-import MenuButton from './MenuButton';
+import MenuButton from '../common/MenuButton';
 import styles from './ConversationView.module.css';
-import { User } from '../../types/user';
-import { Conversation } from '../../types/conversation';
-import { logger } from '../../utils/logger';
-import MessageList from './MessageList';
-import MessageInput from './MessageInput';
+import { User } from '../../../types/user';
+import { Conversation } from '../../../types/conversation';
+import { logger } from '../../../utils/logger';
+import MessageList from '../messages/MessageList';
+import MessageInput from '../messages/MessageInput';
 
 interface Props {
   conversation?: Conversation;
