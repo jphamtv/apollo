@@ -1,10 +1,10 @@
-import styles from './MenuButton.module.css';
-import { Menu } from 'lucide-react';
+import styles from './OpenSidebarButton.module.css';
+import { PanelLeft } from 'lucide-react';
 import { useSidebar } from '../../../hooks/useSidebar';
 import { useMessaging } from '../../../hooks/useMessaging';
 import { useAuth } from '../../../hooks/useAuth';
 
-export default function MenuButton() {
+export default function OpenSidebarButton() {
   const { toggleMobileSidebar } = useSidebar();
   const { conversations } = useMessaging();
   const { user } = useAuth();
@@ -17,11 +17,11 @@ export default function MenuButton() {
   return (
     <div className={styles.buttonContainer}>
       <button
-        className={styles.menuButton}
+        className={styles.openSidebarButton}
         onClick={toggleMobileSidebar}
         aria-label={`Toggle menu${unreadCount > 0 ? `, ${unreadCount} unread conversations` : ''}`}
       >
-        <Menu size={24} strokeWidth={1.5} />
+        <PanelLeft size={20} strokeWidth={1} />
       </button>
       {unreadCount > 0 && <span className={styles.badge}>{unreadCount}</span>}
     </div>

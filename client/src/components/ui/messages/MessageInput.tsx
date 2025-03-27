@@ -180,7 +180,7 @@ export default function MessageInput({
             className={styles.imageButton}
             aria-disabled={isDisabled || isSending}
           >
-            <Image size={24} strokeWidth={1} />
+            <Image size={24} strokeWidth={1.5} />
           </label>
         )}
 
@@ -193,7 +193,7 @@ export default function MessageInput({
           size="small"
           aria-label="Send message"
         >
-          <ArrowUp size={24} strokeWidth={2} />
+          <ArrowUp size={24} strokeWidth={1.5} />
         </Button>
       </div>
     </div>

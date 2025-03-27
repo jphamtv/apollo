@@ -87,7 +87,7 @@ export default function ResetPassword() {
         <div className={sharedStyles.container}>
           <Link to="/login">
             <h1 className={sharedStyles.logo}>
-              <Logo height="5rem" />
+              <Logo height="80px" />
             </h1>
           </Link>
           <div className={sharedStyles.successMessage}>
@@ -109,7 +109,7 @@ export default function ResetPassword() {
       <div className={sharedStyles.container}>
         <Link to="/login">
           <h1 className={sharedStyles.logo}>
-            <Logo height="5rem" />
+            <Logo height="80px" />
           </h1>
         </Link>
 

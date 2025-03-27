@@ -1,7 +1,7 @@
 import styles from './EmptyConversation.module.css';
 import Button from '../common/Button';
 import { useNavigation } from '../../../hooks/useNavigation';
-import MenuButton from '../common/MenuButton';
+import OpenSidebarButton from '../common/OpenSidebarButton';
 import { MessageCirclePlus } from 'lucide-react';
 
 export default function EmptyConversation() {
@@ -11,7 +11,7 @@ export default function EmptyConversation() {
     <div className={styles.container}>
       {/* Menu button in the top-left for mobile */}
       <div className={styles.mobileNav}>
-        <MenuButton />
+        <OpenSidebarButton />
       </div>
 
       <div className={styles.content}>

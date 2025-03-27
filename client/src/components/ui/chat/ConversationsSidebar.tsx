@@ -3,7 +3,7 @@ import ConversationItem from './ConversationItem';
 import NewChatButton from './NewChatButton';
 import ProfileButton from '../profile/ProfileButton';
 import Logo from '../common/Logo';
-import { X } from 'lucide-react';
+import { ArrowLeftFromLine } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
 import { useNavigation } from '../../../hooks/useNavigation';
 import { useMessaging } from '../../../hooks/useMessaging';
@@ -74,14 +74,14 @@ export default function ConversationsSidebar() {
     >
       <header className={styles.header}>
         <h1>
-          <Logo height="2.2rem" />
+          <Logo height="32px" />
         </h1>
         <button
           className={styles.closeButton}
           onClick={closeMobileSidebar}
           aria-label="Close menu"
         >
-          <X size={24} strokeWidth={1.5} />
+          <ArrowLeftFromLine size={20} strokeWidth={1} />
         </button>
       </header>
 

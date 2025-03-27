@@ -30,7 +30,7 @@ import ProfileInfo from '../profile/ProfileInfo';
 import Modal from '../common/Modal';
 import BotBadge from '../common/BotBadge';
 import { Trash2, ChevronDown, X } from 'lucide-react';
-import MenuButton from '../common/MenuButton';
+import OpenSidebarButton from '../common/OpenSidebarButton';
 import styles from './ConversationView.module.css';
 import { User } from '../../../types/user';
 import { Conversation } from '../../../types/conversation';
@@ -244,7 +244,7 @@ export default function ConversationView({ conversation }: Props) {
       <div className={styles.headerContainer}>
         {/* Mobile menu button */}
         <div className={styles.mobileMenuContainer}>
-          <MenuButton />
+          <OpenSidebarButton />
         </div>
 
         <div className={styles.label}>To:</div>

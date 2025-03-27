@@ -44,8 +44,7 @@
 }
 
 .actions button:hover {
-  /* color: var(--error); */
-  background-color: var(--bg-hover);
+  background-color: var(--bg-secondary);
   border-radius: var(--border-radius-sm);
 }
 

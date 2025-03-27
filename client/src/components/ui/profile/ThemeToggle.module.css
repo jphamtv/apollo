@@ -11,10 +11,6 @@
   width: 100%;
 }
 
-/* .toggleButton:hover {
-  background-color: var(--bg-hover);
-} */
-
 .toggleIcon {
   display: flex;
   align-items: center;

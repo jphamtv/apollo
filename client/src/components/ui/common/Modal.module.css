@@ -37,6 +37,6 @@
 }
 
 .closeButton:hover {
-  background-color: var(--bg-hover);
+  background-color: var(--bg-selected);
   border-radius: var(--border-radius-sm);
 }

@@ -92,7 +92,7 @@ export default function Register() {
     <div className={sharedStyles.wrapper}>
       <div className={sharedStyles.container}>
         <h1 className={sharedStyles.logo}>
-          <Logo height="5rem" />
+          <Logo height="80px" />
         </h1>
 
         <form onSubmit={handleSubmit} className={sharedStyles.form}>

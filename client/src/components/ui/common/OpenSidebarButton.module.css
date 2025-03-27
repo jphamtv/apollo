@@ -3,9 +3,9 @@
   display: none;
 }
 
-.menuButton {
+.openSidebarButton {
   display: flex;
-  padding: 0.25rem;
+  padding: 0.5rem;
   background: none;
   border: none;
   color: var(--text-primary);
@@ -31,8 +31,8 @@
   z-index: 1;
 }
 
-.menuButton:hover {
-  background-color: var(--bg-hover);
+.openSidebarButton:hover {
+  background-color: var(--bg-secondary);
   border-radius: var(--border-radius-sm);
 }
 
@@ -46,7 +46,7 @@
 }
 
 @media (min-width: 46.9375rem) {
-  .menuButton {
+  .openSidebarButton {
     display: none; /* Hide menu button on desktop */
   }
 }

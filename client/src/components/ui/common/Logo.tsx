@@ -1,10 +1,13 @@
 import LogoSvg from '../../../assets/logo_apollo.svg?react';
 
-export default function Logo({ height = '3rem', className = '' }) {
+export default function Logo({ height = '80px', className = '' }) {
+  const aspectRatio = 155 / 58;
+  const heightValue = parseFloat(height);
+  const widthValue = heightValue * aspectRatio;
   return (
     <LogoSvg
       height={height}
-      width="100%"
+      width={`${widthValue}px`}
       className={className}
       aria-label="App Logo"
     />
