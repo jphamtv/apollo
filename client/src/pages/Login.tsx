@@ -7,6 +7,7 @@ import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import ErrorBox from '../components/ui/ErrorBox';
 import { isApiError, hasValidationErrors } from '../types/error';
+import sharedStyles from './authPage.module.css';
 import styles from './Login.module.css';
 
 export default function Login() {
@@ -69,11 +70,11 @@ export default function Login() {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.container}>
-        <h1 className={styles.logo}><Logo height='5rem' /></h1>
+    <div className={sharedStyles.wrapper}>
+      <div className={sharedStyles.container}>
+        <h1 className={sharedStyles.logo}><Logo height='5rem' /></h1>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form onSubmit={handleSubmit} className={sharedStyles.form}>
           {errors.length > 0 && <ErrorBox errors={errors} />}
 
           <Input
@@ -94,26 +95,26 @@ export default function Login() {
             autoComplete="current-password"
             required
           />
-          <div className={styles.forgotPassword}>
+          <div className={styles.forgotPasswordLink}>
             <Link to="/forgot-password">
-              <span className={styles.signUpLink}>Forgot password?</span>
+              <span className={sharedStyles.link}>Forgot password?</span>
             </Link>
           </div>
-          <div className={styles.buttonContainer}>
+          <div className={sharedStyles.buttonContainer}>
             <Button
               type="submit"
               isLoading={isLoading}
-              className={styles.button}
+              className={sharedStyles.button}
             >
               Log In
             </Button>
           </div>
         </form>
 
-        <p className={styles.footer}>
+        <p className={sharedStyles.footer}>
           Don't have an account?{' '}
           <Link to="/register">
-            <span className={styles.signUpLink}>Sign up</span>
+            <span className={sharedStyles.link}>Sign up</span>
           </Link>
         </p>
       </div>

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { apiClient } from '../utils/apiClient';
+import { isApiError, hasValidationErrors } from '../types/error';
+import Logo from '../components/ui/Logo';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import ErrorBox from '../components/ui/ErrorBox';
-import { isApiError, hasValidationErrors } from '../types/error';
-import styles from './ForgotPassword.module.css';
+import sharedStyles from './authPage.module.css';
+import styles from './ResetPassword.module.css';
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -81,16 +83,18 @@ export default function ResetPassword() {
 
   if (isSuccess) {
     return (
-      <div className={styles.wrapper}>
-        <div className={styles.container}>
-          <h1 className={styles.title}>Password Reset Successful</h1>
-          <div className={styles.successMessage}>
+      <div className={sharedStyles.wrapper}>
+        <div className={sharedStyles.container}>
+          <Link to='/login'>
+            <h1 className={sharedStyles.logo}><Logo height='5rem' /></h1> 
+          </Link>
+          <div className={sharedStyles.successMessage}>
             Your password has been reset successfully. You will be redirected to
             the login page shortly.
           </div>
-          <p className={styles.footer}>
+          <p className={sharedStyles.centeredButton}>
             <Link to="/login">
-              <span className={styles.link}>Go to login</span>
+              <Button type="submit" >Go to login page</Button>
             </Link>
           </p>
         </div>
@@ -99,21 +103,24 @@ export default function ResetPassword() {
   }
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.container}>
-        <h1 className={styles.title}>Set New Password</h1>
+    <div className={sharedStyles.wrapper}>
+      <div className={sharedStyles.container}>
+        <Link to='/login'>
+          <h1 className={sharedStyles.logo}><Logo height='5rem' /></h1> 
+        </Link>
 
         {!token ? (
-          <div className={styles.errorMessage}>
+          <div>
             {errors.length > 0 && <ErrorBox errors={errors} />}
-            <p className={styles.footer}>
+            <div className={sharedStyles.centeredButton}>
               <Link to="/forgot-password">
-                <span className={styles.link}>Request a new reset link</span>
+                <Button type="submit" >Request a new reset link</Button>
               </Link>
-            </p>
+            </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={handleSubmit} className={sharedStyles.form}>
+            <h2 className={styles.title}>Set New Password</h2>
             {errors.length > 0 && <ErrorBox errors={errors} />}
 
             <Input
@@ -134,7 +141,7 @@ export default function ResetPassword() {
               autoComplete="new-password"
               required
             />
-            <div>
+            <div className={`${sharedStyles.buttonContainer} ${styles.resetButton}`}>
               <Button type="submit" isLoading={isLoading}>
                 Reset Password
               </Button>

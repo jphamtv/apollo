@@ -22,20 +22,16 @@
   background-color: var(--bg-primary);
 }
 
-/* Common elements */
 .footer {
   margin-top: 1rem;
   font-size: 0.875rem;
   text-align: center;
 }
 
+/* Common elements */
 .link {
   text-decoration: underline;
   text-underline-offset: 0.25rem;
-}
-
-.errorMessage {
-  color: var(--error);
 }
 
 .buttonContainer {
@@ -45,4 +41,20 @@
 
 .button {
   min-width: 25%;
+}
+
+.centeredButton {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.successMessage {
+  color: var(--text-primary);
+  margin: 0 1rem;
+  background-color: rgba(34, 197, 94, 0.5);
+  text-align: center;
+  padding: 1rem;
+  border-radius: var(--border-radius-sm);
+  border-left: 0.25rem solid var(--color-success);
 }

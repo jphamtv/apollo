@@ -53,18 +53,18 @@ export default function ForgotPassword() {
 
         {isSubmitted ? (
           <>
-            <div className={styles.successMessage}>
+            <div className={sharedStyles.successMessage}>
               If an account exists with this email, we've sent instructions to
               reset your password.
             </div>
-            <p className={styles.footer}>
+            <div className={sharedStyles.centeredButton}>
               <Link to="/login">
                 <Button type="submit" >Back to Login</Button>
               </Link>
-            </p>
+            </div>
           </>
         ) : (
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={handleSubmit} className={`${sharedStyles.form} ${styles.forgotPasswordForm}`}>
             {errors.length > 0 && <ErrorBox errors={errors} />}
 
             <p>
@@ -79,7 +79,7 @@ export default function ForgotPassword() {
               autoComplete="email"
               required
             />
-            <div className={styles.buttonContainer}>
+            <div className={sharedStyles.buttonContainer}>
               <Button type="submit" isLoading={isLoading}>
                 Send Reset Link
               </Button>

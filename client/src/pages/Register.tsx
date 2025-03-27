@@ -9,6 +9,7 @@ import ErrorBox from '../components/ui/ErrorBox';
 import { validateForm } from '../utils/validation';
 import { isApiError, hasValidationErrors } from '../types/error';
 import { logger } from '../utils/logger';
+import sharedStyles from './authPage.module.css';
 import styles from './Register.module.css';
 
 export default function Register() {
@@ -88,11 +89,11 @@ export default function Register() {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.container}>
-        <h1 className={styles.logo}><Logo height='5rem' /></h1>
+    <div className={sharedStyles.wrapper}>
+      <div className={sharedStyles.container}>
+        <h1 className={sharedStyles.logo}><Logo height='5rem' /></h1>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form onSubmit={handleSubmit} className={sharedStyles.form}>
           {errors.length > 0 && <ErrorBox errors={errors} />}
 
           <Input
@@ -137,21 +138,21 @@ export default function Register() {
             autoComplete="new-password"
             required
           />
-          <div className={styles.buttonContainer}>
+          <div className={`${sharedStyles.buttonContainer} ${styles.createAccountButton}`}>
             <Button
               type="submit"
               isLoading={isLoading}
-              className={styles.button}
+              className={sharedStyles.button}
             >
               Create Account
             </Button>
           </div>
         </form>
 
-        <p className={styles.footer}>
+        <p className={sharedStyles.footer}>
           Already have an account?{' '}
           <Link to="/login">
-            <span className={styles.link}>Sign in</span>
+            <span className={sharedStyles.link}>Sign in</span>
           </Link>
         </p>
       </div>
