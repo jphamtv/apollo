@@ -1,20 +1,20 @@
 /**
  * Rate limiting middleware for various API endpoints
- * 
+ *
  * Security design principles:
- * 
+ *
  * 1. Progressive rate limiting strategy:
  *    - Critical endpoints (login, register) have stricter limits
  *    - General authenticated routes have higher thresholds
- * 
+ *
  * 2. Asymmetric limits for success/failure:
  *    - Failed login attempts count against limit (prevent brute force)
  *    - Successful logins don't count against limit (prevent lockout)
- * 
+ *
  * 3. Granular window periods:
  *    - Login: Short window (15 min) to quickly block suspicious activity
  *    - Register: Longer window (1 hour) to prevent account farming
- * 
+ *
  * The express-rate-limit package uses in-memory storage by default,
  * which means limits reset if the server restarts. In production,
  * this should be replaced with a Redis store for persistence across deployments.
@@ -26,7 +26,7 @@ import rateLimit from 'express-rate-limit';
  * - 5 attempts per 15 minutes per IP address
  * - Only failed attempts count against the limit
  * - Successful logins reset the counter
- * 
+ *
  * Note: For a more secure implementation in production, this should track
  * both IP and username to prevent distributed brute force attacks
  */
@@ -64,7 +64,7 @@ export const registerLimiter = rateLimit({
  * - 100 requests per 15 minutes per IP address
  * - Applied to protected routes as a general safeguard
  * - Balanced to allow normal usage while preventing abuse
- * 
+ *
  * In production, this would be further segmented by endpoint
  * category with different limits for read vs. write operations
  */

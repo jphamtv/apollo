@@ -1,15 +1,15 @@
 /**
  * Email Service for sending transactional emails
- * 
+ *
  * Architecture decisions:
  * 1. Dual-mode operation:
  *    - Development: Uses Ethereal for test emails that can be previewed in browser
  *    - Production: Uses configured SMTP server from environment variables
- * 
+ *
  * 2. Transport creation pattern:
  *    - Creates a new transporter for each email to prevent stale connections
  *    - Automatically generates test credentials in development
- * 
+ *
  * Security considerations:
  *    - Email credentials stored only in environment variables
  *    - Links have limited-time validity (handled by the reset token system)
@@ -19,15 +19,15 @@ import { logger } from '../utils/logger';
 
 /**
  * Creates and configures the appropriate email transport based on environment
- * 
+ *
  * In development:
- * - Creates an Ethereal test account automatically 
+ * - Creates an Ethereal test account automatically
  * - Provides a preview URL to see the sent email in a browser
- * 
+ *
  * In production:
  * - Uses environment variables for SMTP configuration
  * - Requires SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS to be set
- * 
+ *
  * @returns Configured nodemailer transport
  */
 const createTransporter = async () => {
@@ -61,17 +61,17 @@ const createTransporter = async () => {
 
 /**
  * Sends a password reset email with a secure reset link
- * 
+ *
  * The email contains:
  * 1. A button link to the reset page with the token embedded
  * 2. Plain text fallback link for email clients that block HTML
  * 3. Clear expiration information for the user
- * 
+ *
  * Implementation details:
  * - Token is embedded in URL as a query parameter
  * - In development, logs a preview URL for testing
  * - Uses both HTML and plain text versions for compatibility
- * 
+ *
  * @param email Recipient email address
  * @param resetToken Secure token that validates the reset request
  * @returns True if email was sent successfully

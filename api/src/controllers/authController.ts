@@ -52,21 +52,17 @@ export const registerUser = [
 
       const existingUser = await findByEmail(email);
       if (existingUser) {
-        return res
-          .status(400)
-          .json({
-            message:
-              'Email already registered. Please use a different email or try signing in.',
-          });
+        return res.status(400).json({
+          message:
+            'Email already registered. Please use a different email or try signing in.',
+        });
       }
 
       const existingUsername = await findByUsername(username);
       if (existingUsername) {
-        return res
-          .status(400)
-          .json({
-            message: 'Username already exists, please choose another one.',
-          });
+        return res.status(400).json({
+          message: 'Username already exists, please choose another one.',
+        });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);

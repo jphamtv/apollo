@@ -1,19 +1,19 @@
 /**
  * Message controller handling all message-related operations
- * 
+ *
  * Architecture highlights:
- * 
+ *
  * 1. Message creation with advanced features:
  *    - Supports text-only, image-only, or combined messages
  *    - Performs permission validation to ensure sender is a conversation participant
  *    - Handles real-time notifications through Socket.io
  *    - Implements AI bot response system with typing indicators
- * 
+ *
  * 2. Security considerations:
  *    - Validates all inputs with express-validator
  *    - Enforces authorization checks before any data access
  *    - Sanitizes inputs to prevent injection attacks
- * 
+ *
  * 3. Performance optimizations:
  *    - Immediately responds to user with their message before processing bot response
  *    - Uses asynchronous processing for bot responses to prevent blocking
@@ -42,12 +42,12 @@ import {
 
 /**
  * Retrieves all messages for a conversation
- * 
+ *
  * Security flow:
  * 1. Verify conversation exists
  * 2. Verify current user is a participant
  * 3. Return messages if authorized
- * 
+ *
  * @route GET /api/conversations/:conversationId/messages
  * @authenticated Required
  */
@@ -82,19 +82,19 @@ export const getConversationMessages = [
 
 /**
  * Creates a new message in a conversation
- * 
+ *
  * Complex implementation handling:
  * 1. Message validation (text and/or image)
  * 2. Participant verification
  * 3. Image processing if provided
  * 4. Real-time notification to other participants
  * 5. Asynchronous bot response processing
- * 
+ *
  * Note on bot processing:
  * - Uses a self-executing async function to avoid blocking the response
  * - Implements simulated typing indicators and delays for realistic UX
  * - Gracefully handles bot processing errors without affecting user response
- * 
+ *
  * @route POST /api/conversations/:conversationId/messages
  * @authenticated Required
  */

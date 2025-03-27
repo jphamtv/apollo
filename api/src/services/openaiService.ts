@@ -14,7 +14,7 @@ const openai = new OpenAI({
  * @param systemPrompt - The bot's persona/character description
  * @param quotes - Array of quotes that can be incorporated into responses
  * @param conversationHistory - Previous messages in the conversation
- * @param maxTokens - Maximum response length 
+ * @param maxTokens - Maximum response length
  * @returns The generated response text
  */
 export async function generateBotResponse(

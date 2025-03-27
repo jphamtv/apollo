@@ -1,6 +1,6 @@
 /**
  * Message data model using Prisma ORM
- * 
+ *
  * Design considerations:
  * - Includes sender information with each query to prevent N+1 query problems
  * - Uses single-level includes rather than nested includes for better performance

@@ -1,15 +1,15 @@
 /**
  * Passport.js Authentication Configuration
- * 
+ *
  * Security design:
  * 1. Uses two separate strategies for different authentication stages:
  *    - Local Strategy: For initial login with email/password
  *    - JWT Strategy: For subsequent API requests with token
- * 
+ *
  * 2. Password security:
  *    - Passwords never returned to client (filtered out in Local Strategy)
  *    - bcrypt used for secure password comparison (prevents timing attacks)
- * 
+ *
  * 3. JWT implementation:
  *    - Token extracted from Authorization header (Bearer scheme)
  *    - User ID stored in token, full user object fetched from database for each request
@@ -25,7 +25,7 @@ import { JwtPayload } from '../types';
 
 /**
  * Initialize passport strategies
- * 
+ *
  * Note: We don't use sessions (passport.serializeUser) because we use
  * stateless JWT authentication instead of session cookies
  */
