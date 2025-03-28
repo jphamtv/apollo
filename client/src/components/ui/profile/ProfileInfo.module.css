@@ -72,7 +72,7 @@
 }
 
 .avatarPlaceholder {
-  color: var(--text-primary);
+  color: var(--text-avatar);
 }
 
 .userDetails {

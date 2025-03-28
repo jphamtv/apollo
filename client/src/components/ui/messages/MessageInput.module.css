@@ -103,11 +103,12 @@
   align-items: center;
   justify-content: center;
   background-color: none;
-  border: none;
+  border: 1px solid var(--border-messageContainer);
   color: var(--text-secondary);
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 50%;
+  border-radius: var(--border-radius-sm);
+  width: 2rem;
+  height: 2rem;
   transition: background-color 0.2s;
 }
 
@@ -121,7 +122,9 @@
 }
 
 .sendButton {
-  border-radius: 50%;
+  border-radius: var(--border-radius-sm);
+  width: 2rem;
+  height: 2rem;
 }
 
 .inputActions {

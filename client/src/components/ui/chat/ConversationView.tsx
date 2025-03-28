@@ -284,12 +284,15 @@ export default function ConversationView({ conversation }: Props) {
                 </a>
               )}
               <div className={styles.actions}>
-                <button
+                <Button
+                  className={styles.deleteButton}
                   onClick={handleDeleteClick}
+                  size="small"
+                  variant='secondary'
                   aria-label="Delete conversation"
                 >
                   <Trash2 size={20} strokeWidth={1} />
-                </button>
+                </Button>
               </div>
             </div>
           </div>

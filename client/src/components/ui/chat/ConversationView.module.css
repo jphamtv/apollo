@@ -39,13 +39,15 @@
   gap: 1rem;
 }
 
-.actions button {
-  padding: 0.5rem;
+.deleteButton {
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
+  width: 2rem;
+  height: 2rem;
 }
 
-.actions button:hover {
+.deleteButton:hover {
   background-color: var(--bg-secondary);
-  border-radius: var(--border-radius-sm);
 }
 
 .label {
