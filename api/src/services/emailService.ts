@@ -46,14 +46,14 @@ const createTransporter = async () => {
       },
     });
   } else {
-    // Production email settings
+    // Production email settings using SendGrid
     return nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_SECURE === 'true',
+      host: 'smtp.sendgrid.net',
+      port: 587,
+      secure: false,
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: 'apikey',
+        pass: process.env.SENDGRID_API_KEY,
       },
     });
   }
@@ -88,7 +88,10 @@ export const sendPasswordResetEmail = async (
 
     // Send mail with defined transport object
     const info = await transporter.sendMail({
-      from: '"Messaging App" <no-reply@messaging-app.com>',
+      from: {
+        name: 'Apollo Messaging App',
+        address: 'no-reply@helloapollo.chat'
+      },
       to: email,
       subject: 'Password Reset Request',
       text: `You requested a password reset. Click this link to reset your password: ${resetUrl}
@@ -97,18 +100,88 @@ If you didn't request this, please ignore this email.
 
 The link will expire in 1 hour.`,
       html: `
-        <h3>Password Reset Request</h3>
-        <p>You requested a password reset. Click the button below to reset your password:</p>
-        <p>
-          <a href="${resetUrl}" 
-             style="background-color: #4CAF50; color: white; padding: 14px 20px; text-align: center; text-decoration: none; display: inline-block;">
-            Reset Password
-          </a>
-        </p>
-        <p>Or copy and paste this link in your browser:</p>
-        <p>${resetUrl}</p>
-        <p>If you didn't request this, please ignore this email.</p>
-        <p><strong>The link will expire in 1 hour.</strong></p>`,
+        <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Password Reset</title>
+            <style>
+              /* Base styles */
+              body {
+                font-family: 'Helvetica Neue', Arial, sans-serif;
+                line-height: 1.6;
+                color: #333333;
+                margin: 0;
+                padding: 0;
+              }
+              .container {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 16px;
+              }
+              .header {
+                text-align: center;
+                padding: 20px 0;
+              }
+              .content {
+                background-color: #ffffff;
+                padding: 16px;
+                border-radius: 4px;
+              }
+              h1 {
+                color: #0b89e9;
+                font-size: 24px;
+                margin-top: 0;
+              }
+              p {
+                margin-bottom: 16px;
+                font-size: 16px;
+              }
+              .button {
+                display: inline-block;
+                background-color: #0b89e9;
+                color: #ffffff !important;
+                text-decoration: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: bold;
+                font-size: 16px;
+                text-align: center;
+                margin: 8px 0;
+              }
+              .link {
+                word-break: break-all;
+                color: #0b89e9;
+              }
+              .footer {
+                text-align: center;
+                font-size: 12px;
+                color: #666666;
+                margin-top: 30px;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="content">
+                <h1>Password Reset Request</h1>
+                <p>You requested a password reset for your Apollo account. Click the button below to reset your password:</p>
+                <div>
+                  <a href="${resetUrl}" class="button">Reset Password</a>
+                </div>
+                <p>Or copy and paste this link in your browser:</p>
+                <p class="link">${resetUrl}</p>
+                <p>If you didn't request this, please ignore this email.</p>
+                <p><strong>The link will expire in 1 hour.</strong></p>
+              </div>
+              <div class="footer">
+                <p>&copy; ${new Date().getFullYear()} Apollo. All rights reserved.</p>
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
     });
 
     // Log URL for development testing
