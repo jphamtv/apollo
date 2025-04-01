@@ -5,6 +5,7 @@ import {
   findByUserId,
   findByQuery,
   update,
+  updateProfileImage,
 } from '../models/userProfileModel';
 import { AuthRequest } from '../types';
 import { logger } from '../utils/logger';
@@ -44,6 +45,8 @@ export const updateUserProfile = [
       }
 
       const { displayName, bio, imageUrl } = req.body;
+      
+      // The model handles old image cleanup if needed
       const userProfile = await update(userId, {
         displayName,
         bio,
@@ -116,14 +119,13 @@ export const uploadProfileImage = [
 
     try {
       const userId = req.user.id;
-      const existingProfile = await findByUserId(userId);
-
-      if (!existingProfile) {
+      
+      // The model handles both updating the DB and deleting any old image
+      const userProfile = await updateProfileImage(userId, req.fileUrl);
+      
+      if (!userProfile) {
         return res.status(404).json({ message: 'Profile not found' });
       }
-
-      // Update profile with new image URL from R2
-      const userProfile = await update(userId, { imageUrl: req.fileUrl });
 
       // Return updated user data
       const safeUser = {
@@ -145,14 +147,13 @@ export const deleteProfileImage = [
   async (req: AuthRequest, res: Response) => {
     try {
       const userId = req.user.id;
-      const existingProfile = await findByUserId(userId);
-
-      if (!existingProfile) {
+      
+      // The model handles both updating the DB and deleting any old image
+      const userProfile = await updateProfileImage(userId, null);
+      
+      if (!userProfile) {
         return res.status(404).json({ message: 'Profile not found' });
       }
-
-      // Update profile to remove image URL
-      const userProfile = await update(userId, { imageUrl: null });
 
       // Return updated user data
       const safeUser = {

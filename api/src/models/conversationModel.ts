@@ -1,5 +1,7 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { ConversationWithDetails } from '../types';
+import { deleteFile, getKeyFromUrl } from '../services/fileStorageService';
+import { logger } from '../utils/logger';
 
 const prisma = new PrismaClient();
 
@@ -236,19 +238,59 @@ export const isParticipant = async (
   return !!participant; // "!!"" converts to boolean
 };
 
-// Deletes a conversation and all related data (participants and messages) in a transaction
+/**
+ * Deletes a conversation and all related data (participants and messages) in a transaction
+ * Also deletes all image files from Cloudflare R2 associated with messages in the conversation
+ * 
+ * @param id Conversation ID to delete
+ */
 export const deleteById = async (id: string): Promise<void> => {
-  await prisma.$transaction([
-    prisma.conversationParticipant.deleteMany({
-      where: { conversationId: id },
-    }),
-    prisma.message.deleteMany({
-      where: { conversationId: id },
-    }),
-    prisma.conversation.delete({
-      where: { id },
-    }),
-  ]);
+  try {
+    // First, fetch all messages with images in this conversation
+    const messagesWithImages = await prisma.message.findMany({
+      where: {
+        conversationId: id,
+        imageUrl: {
+          not: null,
+        },
+      },
+      select: {
+        id: true,
+        imageUrl: true,
+      },
+    });
+
+    // Delete all image files from R2
+    if (messagesWithImages.length > 0) {
+      for (const message of messagesWithImages) {
+        if (message.imageUrl) {
+          const key = getKeyFromUrl(message.imageUrl);
+          if (key) {
+            await deleteFile(key);
+            logger.info(`Deleted message image from conversation ${id}: ${key}`);
+          }
+        }
+      }
+    }
+
+    // Then delete all database records in a transaction
+    await prisma.$transaction([
+      prisma.conversationParticipant.deleteMany({
+        where: { conversationId: id },
+      }),
+      prisma.message.deleteMany({
+        where: { conversationId: id },
+      }),
+      prisma.conversation.delete({
+        where: { id },
+      }),
+    ]);
+    
+    logger.info(`Conversation ${id} deleted successfully with all associated data`);
+  } catch (error) {
+    logger.error(`Error deleting conversation ${id}: ${error}`);
+    throw error;
+  }
 };
 
 // Checks if a conversation has any unread messages for a specific user

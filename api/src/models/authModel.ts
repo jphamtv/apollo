@@ -14,6 +14,8 @@
  */
 import { PrismaClient } from '@prisma/client';
 import crypto from 'crypto';
+import { deleteFile, getKeyFromUrl } from '../services/fileStorageService';
+import { logger } from '../utils/logger';
 
 const prisma = new PrismaClient();
 
@@ -190,19 +192,66 @@ export const resetPassword = async (token: string, newPassword: string) => {
 
 /**
  * Deletes a user account with all related data
- * Relies on database cascade deletion for cleanup of:
- * - Messages sent by the user
- * - Conversation participations
- * - User profile
+ * Also deletes all images stored in Cloudflare R2 associated with the user:
+ * - Profile images
+ * - Message images sent by the user
  *
  * @param id User ID to delete
  */
 export const deleteById = async (id: string): Promise<void> => {
-  // With onDelete: Cascade in the schema, deleting the user will automatically
-  // delete related messages, conversation participants, and user profile
-  await prisma.user.delete({
-    where: { id },
-  });
+  try {
+    // Fetch user with profile to get profile image URL
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        profile: true,
+        messages: {
+          select: {
+            id: true,
+            imageUrl: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      logger.warn(`Attempted to delete non-existent user: ${id}`);
+      return;
+    }
+
+    // Delete profile image if exists
+    if (user.profile?.imageUrl) {
+      const profileImageKey = getKeyFromUrl(user.profile.imageUrl);
+      if (profileImageKey) {
+        await deleteFile(profileImageKey);
+        logger.info(`Deleted profile image for user ${id}: ${profileImageKey}`);
+      }
+    }
+
+    // Delete all message images sent by the user
+    if (user.messages && user.messages.length > 0) {
+      for (const message of user.messages) {
+        if (message.imageUrl) {
+          const messageImageKey = getKeyFromUrl(message.imageUrl);
+          if (messageImageKey) {
+            await deleteFile(messageImageKey);
+            logger.info(`Deleted message image: ${messageImageKey}`);
+          }
+        }
+      }
+    }
+
+    // With onDelete: Cascade in the schema, deleting the user will automatically
+    // delete related messages, conversation participants, and user profile
+    await prisma.user.delete({
+      where: { id },
+    });
+    
+    logger.info(`User account ${id} deleted successfully`);
+  } catch (error) {
+    logger.error(`Error deleting user account ${id}: ${error}`);
+    throw error;
+  }
 };
 
 export default {

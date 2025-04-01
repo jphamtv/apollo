@@ -9,6 +9,8 @@
  */
 import { PrismaClient, Prisma } from '@prisma/client';
 import { MessageWithDetails } from '../types';
+import { deleteFile, getKeyFromUrl } from '../services/fileStorageService';
+import { logger } from '../utils/logger';
 
 const prisma = new PrismaClient();
 
@@ -87,10 +89,47 @@ export const markAsRead = async (id: string): Promise<MessageWithDetails> => {
   });
 };
 
-export const deleteById = async (id: string) => {
-  return prisma.message.delete({
-    where: { id },
-  });
+/**
+ * Deletes a message and its associated image (if any)
+ * Follows the pattern of handling resource cleanup in the model layer
+ * 
+ * @param id Message ID to delete
+ */
+export const deleteById = async (id: string): Promise<void> => {
+  try {
+    // First fetch the message to check if it has an image
+    const message = await prisma.message.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        imageUrl: true,
+      },
+    });
+    
+    if (!message) {
+      logger.warn(`Attempted to delete non-existent message: ${id}`);
+      return;
+    }
+    
+    // Delete the image from R2 if it exists
+    if (message.imageUrl) {
+      const key = getKeyFromUrl(message.imageUrl);
+      if (key) {
+        await deleteFile(key);
+        logger.info(`Deleted message image: ${key}`);
+      }
+    }
+    
+    // Delete the message from the database
+    await prisma.message.delete({
+      where: { id },
+    });
+    
+    logger.info(`Message ${id} deleted successfully`);
+  } catch (error) {
+    logger.error(`Error deleting message ${id}: ${error}`);
+    throw error;
+  }
 };
 
 export default {

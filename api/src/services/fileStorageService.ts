@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import dotenv from 'dotenv';
 import { logger } from '../utils/logger';
@@ -51,6 +51,7 @@ export const uploadFile = async (
     // Upload to R2
     await s3Client.send(command);
 
+    // TODO: Change this in production
     // Create the URL for the uploaded file
     // const url = `https://${BUCKET_NAME}.${ACCOUNT_ID}.r2.cloudflarestorage.com/${key}`;
     const url = `${PUBLIC_BUCKET_URL}/${key}`;
@@ -60,6 +61,59 @@ export const uploadFile = async (
     logger.error(`Error uploading file to R2: ${error}`);
     throw new Error('Failed to upload file to storage');
   }
+};
+
+/**
+ * Delete a file from Cloudflare R2
+ * @param key The object key to delete
+ * @returns True if deletion was successful, false otherwise
+ */
+export const deleteFile = async (key: string): Promise<boolean> => {
+  try {
+    if (!key) {
+      logger.info('Attempted to delete file with empty key');
+      return false;
+    }
+    
+    // Create command to delete file
+    const command = new DeleteObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: key,
+    });
+
+    // Delete from R2
+    await s3Client.send(command);
+    logger.info(`Successfully deleted file from R2: ${key}`);
+    return true;
+  } catch (error) {
+    logger.error(`Error deleting file from R2: ${key} - ${error}`);
+    return false;
+  }
+};
+
+/**
+ * Extract key from a file URL
+ * @param url The full URL of the file
+ * @returns The key part of the URL, or null if the URL format is invalid
+ */
+export const getKeyFromUrl = (url: string | null): string | null => {
+  if (!url) return null;
+  
+  // Try with PUBLIC_BUCKET_URL - TODO: Update this for production
+  if (PUBLIC_BUCKET_URL && url.startsWith(PUBLIC_BUCKET_URL)) {
+    return url.substring(PUBLIC_BUCKET_URL.length + 1); // +1 for the trailing slash
+  }
+  
+  // Fallback to traditional domain pattern
+  const bucketPattern = new RegExp(`https://${BUCKET_NAME}\.${ACCOUNT_ID}\.r2\.cloudflarestorage\.com/(.+)`);
+  const match = url.match(bucketPattern);
+  
+  if (match && match[1]) {
+    return match[1];
+  }
+  
+  logger.error(`Unable to extract key from URL: ${url}`);
+  return null;
 };
 
 /**

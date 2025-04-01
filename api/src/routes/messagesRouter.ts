@@ -7,7 +7,7 @@ import {
   deleteMessage,
   getConversationMessages,
 } from '../controllers/messageController';
-import { uploadMessageImage as uploadMessageImageMiddleware } from '../middleware/r2UploadMiddleware';
+import { uploadMessageImage as uploadMessageImageMiddleware } from '../middleware/fileUploadMiddleware';
 
 const router = express.Router({ mergeParams: true });
 

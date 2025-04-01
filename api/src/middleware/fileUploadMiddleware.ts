@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
-import { uploadFile } from '../services/r2Service';
+import { uploadFile } from '../services/fileStorageService';
 import { logger } from '../utils/logger';
 import crypto from 'crypto';
 import path from 'path';

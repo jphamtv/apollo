@@ -8,7 +8,7 @@ import {
 } from '../controllers/userProfileController';
 import { authenticateJWT } from '../middleware/authMiddleware';
 import { generalLimiter } from '../middleware/rateLimitMiddleware';
-import { uploadProfileImage as uploadProfileImageMiddleware } from '../middleware/r2UploadMiddleware';
+import { uploadProfileImage as uploadProfileImageMiddleware } from '../middleware/fileUploadMiddleware';
 
 const router = express.Router();
 
