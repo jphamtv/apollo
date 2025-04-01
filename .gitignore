@@ -2,6 +2,7 @@
 messaging-app.md
 scripts/
 uploads/
+logger-documentation.md
 
 # Logs
 logs
@@ -196,6 +197,7 @@ combined.log
 .env.development
 .env.production
 .env.staging
+.env*
 
 # Logs
 logs
