@@ -5,6 +5,7 @@
  *
  * 1. Message creation with advanced features:
  *    - Supports text-only, image-only, or combined messages
+ *    - Images stored in Cloudflare R2 storage
  *    - Performs permission validation to ensure sender is a conversation participant
  *    - Handles real-time notifications through Socket.io
  *    - Implements AI bot response system with typing indicators
@@ -31,7 +32,6 @@ import {
 import { findById, isParticipant } from '../models/conversationModel';
 import { findBotById } from '../models/authModel';
 import { AuthRequest } from '../types';
-import { getFileUrl } from '../middleware/uploadMiddleware';
 import { notifyNewMessage } from '../services/socketService';
 import { logger } from '../utils/logger';
 import { generateBotResponse } from '../services/openaiService';
@@ -86,14 +86,9 @@ export const getConversationMessages = [
  * Complex implementation handling:
  * 1. Message validation (text and/or image)
  * 2. Participant verification
- * 3. Image processing if provided
+ * 3. Image processing if provided (uploaded to R2)
  * 4. Real-time notification to other participants
  * 5. Asynchronous bot response processing
- *
- * Note on bot processing:
- * - Uses a self-executing async function to avoid blocking the response
- * - Implements simulated typing indicators and delays for realistic UX
- * - Gracefully handles bot processing errors without affecting user response
  *
  * @route POST /api/conversations/:conversationId/messages
  * @authenticated Required
@@ -121,17 +116,14 @@ export const createMessage = [
       const senderId = req.user.id;
 
       // Allow either, text, image, or both
-      if (!text && !req.file) {
+      if (!text && !req.fileUrl) {
         return res
           .status(400)
           .json({ message: 'Message must contain text or an image' });
       }
 
-      // Process uploaded image if present and generate URL for storage
-      let imageUrl = null;
-      if (req.file) {
-        imageUrl = getFileUrl(req.file.filename, 'message');
-      }
+      // Image URL comes from the R2 upload middleware
+      const imageUrl = req.fileUrl || null;
 
       const isUserParticipant = await isParticipant(senderId, conversationId);
       if (!isUserParticipant) {

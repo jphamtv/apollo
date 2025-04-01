@@ -7,9 +7,6 @@ import {
   update,
 } from '../models/userProfileModel';
 import { AuthRequest } from '../types';
-import { getFileUrl } from '../middleware/uploadMiddleware';
-import fs from 'fs';
-import path from 'path';
 import { logger } from '../utils/logger';
 
 const validateUserProfile = [
@@ -112,7 +109,8 @@ export const searchUsers = [
 
 export const uploadProfileImage = [
   async (req: AuthRequest, res: Response) => {
-    if (!req.file) {
+    // The fileUrl is added by the R2 upload middleware
+    if (!req.fileUrl) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
@@ -124,30 +122,8 @@ export const uploadProfileImage = [
         return res.status(404).json({ message: 'Profile not found' });
       }
 
-      // Generate image URL
-      const imageUrl = getFileUrl(req.file.filename, 'profile');
-
-      // Delete old image file if it exists
-      if (existingProfile.imageUrl) {
-        try {
-          const oldImagePath = existingProfile.imageUrl.split('/').pop();
-          if (oldImagePath) {
-            const fullPath = path.join(
-              __dirname,
-              '../../uploads/profiles',
-              oldImagePath
-            );
-            if (fs.existsSync(fullPath)) {
-              fs.unlinkSync(fullPath);
-            }
-          }
-        } catch (err) {
-          logger.error(`Error deleting old image: ${err}`);
-        }
-      }
-
-      // Update profile with new image URL
-      const userProfile = await update(userId, { imageUrl });
+      // Update profile with new image URL from R2
+      const userProfile = await update(userId, { imageUrl: req.fileUrl });
 
       // Return updated user data
       const safeUser = {
@@ -173,25 +149,6 @@ export const deleteProfileImage = [
 
       if (!existingProfile) {
         return res.status(404).json({ message: 'Profile not found' });
-      }
-
-      // If there's an existing image, delete the file
-      if (existingProfile.imageUrl) {
-        try {
-          const oldImagePath = existingProfile.imageUrl.split('/').pop();
-          if (oldImagePath) {
-            const fullPath = path.join(
-              __dirname,
-              '../../uploads/profiles',
-              oldImagePath
-            );
-            if (fs.existsSync(fullPath)) {
-              fs.unlinkSync(fullPath);
-            }
-          }
-        } catch (err) {
-          logger.error(`Error deleting image file: ${err}`);
-        }
       }
 
       // Update profile to remove image URL

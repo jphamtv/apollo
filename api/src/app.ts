@@ -15,7 +15,6 @@ const app: Express = express();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // CORS setup to allow both development ports (5173, 5174) and production client URL
 const corsOptions = {

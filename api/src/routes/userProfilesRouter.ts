@@ -8,7 +8,7 @@ import {
 } from '../controllers/userProfileController';
 import { authenticateJWT } from '../middleware/authMiddleware';
 import { generalLimiter } from '../middleware/rateLimitMiddleware';
-import { uploadUserProfileImage } from '../middleware/uploadMiddleware';
+import { uploadProfileImage as uploadProfileImageMiddleware } from '../middleware/r2UploadMiddleware';
 
 const router = express.Router();
 
@@ -23,16 +23,7 @@ router.put('/profile', authenticateJWT, updateUserProfile);
 router.post(
   '/profile/image',
   authenticateJWT,
-  (req: Request, res: Response, next: NextFunction) => {
-    uploadUserProfileImage(req, res, err => {
-      if (err) {
-        return res.status(400).json({
-          message: err.message || 'Error uploading image',
-        });
-      }
-      next();
-    });
-  },
+  uploadProfileImageMiddleware,
   uploadProfileImage
 );
 router.delete('/profile/image', authenticateJWT, deleteProfileImage);

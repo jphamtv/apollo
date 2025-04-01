@@ -7,7 +7,7 @@ import {
   deleteMessage,
   getConversationMessages,
 } from '../controllers/messageController';
-import { uploadMessageImage } from '../middleware/uploadMiddleware';
+import { uploadMessageImage as uploadMessageImageMiddleware } from '../middleware/r2UploadMiddleware';
 
 const router = express.Router({ mergeParams: true });
 
@@ -16,16 +16,7 @@ router.post(
   '/',
   generalLimiter,
   authenticateJWT,
-  (req: Request, res: Response, next: NextFunction) => {
-    uploadMessageImage(req, res, err => {
-      if (err) {
-        return res.status(400).json({
-          message: err.message || 'Error uploading image',
-        });
-      }
-      next();
-    });
-  },
+  uploadMessageImageMiddleware,
   createMessage
 );
 router.put('/:id', authenticateJWT, markMessageAsRead);

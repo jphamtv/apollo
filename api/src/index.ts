@@ -6,8 +6,9 @@ import { verifySocketToken } from './middleware/socketMiddleware';
 import { initializeSocketService } from './services/socketService';
 import { registerHandlers } from './sockets/socketHandlers';
 import { logger } from './utils/logger';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const PORT = process.env.PORT || 3000;
 const httpServer = createServer(app);
 
 // Initialize Socket.io with CORS settings matching Express CORS configuration
@@ -15,8 +16,8 @@ export const io = new Server(httpServer, {
   cors: {
     origin:
       process.env.NODE_ENV === 'production'
-        ? process.env.CLIENT_URL
-        : ['http://localhost:5173', 'http://localhost:5174'],
+      ? process.env.CLIENT_URL
+      : ['http://localhost:5173', 'http://localhost:5174'],
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -31,18 +32,20 @@ io.use(verifySocketToken);
 // Set up event handlers
 io.on('connection', socket => {
   logger.info(`User connected: ${socket.id}`);
-
+  
   // Join user to their personal room for direct user-specific events
   const userId = socket.data.user.id;
   socket.join(userId);
-
+  
   // Register all event handlers
   registerHandlers(io, socket);
-
+  
   socket.on('disconnect', () => {
     logger.info(`User disconnected ${socket.id}`);
   });
 });
+
+const PORT = process.env.PORT || 3000;
 
 httpServer.listen(PORT, () => {
   logger.info(`Server is running on port ${PORT}`);
