@@ -4,7 +4,7 @@ import { User, LoginCredentials, RegisterCredentials } from '../types/user';
 export interface UpdateProfileData {
   displayName: string;
   bio?: string;
-  imageUrl?: string;
+  // imageUrl not included as it's handled by dedicated functions
 }
 
 export interface AuthContextType {

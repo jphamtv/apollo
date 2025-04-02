@@ -4,7 +4,7 @@ import {
   findByUsername,
   findByUserId,
   findByQuery,
-  update,
+  updateProfileText,
   updateProfileImage,
 } from '../models/userProfileModel';
 import { AuthRequest } from '../types';
@@ -44,13 +44,12 @@ export const updateUserProfile = [
         return res.status(404).json({ message: 'Profile not found' });
       }
 
-      const { displayName, bio, imageUrl } = req.body;
+      const { displayName, bio } = req.body;
       
-      // The model handles old image cleanup if needed
-      const userProfile = await update(userId, {
+      // Use the dedicated function for text-only updates
+      const userProfile = await updateProfileText(userId, {
         displayName,
         bio,
-        imageUrl,
       });
 
       // Only send back safe user data

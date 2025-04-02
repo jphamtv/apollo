@@ -85,51 +85,43 @@ export const findByQuery = async (
 /**
  * Updates a user profile and handles image replacement if needed
  * If the imageUrl is changing, the old image is deleted from storage
+ * If imageUrl is not provided, preserves the existing value
  * 
  * @param userId User ID whose profile to update
  * @param data Profile data to update
  * @returns Updated profile details
  */
-export const update = async (
+/**
+ * Updates a user profile's text information only (displayName and bio)
+ * Image updates are handled separately through updateProfileImage
+ */
+export const updateProfileText = async (
   userId: string,
-  data: Prisma.UserProfileUpdateInput
+  data: { displayName: string; bio?: string }
 ): Promise<UserProfileDetails | null> => {
   try {
-    // If we're updating the imageUrl, we need to check if we should delete an old image
-    if ('imageUrl' in data) {
-      // Get the current profile to check for existing image
-      const currentProfile = await findByUserId(userId);
-      
-      // If there's an existing image and it's changing (or being removed)
-      if (currentProfile?.imageUrl && currentProfile.imageUrl !== data.imageUrl) {
-        const key = getKeyFromUrl(currentProfile.imageUrl);
-        if (key) {
-          await deleteFile(key);
-          logger.info(`Deleted old profile image for user ${userId}: ${key}`);
-        }
-      }
-    }
-    
-    // Perform the update
+    // We only update displayName and bio here, leaving imageUrl untouched
     return prisma.userProfile.update({
       where: { userId },
-      data,
+      data: {
+        displayName: data.displayName,
+        bio: data.bio
+      },
       select: {
         displayName: true,
         bio: true,
-        imageUrl: true,
+        imageUrl: true, // Still include imageUrl in the response
       },
     });
   } catch (error) {
-    logger.error(`Error updating user profile for ${userId}: ${error}`);
+    logger.error(`Error updating user profile text for ${userId}: ${error}`);
     throw error;
   }
 };
 
 /**
- * Updates a user's profile image
+ * Updates a user's profile image independently from text fields
  * Handles deletion of the old image if one exists
- * Uses the general update function internally to avoid code duplication
  * 
  * @param userId User ID whose profile image to update
  * @param imageUrl New image URL (or null to remove)
@@ -140,8 +132,28 @@ export const updateProfileImage = async (
   imageUrl: string | null
 ): Promise<UserProfileDetails | null> => {
   try {
-    // Simply delegate to the update function with the imageUrl parameter
-    return update(userId, { imageUrl });
+    // Get current profile to check for existing image
+    const currentProfile = await findByUserId(userId);
+    
+    // Delete old image if it exists and is changing
+    if (currentProfile?.imageUrl && currentProfile.imageUrl !== imageUrl) {
+      const key = getKeyFromUrl(currentProfile.imageUrl);
+      if (key) {
+        await deleteFile(key);
+        logger.info(`Deleted old profile image for user ${userId}: ${key}`);
+      }
+    }
+    
+    // Update just the imageUrl field
+    return prisma.userProfile.update({
+      where: { userId },
+      data: { imageUrl },
+      select: {
+        displayName: true,
+        bio: true,
+        imageUrl: true,
+      },
+    });
   } catch (error) {
     logger.error(`Error updating profile image for ${userId}: ${error}`);
     throw error;
@@ -152,6 +164,6 @@ export default {
   findByUsername,
   findByUserId,
   findByQuery,
-  update,
+  updateProfileText,
   updateProfileImage,
 };

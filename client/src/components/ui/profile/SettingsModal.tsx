@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
 import { useNavigation } from '../../../hooks/useNavigation';
 import Button from '../common/Button';
@@ -6,7 +6,7 @@ import Input from '../common/Input';
 import Modal from '../common/Modal';
 import { logger } from '../../../utils/logger';
 import styles from './SettingsModal.module.css';
-import { User as UserIcon, Trash2Icon } from 'lucide-react';
+import { User as UserIcon, Trash2Icon, CheckCircle } from 'lucide-react';
 
 export default function SettingsModal() {
   const {
@@ -28,18 +28,56 @@ export default function SettingsModal() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] =
     useState<boolean>(false);
+  const [textChanged, setTextChanged] = useState<boolean>(false);
+  const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Store original values for comparison
+  const [originalDisplayName, setOriginalDisplayName] = useState(user?.profile.displayName || '');
+  const [originalBio, setOriginalBio] = useState(user?.profile.bio || '');
+  
+  // Reset form values when modal opens/closes
+  useEffect(() => {
+    if (isSettingsOpen && user) {
+      // Reset to current user values when modal opens
+      setDisplayName(user.profile.displayName || '');
+      setBio(user.profile.bio || '');
+      setOriginalDisplayName(user.profile.displayName || '');
+      setOriginalBio(user.profile.bio || '');
+      setTextChanged(false);
+    }
+  }, [isSettingsOpen, user]);
+  
+  // Auto-hide success message after 3 seconds
+  useEffect(() => {
+    if (saveSuccess) {
+      const timer = setTimeout(() => {
+        setSaveSuccess(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [saveSuccess]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!textChanged) return;
+    
     setIsLoading(true);
 
     try {
+      // Only send text fields to the backend - image updates are handled separately
       await updateProfile({
         displayName,
-        bio,
+        bio
       });
-      closeSettings();
+      
+      // Update the original values to match current state after successful save
+      setOriginalDisplayName(displayName);
+      setOriginalBio(bio);
+      setTextChanged(false);
+      setSaveSuccess(true);
+      
+      // Success message will auto-hide via useEffect
     } catch (error) {
       logger.error('Failed to update profile:', error);
     } finally {
@@ -111,11 +149,29 @@ export default function SettingsModal() {
     setShowDeleteConfirmation(false);
   };
 
+  // Cancel handler for text changes
+  const handleCancel = useCallback(() => {
+    // Reset form to original values
+    setDisplayName(originalDisplayName);
+    setBio(originalBio);
+    setTextChanged(false);
+  }, [originalDisplayName, originalBio]);
+
+  // Custom close handler to check for unsaved changes
+  const handleClose = useCallback(() => {
+    // If there are unsaved changes, reset the form
+    if (textChanged) {
+      handleCancel();
+    }
+    closeSettings();
+  }, [textChanged, handleCancel, closeSettings]);
+
   return (
-    <Modal isOpen={isSettingsOpen} onClose={closeSettings}>
+    <Modal isOpen={isSettingsOpen} onClose={handleClose}>
       <div className={styles.container}>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <h2 className={styles.title}>Profile</h2>
+        {/* Image Section - Completely separate from text form */}
+        <h2 className={styles.title}>Settings</h2>
+        <div className={styles.profileSection}>
           <div className={styles.imageSection}>
             <div className={styles.avatar}>
               {isUploading && (
@@ -168,45 +224,79 @@ export default function SettingsModal() {
               )}
             </div>
           </div>
+        </div>
 
-          <div className={styles.field}>
-            <label htmlFor="displayName">Display Name</label>
-            <Input
-              id="displayName"
-              value={displayName}
-              onChange={e => setDisplayName(e.target.value)}
-              placeholder="Enter your full name"
-              className={styles.input}
-            />
-          </div>
+        {/* Text Profile Form - Separate section */}
+        <div className={styles.profileSection}>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.field}>
+              <label htmlFor="displayName">Display Name</label>
+              <Input
+                id="displayName"
+                value={displayName}
+                onChange={e => {
+                  setDisplayName(e.target.value);
+                  setTextChanged(
+                    e.target.value !== originalDisplayName || bio !== originalBio
+                  );
+                }}
+                placeholder="Enter your full name"
+                className={styles.input}
+              />
+            </div>
 
-          <div className={styles.field}>
-            <label htmlFor="bio">
-              What do you want people to know about you?
-            </label>
-            <textarea
-              id="bio"
-              value={bio}
-              onChange={e => setBio(e.target.value)}
-              className={styles.textarea}
-              placeholder="Tell us about yourself"
-              rows={3}
-            />
-          </div>
+            <div className={styles.field}>
+              <label htmlFor="bio">
+                What do you want people to know about you?
+              </label>
+              <textarea
+                id="bio"
+                value={bio}
+                onChange={e => {
+                  setBio(e.target.value);
+                  setTextChanged(
+                    displayName !== originalDisplayName || e.target.value !== originalBio
+                  );
+                }}
+                className={styles.textarea}
+                placeholder="Tell us about yourself"
+                rows={3}
+              />
+            </div>
 
-          <div className={styles.buttonContainer}>
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className={styles.button}
-            >
-              {isLoading ? 'Saving...' : 'Update Profile'}
-            </Button>
-          </div>
-        </form>
+            <div className={styles.buttonContainer}>
+              {saveSuccess && (
+                <div className={styles.successMessage}>
+                  <CheckCircle size={16} />
+                  Profile updated!
+                </div>
+              )}
+              
+              <div className={styles.buttonGroup}>
+                {textChanged && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={handleCancel}
+                    className={styles.cancelButton}
+                  >
+                    Cancel
+                  </Button>
+                )}
+                <Button
+                  type="submit"
+                  disabled={isLoading || !textChanged}
+                  className={styles.button}
+                >
+                  {isLoading ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </div>
+            </div>
+          </form>
+        </div>
 
         <div className={styles.dangerZone}>
-          <h2 className={styles.title}>Account Management</h2>
+          <h2 className={styles.dangerTitle}>Delete Account</h2>
           <p className={styles.dangerText}>
             Deleting your account will permanently remove all your data,
             including all conversations and messages. Other users will no longer
@@ -215,7 +305,6 @@ export default function SettingsModal() {
           <Button
             onClick={openDeleteConfirmation}
             variant="danger"
-            className={styles.deleteButton}
             aria-label="Delete account"
           >
             Delete Account

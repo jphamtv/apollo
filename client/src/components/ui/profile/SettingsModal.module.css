@@ -1,20 +1,35 @@
 .container {
-  padding: 1.5rem 1.5rem 2.5rem;
+  padding: 1.5rem;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: --border-radius;
+}
+
+.profileSection {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
 }
 
 .form {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
 }
 
 .imageSection {
   display: flex;
   gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  padding: 1.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
 }
 
 .uploading {
@@ -23,8 +38,9 @@
   justify-content: center;
   width: 100%;
   height: 100%;
+  font-size: 0.75rem;
   background-color: rgba(0, 0, 0, 0.5);
-  color: white;
+  color: #fff;
   border-radius: 50%;
 }
 
@@ -156,42 +172,55 @@
 .buttonContainer {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
 }
 
-.button {
-  min-width: 25%;
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.button,
+.button:hover {
+  border: 1px solid var(--accent-primary);
+}
+
+.cancelButton {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.successMessage {
+  display: flex;
+  align-items: center;
+  justify-self: flex-start;
+  gap: 0.5rem;
+  color: var(--success);
+  font-size: 0.875rem;
+  margin: 0;
 }
 
 /* Danger Zone */
 .dangerZone {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color);
+  padding: 1.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
 }
 
-.title {
+.dangerTitle {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .dangerText {
-  color: var(--text-secondary);
+  color: var(--text-primary);
   margin-bottom: 1rem;
   font-size: 0.875rem;
   line-height: 1.5;
-}
-
-.deleteButton {
-  background-color: var(--error-bg);
-  color: var(--error);
-  border: 1px solid var(--error);
-}
-
-.deleteButton:hover {
-  background-color: var(--error);
-  color: white;
 }
 
 /* Confirmation Modal */
@@ -220,6 +249,10 @@
 
 /* Mobile styles */
 @media (max-width: 29rem) {
+  .container {
+    padding: 1rem 0.75rem;
+  }
+
   .imageControls {
     display: flex;
     flex-direction: column;
@@ -229,5 +262,10 @@
 
   .uploadButton {
     width: 100%;
+  }
+ 
+  .successMessage {
+    margin-top: 0.5rem;
+    justify-content: center;
   }
 }
