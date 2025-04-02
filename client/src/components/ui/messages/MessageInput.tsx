@@ -8,7 +8,6 @@ interface Props {
   onSendMessage: (text: string, imageFile: File | null) => Promise<void>;
   isDisabled: boolean;
   isSending: boolean;
-  isConversationWithBot: boolean;
   onTyping: (isTyping: boolean) => void;
 }
 
@@ -17,7 +16,6 @@ export default function MessageInput({
   onSendMessage,
   isDisabled,
   isSending,
-  isConversationWithBot,
   onTyping,
 }: Props) {
   const [messageText, setMessageText] = useState<string>('');
@@ -167,22 +165,16 @@ export default function MessageInput({
           accept="image/jpeg,image/png,image/gif,image/webp"
           className={styles.fileInput}
           onChange={handleImageChange}
-          disabled={isDisabled || isSending || isConversationWithBot}
+          disabled={isDisabled || isSending}
         />
 
-        {isConversationWithBot ? (
-          <div className={styles.botImageNotice}>
-            <span>Sending images not available with bots</span>
-          </div>
-        ) : (
-          <label
-            htmlFor="messageImage"
-            className={styles.imageButton}
-            aria-disabled={isDisabled || isSending}
-          >
-            <Image size={20} strokeWidth={1} />
-          </label>
-        )}
+        <label
+          htmlFor="messageImage"
+          className={styles.imageButton}
+          aria-disabled={isDisabled || isSending}
+        >
+          <Image size={20} strokeWidth={1} />
+        </label>
 
         <Button
           className={styles.sendButton}

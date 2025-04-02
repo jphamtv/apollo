@@ -339,7 +339,6 @@ export default function ConversationView({ conversation }: Props) {
         onSendMessage={handleSendMessage}
         isDisabled={isNewConversation || isCreatingConversation}
         isSending={isSendingImage}
-        isConversationWithBot={isConversationWithBot}
         onTyping={handleTypingIndicator}
       />
 

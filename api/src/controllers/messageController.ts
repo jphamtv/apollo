@@ -170,15 +170,35 @@ export const createMessage = [
             const botUser = await findBotById(botId);
             if (!botUser) return;
 
-            // Get conversation history (last 10 messages for context)
+            // Get conversation history (last 50 messages for context)
             const messageHistory = await findByConversationId(conversationId);
 
-            // Format history for OpenAI API
+            // Format history for OpenAI API with support for images
             const conversationHistory = messageHistory
-              .map(msg => ({
-                role: msg.sender.id === botUser.id ? 'assistant' : 'user',
-                content: msg.text,
-              }))
+              .map(msg => {
+                // Handle messages with images
+                if (msg.imageUrl) {
+                  return {
+                    role: msg.sender.id === botUser.id ? 'assistant' : 'user',
+                    content: [
+                      { type: 'text', text: msg.text || 'Check out this image:' },
+                      {
+                        type: 'image_url',
+                        image_url: {
+                          url: msg.imageUrl,
+                          detail: 'low'
+                        }
+                      }
+                    ]
+                  };
+                } else {
+                  // Plain text message
+                  return {
+                    role: msg.sender.id === botUser.id ? 'assistant' : 'user',
+                    content: msg.text,
+                  };
+                }
+              })
               .reverse();
 
             await new Promise(resolve =>

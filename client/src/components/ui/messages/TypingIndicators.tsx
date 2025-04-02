@@ -28,7 +28,7 @@ export default function TypingIndicator({
   return (
     <div className={styles.container} role="status" aria-live="polite">
       <div className={styles.text}>
-        {displayName} is {isConversationWithBot ? 'replying' : 'typing'}
+        {displayName} is {isConversationWithBot ? 'thinking' : 'typing'}
         <span className={styles.dots} aria-hidden="true">
           {dots}
         </span>

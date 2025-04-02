@@ -1,6 +1,6 @@
 // OpenAI service for generating AI chatbot responses
 import OpenAI from 'openai';
-import { ChatCompletionAssistantMessageParam } from 'openai/resources';
+import { ChatCompletionAssistantMessageParam, ChatCompletionContentPart } from 'openai/resources';
 import dotenv from 'dotenv';
 import { logger } from '../utils/logger';
 dotenv.config();
@@ -10,17 +10,25 @@ const openai = new OpenAI({
 });
 
 /**
+ * Type definition for message content that can include text or images
+ */
+interface MessageContent {
+  role: string;
+  content: string | { type: string; text?: string; image_url?: { url: string } }[];
+}
+
+/**
  * Generates an AI response using OpenAI's GPT model
  * @param systemPrompt - The bot's persona/character description
  * @param quotes - Array of quotes that can be incorporated into responses
- * @param conversationHistory - Previous messages in the conversation
+ * @param conversationHistory - Previous messages in the conversation, may include image URLs
  * @param maxTokens - Maximum response length
  * @returns The generated response text
  */
 export async function generateBotResponse(
   systemPrompt: string,
   quotes: string[],
-  conversationHistory: Array<{ role: string; content: string }>,
+  conversationHistory: Array<MessageContent>,
   maxTokens: number = 150
 ): Promise<string> {
   try {
@@ -36,16 +44,19 @@ export async function generateBotResponse(
         ? `${systemPrompt}\n\nOccasionally incorporate these quotes (make sure to remove the quotations) when appropriate:\n${selectedQuotes.join('\n')}`
         : systemPrompt;
 
-    // Format messages for text-only processing
+    // Format messages, supporting both text-only and image content
     const messages = [
       {
         role: 'developer',
         content: enhancedPrompt,
       },
-      ...conversationHistory.map(message => ({
-        role: message.role === 'assistant' ? 'assistant' : 'user',
-        content: message.content,
-      })),
+      ...conversationHistory.map(message => {
+        // Handle messages that might have image URLs
+        return {
+          role: message.role === 'assistant' ? 'assistant' : 'user',
+          content: message.content,
+        };
+      }),
     ];
 
     const response = await openai.chat.completions.create({
