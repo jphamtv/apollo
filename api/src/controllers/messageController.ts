@@ -34,7 +34,7 @@ import { findBotById } from '../models/authModel';
 import { AuthRequest } from '../types';
 import { notifyNewMessage } from '../services/socketService';
 import { logger } from '../utils/logger';
-import { generateBotResponse } from '../services/openaiService';
+import { generateBotResponse, formatMessageWithImage } from '../services/aiService';
 import {
   notifyTypingStarted,
   notifyTypingStopped,
@@ -180,16 +180,7 @@ export const createMessage = [
                 if (msg.imageUrl) {
                   return {
                     role: msg.sender.id === botUser.id ? 'assistant' : 'user',
-                    content: [
-                      { type: 'text', text: msg.text || 'Check out this image:' },
-                      {
-                        type: 'image_url',
-                        image_url: {
-                          url: msg.imageUrl,
-                          detail: 'low'
-                        }
-                      }
-                    ]
+                    content: formatMessageWithImage(msg.text || '', msg.imageUrl, 'low')
                   };
                 } else {
                   // Plain text message
