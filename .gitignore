@@ -3,6 +3,7 @@ messaging-app.md
 scripts_and_old_files/
 uploads/
 logger-documentation.md
+docker-compose.yml
 
 # Logs
 logs

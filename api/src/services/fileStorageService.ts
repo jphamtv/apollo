@@ -51,10 +51,9 @@ export const uploadFile = async (
     // Upload to R2
     await s3Client.send(command);
 
-    // TODO: Change this in production
-    // Create the URL for the uploaded file
-    // const url = `https://${BUCKET_NAME}.${ACCOUNT_ID}.r2.cloudflarestorage.com/${key}`;
-    const url = `${PUBLIC_BUCKET_URL}/${key}`;
+    const url = process.env.NODE_ENV === 'development'
+      ? `${PUBLIC_BUCKET_URL}/${key}` // Development mode - public access
+      : `https://helloapollo.chat/${key}`; // Production mode with custom domain
 
     return { key, url };
   } catch (error) {
@@ -99,9 +98,15 @@ export const deleteFile = async (key: string): Promise<boolean> => {
 export const getKeyFromUrl = (url: string | null): string | null => {
   if (!url) return null;
   
-  // Try with PUBLIC_BUCKET_URL - TODO: Update this for production
+  // PUBLIC_BUCKET_URL in development mode
   if (PUBLIC_BUCKET_URL && url.startsWith(PUBLIC_BUCKET_URL)) {
     return url.substring(PUBLIC_BUCKET_URL.length + 1); // +1 for the trailing slash
+  }
+
+  // Custom domain in production mode
+  const CUSTOM_DOMAIN = 'https://helloapollo.chat';
+  if (url.startsWith(CUSTOM_DOMAIN)) {
+    return url.substring(CUSTOM_DOMAIN.length + 1);
   }
   
   // Fallback to traditional domain pattern
@@ -145,5 +150,9 @@ export const getSignedReadUrl = async (
  * @returns Public URL
  */
 export const getPublicUrl = (key: string): string => {
-  return `https://${BUCKET_NAME}.${ACCOUNT_ID}.r2.cloudflarestorage.com/${key}`;
+  if (process.env.NODE_ENV === 'development') {
+    return `${PUBLIC_BUCKET_URL}/${key}`;
+  } else {
+    return `https://helloapollo.chat/${key}`;
+  }
 };

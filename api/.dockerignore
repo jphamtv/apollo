@@ -1,0 +1,15 @@
+# Exclude everything by default
+*
+
+# Include necessary files and directories
+!src/
+!prisma/
+!tsconfig*.json
+!package.json
+!package-lock.json
+!.eslintrc.json
+
+# Exclude node_modules even if parent directory is included
+**/node_modules/
+**/dist/
+**/.git/
