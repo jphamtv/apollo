@@ -5,6 +5,7 @@ import { Server } from 'socket.io';
 import { verifySocketToken } from './middleware/socketMiddleware';
 import { initializeSocketService } from './services/socketService';
 import { registerHandlers } from './sockets/socketHandlers';
+import { corsOptionsBase } from './config/corsConfig';
 import { logger } from './utils/logger';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -14,12 +15,8 @@ const httpServer = createServer(app);
 // Initialize Socket.io with CORS settings matching Express CORS configuration
 export const io = new Server(httpServer, {
   cors: {
-    origin:
-      process.env.NODE_ENV === 'production'
-      ? process.env.CLIENT_URL
-      : ['http://localhost:5173', 'http://localhost:5174'],
+    ...corsOptionsBase,
     methods: ['GET', 'POST'],
-    credentials: true,
   },
 });
 

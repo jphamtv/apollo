@@ -9,6 +9,7 @@ import authRouter from './routes/authRouter';
 import userProfilesRouter from './routes/userProfilesRouter';
 import conversationsRouter from './routes/conversationsRouter';
 import messagesRouter from './routes/messagesRouter';
+import { corsOptionsBase } from './config/corsConfig';
 
 const app: Express = express();
 
@@ -18,11 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // CORS setup to allow both development ports (5173, 5174) and production client URL
 const corsOptions = {
-  origin:
-    process.env.NODE_ENV === 'production'
-      ? process.env.CLIENT_URL
-      : ['http://localhost:5173', 'http://localhost:5174'],
-  credentials: true,
+  ...corsOptionsBase,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   optionSuccessStatus: 200,
