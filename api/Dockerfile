@@ -16,11 +16,13 @@ RUN npx prisma generate
 COPY --chown=node:node . .
 
 # Build TypeScript code
-RUN npm run format && npm run lint:fix && tsc
+RUN npm run format && npx tsc
 
 # Create a script to run migrations and start the app
-RUN echo '#!/bin/sh\nnpx prisma migrate deploy\nnode src/index.js' > start.sh
-RUN chmod +x start.sh
+RUN echo '#!/bin/sh' > /app/start.sh
+RUN echo 'npx prisma migrate deploy' >> /app/start.sh  
+RUN echo 'node dist/index.js' >> /app/start.sh
+RUN chmod +x /app/start.sh
 
 # Set environment variables
 ENV NODE_ENV=production

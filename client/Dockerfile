@@ -15,7 +15,7 @@ COPY --chown=node:node .env.production ./.env
 COPY --chown=node:node . .
 
 # Build the app
-RUN npm run format && npm run lint:fix && npm run build
+RUN npm run format && npm run build
 
 # Production stage
 FROM node:22-alpine
