@@ -11,6 +11,7 @@ const ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
 const SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY;
 const BUCKET_NAME = process.env.R2_BUCKET_NAME;
 const PUBLIC_BUCKET_URL = process.env.R2_PUBLIC_BUCKET_URL;
+const CUSTOM_DOMAIN = process.env.R2_CUSTOM_DOMAIN;
 
 // Verify required environment variables
 if (!ACCOUNT_ID || !ACCESS_KEY_ID || !SECRET_ACCESS_KEY || !BUCKET_NAME) {
@@ -53,7 +54,7 @@ export const uploadFile = async (
 
     const url = process.env.NODE_ENV === 'development'
       ? `${PUBLIC_BUCKET_URL}/${key}` // Development mode - public access
-      : `https://helloapollo.chat/${key}`; // Production mode with custom domain
+      : `${CUSTOM_DOMAIN}/${key}`; // Production mode with custom domain
 
     return { key, url };
   } catch (error) {
@@ -104,8 +105,7 @@ export const getKeyFromUrl = (url: string | null): string | null => {
   }
 
   // Custom domain in production mode
-  const CUSTOM_DOMAIN = 'https://helloapollo.chat';
-  if (url.startsWith(CUSTOM_DOMAIN)) {
+  if (CUSTOM_DOMAIN && url.startsWith(CUSTOM_DOMAIN)) {
     return url.substring(CUSTOM_DOMAIN.length + 1);
   }
   
@@ -153,6 +153,6 @@ export const getPublicUrl = (key: string): string => {
   if (process.env.NODE_ENV === 'development') {
     return `${PUBLIC_BUCKET_URL}/${key}`;
   } else {
-    return `https://helloapollo.chat/${key}`;
+    return `${CUSTOM_DOMAIN}/${key}`;
   }
 };
