@@ -20,7 +20,8 @@ const imageFilter = (
     'image/png',
     'image/gif',
     'image/webp',
-    'image/heic'
+    'image/heic',
+    'image/heif'
   ];
 
   if (allowedTypes.includes(file.mimetype)) {
@@ -34,7 +35,7 @@ const imageFilter = (
 const upload = multer({
   storage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB max
+    fileSize: 20 * 1024 * 1024, // 20MB max
   },
   fileFilter: imageFilter,
 });

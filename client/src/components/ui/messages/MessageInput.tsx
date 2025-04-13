@@ -162,7 +162,7 @@ export default function MessageInput({
           ref={fileInputRef}
           type="file"
           id="messageImage"
-          accept="image/jpeg,image/png,image/gif,image/webp"
+          accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/heic,image/heif"
           className={styles.fileInput}
           onChange={handleImageChange}
           disabled={isDisabled || isSending}
