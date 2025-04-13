@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import multer from 'multer';
 import { uploadFile } from '../services/fileStorageService';
 import { logger } from '../utils/logger';
+import multer from 'multer';
+import heicConvert from 'heic-convert';
 import crypto from 'crypto';
 import path from 'path';
 
@@ -48,73 +49,92 @@ const generateUniqueFilename = (originalname: string): string => {
   return `${timestamp}-${randomString}${extension}`;
 };
 
-// Middleware to handle profile image uploads
-export const uploadProfileImage = (req: Request, res: Response, next: NextFunction) => {
-  const singleUpload = upload.single('image');
+// Convert HEIC to JPEG if needed
+async function convertHeicIfNeeded(file: Express.Multer.File): Promise<{
+  buffer: Buffer,
+  mimetype: string,
+  filename: string
+}> {
+  // Return the original file data if not HEIC
+  if (file.mimetype !== 'image/heic') {
+    return {
+      buffer: file.buffer,
+      mimetype: file.mimetype,
+      filename: file.originalname
+    };
+  }
+  
+  try {
+    // Convert HEIC to JPEG
+    const jpegBuffer = await heicConvert({
+      buffer: file.buffer,
+      format: 'JPEG',
+      quality: 0.9  // Adjust quality as needed (0-1)
+    });
+    
+    // Create a new filename with jpg extension
+    const nameWithoutExt = path.basename(file.originalname, path.extname(file.originalname));
+    const newFilename = `${nameWithoutExt}.jpg`;
+    
+    logger.info(`Converted HEIC image to JPEG: ${newFilename}`);
+    
+    return {
+      buffer: Buffer.from(jpegBuffer),
+      mimetype: 'image/jpeg',
+      filename: newFilename
+    };
+  } catch (error) {
+    logger.error(`HEIC conversion error: ${error}`);
+    throw new Error('Failed to convert HEIC image');
+  }
+}
 
-  singleUpload(req, res, async (err) => {
-    if (err) {
-      logger.error(`Upload error: ${err.message}`);
-      return res.status(400).json({ error: err.message });
-    }
+// Generic upload middleware function
+const createUploadMiddleware = (folderPath: string) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const singleUpload = upload.single('image');
 
-    // If no file was uploaded, continue to next middleware
-    if (!req.file) {
-      return next();
-    }
+    singleUpload(req, res, async (err) => {
+      if (err) {
+        logger.error(`Upload error: ${err.message}`);
+        return res.status(400).json({ error: err.message });
+      }
 
-    try {
-      const file = req.file;
-      const filename = generateUniqueFilename(file.originalname);
-      const key = `profiles/${filename}`;
+      // If no file was uploaded, continue to next middleware
+      if (!req.file) {
+        return next();
+      }
 
-      // Upload to R2
-      const result = await uploadFile(file.buffer, key, file.mimetype);
+      try {
+        // Process file (convert HEIC if needed)
+        const processedFile = await convertHeicIfNeeded(req.file);
+        
+        // Generate a unique filename
+        const filename = generateUniqueFilename(processedFile.filename);
+        const key = `${folderPath}/${filename}`;
 
-      // Add the file info to the request object
-      req.fileUrl = result.url;
-      req.fileKey = result.key;
-      next();
-    } catch (error) {
-      logger.error(`R2 upload error: ${error}`);
-      return res.status(500).json({ error: 'Failed to upload image' });
-    }
-  });
+        // Upload to R2
+        const result = await uploadFile(
+          processedFile.buffer, 
+          key, 
+          processedFile.mimetype
+        );
+
+        // Add the file info to the request object
+        req.fileUrl = result.url;
+        req.fileKey = result.key;
+        next();
+      } catch (error) {
+        logger.error(`File processing error: ${error}`);
+        return res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to process image' });
+      }
+    });
+  };
 };
 
-// Middleware to handle message image uploads
-export const uploadMessageImage = (req: Request, res: Response, next: NextFunction) => {
-  const singleUpload = upload.single('image');
-
-  singleUpload(req, res, async (err) => {
-    if (err) {
-      logger.error(`Upload error: ${err.message}`);
-      return res.status(400).json({ error: err.message });
-    }
-
-    // If no file was uploaded, continue to next middleware
-    if (!req.file) {
-      return next();
-    }
-
-    try {
-      const file = req.file;
-      const filename = generateUniqueFilename(file.originalname);
-      const key = `messages/${filename}`;
-
-      // Upload to R2
-      const result = await uploadFile(file.buffer, key, file.mimetype);
-
-      // Add the file info to the request object
-      req.fileUrl = result.url;
-      req.fileKey = result.key;
-      next();
-    } catch (error) {
-      logger.error(`R2 upload error: ${error}`);
-      return res.status(500).json({ error: 'Failed to upload image' });
-    }
-  });
-};
+// Create specific middleware functions using the factory
+export const uploadProfileImage = createUploadMiddleware('profiles');
+export const uploadMessageImage = createUploadMiddleware('messages');
 
 // Type augmentation for Express Request
 declare global {
