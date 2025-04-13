@@ -27,14 +27,12 @@ RUN chmod +x /app/start.sh
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=8000
-ENV SOCKET_PORT=8001
 
 # Switch to non-root user
 USER node
 
 # Expose ports
 EXPOSE 8000
-EXPOSE 8001
 
 # Run the app
 CMD ["./start.sh"]
