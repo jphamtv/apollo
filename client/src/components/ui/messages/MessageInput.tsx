@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUp, Image, X } from 'lucide-react';
+import heic2any from 'heic2any';
 import Button from '../common/Button';
 import styles from './MessageInput.module.css';
 
@@ -94,21 +95,64 @@ export default function MessageInput({
     onTyping(textarea.value.trim().length > 0);
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) {
       return;
     }
 
     const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setImagePreview(reader.result as string);
-    };
-
-    reader.readAsDataURL(file);
-    setImageFile(file);
+    
+    // Check file size
+    if (file.size > 20 * 1024 * 1024) {
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      // This error will be caught by onSendMessage in the parent component
+      throw new Error("Image too large. Please select an image under 20MB.");
+    }
+    
+    try {
+      // Check if the file is HEIC format
+      if (file.type === 'image/heic') {
+        // Convert HEIC to JPEG for preview
+        const jpegBlob = await heic2any({
+          blob: file,
+          toType: 'image/jpeg',
+          quality: 0.9
+        });
+        
+        // Create a new File object (for sending to the server)
+        const convertedFile = new File(
+          [jpegBlob as Blob], 
+          file.name.replace(/\.heic$/i, '.jpg'), 
+          { type: 'image/jpeg' }
+        );
+        
+        // Update the file reference for sending
+        setImageFile(convertedFile);
+        
+        // Create preview
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(jpegBlob as Blob);
+      } else {
+        // Regular image handling
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+        setImageFile(file);
+      }
+    } catch (error) {
+      console.error('Error processing image:', error);
+      throw new Error("Failed to process image. Please try again or use a different format.");
+    }
   };
+
 
   const handleRemoveImage = () => {
     setImageFile(null);
