@@ -170,6 +170,11 @@ export default function ConversationView({ conversation }: Props) {
     setSendError(null);
 
     try {
+      // Validate file size before attempting to upload
+      if (file && file.size > 20 * 1024 * 1024) {
+        throw new Error("Image too large. Please select an image under 20MB.");
+      }
+      
       if (file) {
         setIsSendingImage(true);
         const formData = new FormData();
