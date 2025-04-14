@@ -33,6 +33,7 @@ interface Props {
   typingUserName: string;
   isTyping: boolean;
   isConversationWithBot: boolean;
+  sendingImageMessage?: boolean;
 }
 
 export default function MessageList({
@@ -41,6 +42,7 @@ export default function MessageList({
   typingUserName,
   isTyping,
   isConversationWithBot,
+  sendingImageMessage,
 }: Props) {
   /**
    * References and state:
@@ -60,7 +62,7 @@ export default function MessageList({
    */
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView();
-  }, [messages, isTyping]);
+  }, [messages, isTyping, sendingImageMessage]);
 
   /**
    * Image orientation detection handler
@@ -75,6 +77,9 @@ export default function MessageList({
     if (img.naturalWidth > img.naturalHeight) {
       setLandscapeImages(prev => new Set(prev).add(messageId));
     }
+
+    // Scroll to bottom after image loads
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   /**
@@ -156,6 +161,12 @@ export default function MessageList({
             </React.Fragment>
           );
         })}
+      
+      {sendingImageMessage && (
+        <div className={styles.sendingIndicator}>
+          <span>Sending...</span>
+        </div>
+      )}
 
       {isTyping && typingUserName && (
         <TypingIndicators

@@ -74,6 +74,7 @@ export default function ConversationView({ conversation }: Props) {
     left: number;
   }>({ top: 0, left: 0 });
   const [sendError, setSendError] = useState<string | null>(null);
+  const [sendingImageMessage, setSendingImageMessage] = useState<boolean>(false);
 
   /**
    * DOM references for positioning and interaction
@@ -177,6 +178,8 @@ export default function ConversationView({ conversation }: Props) {
       
       if (file) {
         setIsSendingImage(true);
+        setSendingImageMessage(true);
+
         const formData = new FormData();
         formData.append('image', file);
         if (text.trim()) {
@@ -203,6 +206,7 @@ export default function ConversationView({ conversation }: Props) {
       throw err;
     } finally {
       setIsSendingImage(false);
+      setSendingImageMessage(false);
     }
   };
 
@@ -324,6 +328,7 @@ export default function ConversationView({ conversation }: Props) {
         typingUserName={typingUserName}
         isTyping={otherTypingUsers.length > 0}
         isConversationWithBot={isConversationWithBot}
+        sendingImageMessage={sendingImageMessage}
       />
 
       {sendError && (

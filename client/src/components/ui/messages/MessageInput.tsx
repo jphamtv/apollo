@@ -22,6 +22,7 @@ export default function MessageInput({
   const [messageText, setMessageText] = useState<string>('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -51,20 +52,40 @@ export default function MessageInput({
       return;
     }
 
-    try {
-      await onSendMessage(messageText, imageFile);
+    // Store current values in case of error
+    const currentText = messageText;
+    const currentImageFile = imageFile;
 
-      // Clear the input on success
-      setMessageText('');
+    try {
+      // Clear the input and image preview immediately
       setImageFile(null);
       setImagePreview(null);
+      setMessageText('');
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
 
+      // Send the message
+      await onSendMessage(currentText, currentImageFile);
+
       // Stop typing indicator
       onTyping(false);
     } catch {
+      // On error, restore the previous message text and image
+      setMessageText(currentText);
+      
+      // Only restore image file if it was part of the failed message
+      if (currentImageFile) {
+        setImageFile(currentImageFile);
+        
+        // Create a new preview from the file
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(currentImageFile);
+      }
+      
       // Error is handled by parent component
     }
   };
@@ -113,6 +134,8 @@ export default function MessageInput({
     }
     
     try {
+      setIsUploading(true);
+
       // Check if the file is HEIC format
       if (file.type === 'image/heic') {
         // Convert HEIC to JPEG for preview
@@ -136,6 +159,7 @@ export default function MessageInput({
         const reader = new FileReader();
         reader.onloadend = () => {
           setImagePreview(reader.result as string);
+          setIsUploading(false);
         };
         reader.readAsDataURL(jpegBlob as Blob);
       } else {
@@ -143,16 +167,17 @@ export default function MessageInput({
         const reader = new FileReader();
         reader.onloadend = () => {
           setImagePreview(reader.result as string);
+          setIsUploading(false);
         };
         reader.readAsDataURL(file);
         setImageFile(file);
       }
     } catch (error) {
       console.error('Error processing image:', error);
+      setIsUploading(false);
       throw new Error("Failed to process image. Please try again or use a different format.");
     }
   };
-
 
   const handleRemoveImage = () => {
     setImageFile(null);
@@ -168,23 +193,31 @@ export default function MessageInput({
       role="region"
       aria-label="Message input"
     >
-      {imagePreview && (
-        <div className={styles.imagePreviewContainer}>
-          <img
-            src={imagePreview}
-            className={styles.imagePreview}
-            alt="Preview"
-          />
-          <button
-            type="button"
-            onClick={handleRemoveImage}
-            className={styles.removeImageButton}
-            aria-label="Remove image"
-          >
-            <X size={16} />
-          </button>
-        </div>
-      )}
+    {(imagePreview || isUploading) && (
+      <div className={styles.imagePreviewContainer}>
+        {isUploading ? (
+          <div className={styles.uploadingContainer}>
+            <span>Uploading...</span>
+          </div>
+        ) : (
+          <>
+            <img
+              src={imagePreview || ''}
+              className={styles.imagePreview}
+              alt="Preview"
+            />
+            <button
+              type="button"
+              onClick={handleRemoveImage}
+              className={styles.removeImageButton}
+              aria-label="Remove image"
+            >
+              <X size={16} />
+            </button>
+          </>
+        )}
+      </div>
+    )}
 
       <textarea
         ref={textareaRef}

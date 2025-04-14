@@ -199,7 +199,7 @@ export default function SettingsModal() {
                 ref={fileInputRef}
                 type="file"
                 id="image"
-                accept="image/jpeg,image/png,image/gif,image/webp"
+                accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/heic,image/heif"
                 className={styles.fileInput}
                 onChange={handleImageChange}
                 disabled={isUploading}

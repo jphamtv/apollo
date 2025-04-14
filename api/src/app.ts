@@ -13,6 +13,9 @@ import { corsOptionsBase } from './config/corsConfig';
 
 const app: Express = express();
 
+// Trust proxy (nginx)
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

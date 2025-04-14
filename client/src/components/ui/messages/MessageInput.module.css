@@ -134,6 +134,20 @@
   gap: 0.5rem;
 }
 
+.uploadingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius-sm);
+  padding: 1rem;
+  color: var(--text-secondary);
+  height: 100%;
+  min-height: 100px;
+  width: 100%;
+  font-size: 0.875rem;
+}
+
 .botImageNotice {
   display: flex;
   align-items: center;

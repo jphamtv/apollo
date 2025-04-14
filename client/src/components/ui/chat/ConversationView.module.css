@@ -132,8 +132,18 @@
 
 /* Mobile styles */
 @media (max-width: 46.875em) {
+  .container {
+    /* Make sure the container takes the full viewport height */
+    height: 100vh;
+    /* Use the full viewport height, even when URL bar is present */
+    height: -webkit-fill-available;
+  }
+
   .headerContainer {
     padding: 1rem 0.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
 
   /* Only display menu button on mobile */
@@ -141,6 +151,12 @@
     display: flex;
     align-items: center;
     margin-right: 0.5rem;
+  }
+
+  .container > div:last-child {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
   }
 }
 

@@ -3,6 +3,7 @@
  * Handles different message types: text-only, image-only, or text with image
  * Includes proper accessibility attributes
  */
+import { useState } from 'react';
 import { Message } from '../../../types/message';
 import styles from './MessageItem.module.css';
 
@@ -22,6 +23,8 @@ export default function MessageItem({
   landscapeImages,
   onImageLoad,
 }: Props) {
+  const [imageLoaded, setImageLoaded] = useState(!message.imageUrl);
+
   // Determine if this is an image-only message for special styling
   const isImageOnly = message.imageUrl && !message.text;
 
@@ -53,7 +56,11 @@ export default function MessageItem({
           <img
             src={message.imageUrl || undefined}
             alt="Shared image"
-            onLoad={e => onImageLoad(e, message.id)}
+            onLoad={(e) => {
+              onImageLoad(e, message.id);
+              setImageLoaded(true);
+            }}
+            style={{ opacity: imageLoaded ? 1 : 0 }}
           />
         </div>
       ) : (
@@ -65,11 +72,15 @@ export default function MessageItem({
               <img
                 src={message.imageUrl}
                 alt="Shared image"
-                onLoad={e => onImageLoad(e, message.id)}
+                onLoad={(e) => {
+                  onImageLoad(e, message.id);
+                  setImageLoaded(true);
+                }}
+                style={{ opacity: imageLoaded ? 1 : 0 }}
               />
             </div>
           )}
-          {message.text}
+          {imageLoaded && message.text}
         </div>
       )}
     </div>
