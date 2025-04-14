@@ -11,7 +11,9 @@ import {
   deleteById,
   markConversationAsRead,
 } from '../models/conversationModel';
+import { create as createMessage } from '../models/messageModel';
 import { AuthRequest } from '../types';
+import { UserWithBotDetails } from '../types/user/base';
 import { notifyMessageRead } from '../services/socketService';
 import { logger } from '../utils/logger';
 
@@ -53,6 +55,29 @@ export const createConversation = [
       };
 
       const conversation = await create(data);
+
+      // Check if any participant is a bot
+      const botParticipant = conversation.participants.find(
+        p => p.user.isBot === true && p.user.id !== req.user.id
+      ) as { user: UserWithBotDetails } | undefined;
+
+      // If this is a new conversation with a bot and it has an initial message, create it
+      if (botParticipant && botParticipant.user.botInitialMessage) {
+        // Add a small delay to make it feel more natural
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Create the bot's initial message - only once per conversation
+        await createMessage({
+          text: botParticipant.user.botInitialMessage,
+          conversation: { connect: { id: conversation.id } },
+          sender: { connect: { id: botParticipant.user.id } },
+        });
+        
+        // Refresh the conversation to include the new message
+        const updatedConversation = await findById(conversation.id);
+        return res.json({ conversation: updatedConversation });
+      }
+
       res.json({ conversation });
     } catch (err) {
       logger.error(`Create conversation error: ${err}`);

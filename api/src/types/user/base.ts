@@ -20,3 +20,13 @@ export type UserWithAuth = Prisma.UserGetPayload<{
     password: true;
   };
 }>;
+
+// Bot-related user type
+export type UserWithBotDetails = Prisma.UserGetPayload<{
+  select: {
+    id: true;
+    username: true;
+    isBot: true;
+    botInitialMessage: true;
+  };
+}>;

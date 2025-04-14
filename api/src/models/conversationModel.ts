@@ -10,6 +10,7 @@ const userSelect = {
   id: true,
   username: true,
   isBot: true,
+  botInitialMessage: true,
   profile: {
     select: {
       displayName: true,
