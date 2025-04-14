@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
 import { useNavigation } from '../../../hooks/useNavigation';
+import { logger } from '../../../utils/logger';
+import heic2any from 'heic2any';
 import Button from '../common/Button';
 import Input from '../common/Input';
 import Modal from '../common/Modal';
-import { logger } from '../../../utils/logger';
 import styles from './SettingsModal.module.css';
 import { User as UserIcon, Trash2Icon, CheckCircle } from 'lucide-react';
 
@@ -91,24 +92,67 @@ export default function SettingsModal() {
     }
 
     const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setImagePreview(reader.result as string);
-    };
-
-    reader.readAsDataURL(file);
-
-    // Upload the image immediately
-    const formData = new FormData();
-    formData.append('image', file);
-
+    
+    // Check file size
+    if (file.size > 20 * 1024 * 1024) {
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      logger.error('Image too large. Please select an image under 20MB.');
+      return;
+    }
+    
     setIsUploading(true);
+    
     try {
+      let fileToUpload = file;
+      
+      // Check if the file is HEIC format
+      if (file.type === 'image/heic') {
+        // Convert HEIC to JPEG for preview and upload
+        const jpegBlob = await heic2any({
+          blob: file,
+          toType: 'image/jpeg',
+          quality: 0.9
+        });
+        
+        // Create a new File object (for sending to the server)
+        fileToUpload = new File(
+          [jpegBlob as Blob], 
+          file.name.replace(/\.heic$/i, '.jpg'), 
+          { type: 'image/jpeg' }
+        );
+        
+        // Create preview from converted file
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(jpegBlob as Blob);
+      } else {
+        // Regular image handling
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // Create a FormData object with the (potentially converted) file
+      const formData = new FormData();
+      formData.append('image', fileToUpload);
+
+      // Upload the image
       await uploadProfileImage(formData);
     } catch (err) {
-      logger.error('Failed to upload image:', err);
+      logger.error('Failed to process or upload image:', err);
       setImagePreview(user?.profile.imageUrl || null); // Revert preview on error
+      
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     } finally {
       setIsUploading(false);
     }
