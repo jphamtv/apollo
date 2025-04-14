@@ -22,9 +22,9 @@ interface MessageContent {
 // Initialize the ChatOpenAI model
 const model = new ChatOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  modelName: 'gpt-4o-mini',
+  modelName: 'gpt-4.1-mini',
   maxTokens: 150, // Max output for each response
-  temperature: 0.75,
+  temperature: 0.8,
 });
 
 /**
