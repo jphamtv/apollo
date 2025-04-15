@@ -1,5 +1,6 @@
 // Main application setup file that configures Express middleware, CORS, and routes
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import passport from 'passport';
 import path from 'path';
@@ -10,8 +11,9 @@ import userProfilesRouter from './routes/userProfilesRouter';
 import conversationsRouter from './routes/conversationsRouter';
 import messagesRouter from './routes/messagesRouter';
 import { corsOptionsBase } from './config/corsConfig';
+import { PrismaClient } from '@prisma/client';
 
-const app: Express = express();
+const app = express();
 
 // Trust proxy (nginx)
 app.set('trust proxy', 1);
@@ -32,6 +34,25 @@ app.use(cors(corsOptions));
 // Initialize Passport
 initializePassport();
 app.use(passport.initialize());
+
+// Health check endpoint
+app.get('/health', (req: Request, res: Response) => {
+  const checkHealth = async () => {
+    try {
+      // Check database connection by running a simple query
+      const prisma = new PrismaClient();
+      const result = await prisma.$queryRaw`SELECT 1 as test`;
+      await prisma.$disconnect();
+      
+      return res.status(200).json({ status: 'ok', message: 'Service is healthy', dbConnected: true });
+    } catch (err) {
+      logger.error(`Health check failed: ${err}`);
+      return res.status(500).json({ status: 'error', message: 'Service is unhealthy', dbConnected: false });
+    }
+  };
+  
+  checkHealth();
+});
 
 // Routes
 app.use('/api/auth', authRouter);
