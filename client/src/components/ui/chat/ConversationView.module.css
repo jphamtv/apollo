@@ -153,12 +153,6 @@
     align-items: center;
     margin-right: 0.5rem;
   }
-
-  .container > div:last-child {
-    position: sticky;
-    bottom: 0;
-    z-index: 10;
-  }
 }
 
 @media (min-width: 46.9375em) {

@@ -172,5 +172,8 @@
     border-bottom: none;
     border-left: none;
     border-right: none;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
   }
 }

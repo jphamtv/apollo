@@ -29,6 +29,8 @@ const model = new ChatOpenAI({
   modelName: 'gpt-4.1-mini',
   maxTokens: 150, // Max output for each response
   temperature: 0.8,
+  frequencyPenalty: 0.3,
+  presencePenalty: 0.4,
 });
 
 /**

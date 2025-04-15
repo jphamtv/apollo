@@ -79,7 +79,7 @@ export default function MessageList({
     }
 
     // Scroll to bottom after image loads
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView();
   };
 
   /**
