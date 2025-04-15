@@ -246,7 +246,7 @@ export const deleteById = async (id: string): Promise<void> => {
     await prisma.user.delete({
       where: { id },
     });
-    
+
     logger.info(`User account ${id} deleted successfully`);
   } catch (error) {
     logger.error(`Error deleting user account ${id}: ${error}`);

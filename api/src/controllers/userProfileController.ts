@@ -46,7 +46,7 @@ export const updateUserProfile = [
       }
 
       const { displayName, bio } = req.body;
-      
+
       // Use the dedicated function for text-only updates
       const userProfile = await updateProfileText(userId, {
         displayName,
@@ -101,7 +101,7 @@ export const getAllUsers = [
     try {
       // Get all users except the current user
       const users = await findAll(req.user.id);
-      
+
       res.json(users);
     } catch (err) {
       logger.error(`Get all users error: ${err}`);
@@ -119,10 +119,10 @@ export const uploadProfileImage = [
 
     try {
       const userId = req.user.id;
-      
+
       // The model handles both updating the DB and deleting any old image
       const userProfile = await updateProfileImage(userId, req.fileUrl);
-      
+
       if (!userProfile) {
         return res.status(404).json({ message: 'Profile not found' });
       }
@@ -147,10 +147,10 @@ export const deleteProfileImage = [
   async (req: AuthRequest, res: Response) => {
     try {
       const userId = req.user.id;
-      
+
       // The model handles both updating the DB and deleting any old image
       const userProfile = await updateProfileImage(userId, null);
-      
+
       if (!userProfile) {
         return res.status(404).json({ message: 'Profile not found' });
       }

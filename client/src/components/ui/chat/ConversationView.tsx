@@ -74,7 +74,8 @@ export default function ConversationView({ conversation }: Props) {
     left: number;
   }>({ top: 0, left: 0 });
   const [sendError, setSendError] = useState<string | null>(null);
-  const [sendingImageMessage, setSendingImageMessage] = useState<boolean>(false);
+  const [sendingImageMessage, setSendingImageMessage] =
+    useState<boolean>(false);
 
   /**
    * DOM references for positioning and interaction
@@ -173,9 +174,9 @@ export default function ConversationView({ conversation }: Props) {
     try {
       // Validate file size before attempting to upload
       if (file && file.size > 20 * 1024 * 1024) {
-        throw new Error("Image too large. Please select an image under 20MB.");
+        throw new Error('Image too large. Please select an image under 20MB.');
       }
-      
+
       if (file) {
         setIsSendingImage(true);
         setSendingImageMessage(true);
@@ -297,7 +298,7 @@ export default function ConversationView({ conversation }: Props) {
                   className={styles.deleteButton}
                   onClick={handleDeleteClick}
                   size="small"
-                  variant='secondary'
+                  variant="secondary"
                   aria-label="Delete conversation"
                 >
                   <Trash2 size={20} strokeWidth={1} />

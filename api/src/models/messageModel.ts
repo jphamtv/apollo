@@ -92,7 +92,7 @@ export const markAsRead = async (id: string): Promise<MessageWithDetails> => {
 /**
  * Deletes a message and its associated image (if any)
  * Follows the pattern of handling resource cleanup in the model layer
- * 
+ *
  * @param id Message ID to delete
  */
 export const deleteById = async (id: string): Promise<void> => {
@@ -105,12 +105,12 @@ export const deleteById = async (id: string): Promise<void> => {
         imageUrl: true,
       },
     });
-    
+
     if (!message) {
       logger.warn(`Attempted to delete non-existent message: ${id}`);
       return;
     }
-    
+
     // Delete the image from R2 if it exists
     if (message.imageUrl) {
       const key = getKeyFromUrl(message.imageUrl);
@@ -119,12 +119,12 @@ export const deleteById = async (id: string): Promise<void> => {
         logger.info(`Deleted message image: ${key}`);
       }
     }
-    
+
     // Delete the message from the database
     await prisma.message.delete({
       where: { id },
     });
-    
+
     logger.info(`Message ${id} deleted successfully`);
   } catch (error) {
     logger.error(`Error deleting message ${id}: ${error}`);

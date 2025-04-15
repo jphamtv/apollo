@@ -22,7 +22,7 @@ const imageFilter = (
     'image/gif',
     'image/webp',
     'image/heic',
-    'image/heif'
+    'image/heif',
   ];
 
   if (allowedTypes.includes(file.mimetype)) {
@@ -51,37 +51,40 @@ const generateUniqueFilename = (originalname: string): string => {
 
 // Convert HEIC to JPEG if needed
 async function convertHeicIfNeeded(file: Express.Multer.File): Promise<{
-  buffer: Buffer,
-  mimetype: string,
-  filename: string
+  buffer: Buffer;
+  mimetype: string;
+  filename: string;
 }> {
   // Return the original file data if not HEIC
   if (file.mimetype !== 'image/heic') {
     return {
       buffer: file.buffer,
       mimetype: file.mimetype,
-      filename: file.originalname
+      filename: file.originalname,
     };
   }
-  
+
   try {
     // Convert HEIC to JPEG
     const jpegBuffer = await heicConvert({
       buffer: file.buffer,
       format: 'JPEG',
-      quality: 0.9  // Adjust quality as needed (0-1)
+      quality: 0.9, // Adjust quality as needed (0-1)
     });
-    
+
     // Create a new filename with jpg extension
-    const nameWithoutExt = path.basename(file.originalname, path.extname(file.originalname));
+    const nameWithoutExt = path.basename(
+      file.originalname,
+      path.extname(file.originalname)
+    );
     const newFilename = `${nameWithoutExt}.jpg`;
-    
+
     logger.info(`Converted HEIC image to JPEG: ${newFilename}`);
-    
+
     return {
       buffer: Buffer.from(jpegBuffer),
       mimetype: 'image/jpeg',
-      filename: newFilename
+      filename: newFilename,
     };
   } catch (error) {
     logger.error(`HEIC conversion error: ${error}`);
@@ -94,7 +97,7 @@ const createUploadMiddleware = (folderPath: string) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const singleUpload = upload.single('image');
 
-    singleUpload(req, res, async (err) => {
+    singleUpload(req, res, async err => {
       if (err) {
         logger.error(`Upload error: ${err.message}`);
         return res.status(400).json({ error: err.message });
@@ -108,15 +111,15 @@ const createUploadMiddleware = (folderPath: string) => {
       try {
         // Process file (convert HEIC if needed)
         const processedFile = await convertHeicIfNeeded(req.file);
-        
+
         // Generate a unique filename
         const filename = generateUniqueFilename(processedFile.filename);
         const key = `${folderPath}/${filename}`;
 
         // Upload to R2
         const result = await uploadFile(
-          processedFile.buffer, 
-          key, 
+          processedFile.buffer,
+          key,
           processedFile.mimetype
         );
 
@@ -126,7 +129,14 @@ const createUploadMiddleware = (folderPath: string) => {
         next();
       } catch (error) {
         logger.error(`File processing error: ${error}`);
-        return res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to process image' });
+        return res
+          .status(500)
+          .json({
+            error:
+              error instanceof Error
+                ? error.message
+                : 'Failed to process image',
+          });
       }
     });
   };

@@ -161,7 +161,7 @@ export default function MessageList({
             </React.Fragment>
           );
         })}
-      
+
       {sendingImageMessage && (
         <div className={styles.sendingIndicator}>
           <span>Sending...</span>

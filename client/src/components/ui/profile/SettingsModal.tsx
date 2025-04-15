@@ -32,11 +32,13 @@ export default function SettingsModal() {
   const [textChanged, setTextChanged] = useState<boolean>(false);
   const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   // Store original values for comparison
-  const [originalDisplayName, setOriginalDisplayName] = useState(user?.profile.displayName || '');
+  const [originalDisplayName, setOriginalDisplayName] = useState(
+    user?.profile.displayName || ''
+  );
   const [originalBio, setOriginalBio] = useState(user?.profile.bio || '');
-  
+
   // Reset form values when modal opens/closes
   useEffect(() => {
     if (isSettingsOpen && user) {
@@ -48,7 +50,7 @@ export default function SettingsModal() {
       setTextChanged(false);
     }
   }, [isSettingsOpen, user]);
-  
+
   // Auto-hide success message after 3 seconds
   useEffect(() => {
     if (saveSuccess) {
@@ -62,22 +64,22 @@ export default function SettingsModal() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!textChanged) return;
-    
+
     setIsLoading(true);
 
     try {
       // Only send text fields to the backend - image updates are handled separately
       await updateProfile({
         displayName,
-        bio
+        bio,
       });
-      
+
       // Update the original values to match current state after successful save
       setOriginalDisplayName(displayName);
       setOriginalBio(bio);
       setTextChanged(false);
       setSaveSuccess(true);
-      
+
       // Success message will auto-hide via useEffect
     } catch (error) {
       logger.error('Failed to update profile:', error);
@@ -92,7 +94,7 @@ export default function SettingsModal() {
     }
 
     const file = e.target.files[0];
-    
+
     // Check file size
     if (file.size > 20 * 1024 * 1024) {
       // Clear the file input
@@ -102,28 +104,28 @@ export default function SettingsModal() {
       logger.error('Image too large. Please select an image under 20MB.');
       return;
     }
-    
+
     setIsUploading(true);
-    
+
     try {
       let fileToUpload = file;
-      
+
       // Check if the file is HEIC format
       if (file.type === 'image/heic') {
         // Convert HEIC to JPEG for preview and upload
         const jpegBlob = await heic2any({
           blob: file,
           toType: 'image/jpeg',
-          quality: 0.9
+          quality: 0.9,
         });
-        
+
         // Create a new File object (for sending to the server)
         fileToUpload = new File(
-          [jpegBlob as Blob], 
-          file.name.replace(/\.heic$/i, '.jpg'), 
+          [jpegBlob as Blob],
+          file.name.replace(/\.heic$/i, '.jpg'),
           { type: 'image/jpeg' }
         );
-        
+
         // Create preview from converted file
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -148,7 +150,7 @@ export default function SettingsModal() {
     } catch (err) {
       logger.error('Failed to process or upload image:', err);
       setImagePreview(user?.profile.imageUrl || null); // Revert preview on error
-      
+
       // Clear the file input
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -281,7 +283,8 @@ export default function SettingsModal() {
                 onChange={e => {
                   setDisplayName(e.target.value);
                   setTextChanged(
-                    e.target.value !== originalDisplayName || bio !== originalBio
+                    e.target.value !== originalDisplayName ||
+                      bio !== originalBio
                   );
                 }}
                 placeholder="Enter your full name"
@@ -299,7 +302,8 @@ export default function SettingsModal() {
                 onChange={e => {
                   setBio(e.target.value);
                   setTextChanged(
-                    displayName !== originalDisplayName || e.target.value !== originalBio
+                    displayName !== originalDisplayName ||
+                      e.target.value !== originalBio
                   );
                 }}
                 className={styles.textarea}
@@ -315,7 +319,7 @@ export default function SettingsModal() {
                   Profile updated!
                 </div>
               )}
-              
+
               <div className={styles.buttonGroup}>
                 {textChanged && (
                   <Button

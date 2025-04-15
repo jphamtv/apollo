@@ -29,14 +29,14 @@ io.use(verifySocketToken);
 // Set up event handlers
 io.on('connection', socket => {
   logger.info(`User connected: ${socket.id}`);
-  
+
   // Join user to their personal room for direct user-specific events
   const userId = socket.data.user.id;
   socket.join(userId);
-  
+
   // Register all event handlers
   registerHandlers(io, socket);
-  
+
   socket.on('disconnect', () => {
     logger.info(`User disconnected ${socket.id}`);
   });

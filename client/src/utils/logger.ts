@@ -1,17 +1,17 @@
 /**
  * Client-side logger with environment-aware log levels
- * 
+ *
  * Log levels (from highest to lowest):
  * - ERROR: Runtime errors that require attention
  * - WARN: Unexpected behavior that doesn't break the application
  * - INFO: General operational information
  * - DEBUG: Detailed information for troubleshooting
- * 
+ *
  * Environment configuration:
  * - Development: All logs are displayed
  * - Production: Only errors and warnings are displayed by default
- * 
- * Note: For client-side logging, we're more conservative about 
+ *
+ * Note: For client-side logging, we're more conservative about
  * what gets logged in production to minimize console noise for users.
  */
 
@@ -21,7 +21,7 @@ const shouldLog = (level: 'error' | 'warn' | 'info' | 'debug'): boolean => {
   if (!import.meta.env.DEV) {
     return level === 'error' || level === 'warn';
   }
-  
+
   // In development, show all levels
   return true;
 };
@@ -42,7 +42,7 @@ export const logger = {
       console.error(`[ERROR] ${message}`);
     }
   },
-  
+
   warn: (message: string, ...args: unknown[]) => {
     if (shouldLog('warn')) {
       if (import.meta.env.DEV) {
@@ -52,16 +52,16 @@ export const logger = {
       }
     }
   },
-  
+
   info: (message: string, ...args: unknown[]) => {
     if (shouldLog('info')) {
       console.log(`[${getTimestamp()}] [INFO] ${message}`, ...args);
     }
   },
-  
+
   debug: (message: string, ...args: unknown[]) => {
     if (shouldLog('debug')) {
       console.log(`[${getTimestamp()}] [DEBUG] ${message}`, ...args);
     }
-  }
+  },
 };

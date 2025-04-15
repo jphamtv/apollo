@@ -90,7 +90,7 @@ export const sendPasswordResetEmail = async (
     const info = await transporter.sendMail({
       from: {
         name: 'Apollo Messaging App',
-        address: 'no-reply@helloapollo.chat'
+        address: 'no-reply@helloapollo.chat',
       },
       to: email,
       subject: 'Password Reset Request',

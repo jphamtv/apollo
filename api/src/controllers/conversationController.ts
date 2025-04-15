@@ -65,14 +65,14 @@ export const createConversation = [
       if (botParticipant && botParticipant.user.botInitialMessage) {
         // Add a small delay to make it feel more natural
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
+
         // Create the bot's initial message - only once per conversation
         await createMessage({
           text: botParticipant.user.botInitialMessage,
           conversation: { connect: { id: conversation.id } },
           sender: { connect: { id: botParticipant.user.id } },
         });
-        
+
         // Refresh the conversation to include the new message
         const updatedConversation = await findById(conversation.id);
         return res.json({ conversation: updatedConversation });

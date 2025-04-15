@@ -1,4 +1,9 @@
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import dotenv from 'dotenv';
 import { logger } from '../utils/logger';
@@ -52,9 +57,10 @@ export const uploadFile = async (
     // Upload to R2
     await s3Client.send(command);
 
-    const url = process.env.NODE_ENV === 'development'
-      ? `${PUBLIC_BUCKET_URL}/${key}` // Development mode - public access
-      : `${CUSTOM_DOMAIN}/${key}`; // Production mode with custom domain
+    const url =
+      process.env.NODE_ENV === 'development'
+        ? `${PUBLIC_BUCKET_URL}/${key}` // Development mode - public access
+        : `${CUSTOM_DOMAIN}/${key}`; // Production mode with custom domain
 
     return { key, url };
   } catch (error) {
@@ -74,7 +80,7 @@ export const deleteFile = async (key: string): Promise<boolean> => {
       logger.info('Attempted to delete file with empty key');
       return false;
     }
-    
+
     // Create command to delete file
     const command = new DeleteObjectCommand({
       Bucket: BUCKET_NAME,
@@ -98,7 +104,7 @@ export const deleteFile = async (key: string): Promise<boolean> => {
  */
 export const getKeyFromUrl = (url: string | null): string | null => {
   if (!url) return null;
-  
+
   // PUBLIC_BUCKET_URL in development mode
   if (PUBLIC_BUCKET_URL && url.startsWith(PUBLIC_BUCKET_URL)) {
     return url.substring(PUBLIC_BUCKET_URL.length + 1); // +1 for the trailing slash
@@ -108,15 +114,17 @@ export const getKeyFromUrl = (url: string | null): string | null => {
   if (CUSTOM_DOMAIN && url.startsWith(CUSTOM_DOMAIN)) {
     return url.substring(CUSTOM_DOMAIN.length + 1);
   }
-  
+
   // Fallback to traditional domain pattern
-  const bucketPattern = new RegExp(`https://${BUCKET_NAME}\.${ACCOUNT_ID}\.r2\.cloudflarestorage\.com/(.+)`);
+  const bucketPattern = new RegExp(
+    `https://${BUCKET_NAME}\.${ACCOUNT_ID}\.r2\.cloudflarestorage\.com/(.+)`
+  );
   const match = url.match(bucketPattern);
-  
+
   if (match && match[1]) {
     return match[1];
   }
-  
+
   logger.error(`Unable to extract key from URL: ${url}`);
   return null;
 };

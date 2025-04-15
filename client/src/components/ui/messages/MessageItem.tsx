@@ -56,7 +56,7 @@ export default function MessageItem({
           <img
             src={message.imageUrl || undefined}
             alt="Shared image"
-            onLoad={(e) => {
+            onLoad={e => {
               onImageLoad(e, message.id);
               setImageLoaded(true);
             }}
@@ -72,7 +72,7 @@ export default function MessageItem({
               <img
                 src={message.imageUrl}
                 alt="Shared image"
-                onLoad={(e) => {
+                onLoad={e => {
                   onImageLoad(e, message.id);
                   setImageLoaded(true);
                 }}

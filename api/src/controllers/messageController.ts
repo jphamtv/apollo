@@ -29,12 +29,18 @@ import {
   deleteById,
   findByConversationId,
 } from '../models/messageModel';
-import { findById as findConversationById, isParticipant } from '../models/conversationModel';
+import {
+  findById as findConversationById,
+  isParticipant,
+} from '../models/conversationModel';
 import { findBotById } from '../models/authModel';
 import { AuthRequest } from '../types';
 import { notifyNewMessage } from '../services/socketService';
 import { logger } from '../utils/logger';
-import { generateBotResponse, formatMessageWithImage } from '../services/aiService';
+import {
+  generateBotResponse,
+  formatMessageWithImage,
+} from '../services/aiService';
 import {
   notifyTypingStarted,
   notifyTypingStopped,
@@ -54,7 +60,9 @@ import {
 export const getConversationMessages = [
   async (req: AuthRequest, res: Response) => {
     try {
-      const conversation = await findConversationById(req.params.conversationId);
+      const conversation = await findConversationById(
+        req.params.conversationId
+      );
 
       if (!conversation) {
         return res.status(404).json({ message: 'Conversation not found' });
@@ -180,7 +188,11 @@ export const createMessage = [
                 if (msg.imageUrl) {
                   return {
                     role: msg.sender.id === botUser.id ? 'assistant' : 'user',
-                    content: formatMessageWithImage(msg.text || '', msg.imageUrl, 'low')
+                    content: formatMessageWithImage(
+                      msg.text || '',
+                      msg.imageUrl,
+                      'low'
+                    ),
                   };
                 } else {
                   // Plain text message
@@ -257,10 +269,10 @@ export const deleteMessage = [
   async (req: AuthRequest, res: Response) => {
     try {
       const messageId = req.params.id;
-      
+
       // The model handles deleting both the database record and associated image
       await deleteById(messageId);
-      
+
       res.json({ message: 'Message deleted successfully' });
     } catch (err) {
       logger.error(`Delete message error: ${err}`);

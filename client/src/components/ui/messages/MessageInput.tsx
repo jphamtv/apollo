@@ -73,11 +73,11 @@ export default function MessageInput({
     } catch {
       // On error, restore the previous message text and image
       setMessageText(currentText);
-      
+
       // Only restore image file if it was part of the failed message
       if (currentImageFile) {
         setImageFile(currentImageFile);
-        
+
         // Create a new preview from the file
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -85,7 +85,7 @@ export default function MessageInput({
         };
         reader.readAsDataURL(currentImageFile);
       }
-      
+
       // Error is handled by parent component
     }
   };
@@ -122,7 +122,7 @@ export default function MessageInput({
     }
 
     const file = e.target.files[0];
-    
+
     // Check file size
     if (file.size > 20 * 1024 * 1024) {
       // Clear the file input
@@ -130,9 +130,9 @@ export default function MessageInput({
         fileInputRef.current.value = '';
       }
       // This error will be caught by onSendMessage in the parent component
-      throw new Error("Image too large. Please select an image under 20MB.");
+      throw new Error('Image too large. Please select an image under 20MB.');
     }
-    
+
     try {
       setIsUploading(true);
 
@@ -142,19 +142,19 @@ export default function MessageInput({
         const jpegBlob = await heic2any({
           blob: file,
           toType: 'image/jpeg',
-          quality: 0.9
+          quality: 0.9,
         });
-        
+
         // Create a new File object (for sending to the server)
         const convertedFile = new File(
-          [jpegBlob as Blob], 
-          file.name.replace(/\.heic$/i, '.jpg'), 
+          [jpegBlob as Blob],
+          file.name.replace(/\.heic$/i, '.jpg'),
           { type: 'image/jpeg' }
         );
-        
+
         // Update the file reference for sending
         setImageFile(convertedFile);
-        
+
         // Create preview
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -175,7 +175,9 @@ export default function MessageInput({
     } catch (error) {
       console.error('Error processing image:', error);
       setIsUploading(false);
-      throw new Error("Failed to process image. Please try again or use a different format.");
+      throw new Error(
+        'Failed to process image. Please try again or use a different format.'
+      );
     }
   };
 
@@ -193,31 +195,31 @@ export default function MessageInput({
       role="region"
       aria-label="Message input"
     >
-    {(imagePreview || isUploading) && (
-      <div className={styles.imagePreviewContainer}>
-        {isUploading ? (
-          <div className={styles.uploadingContainer}>
-            <span>Uploading...</span>
-          </div>
-        ) : (
-          <>
-            <img
-              src={imagePreview || ''}
-              className={styles.imagePreview}
-              alt="Preview"
-            />
-            <button
-              type="button"
-              onClick={handleRemoveImage}
-              className={styles.removeImageButton}
-              aria-label="Remove image"
-            >
-              <X size={16} />
-            </button>
-          </>
-        )}
-      </div>
-    )}
+      {(imagePreview || isUploading) && (
+        <div className={styles.imagePreviewContainer}>
+          {isUploading ? (
+            <div className={styles.uploadingContainer}>
+              <span>Uploading...</span>
+            </div>
+          ) : (
+            <>
+              <img
+                src={imagePreview || ''}
+                className={styles.imagePreview}
+                alt="Preview"
+              />
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                className={styles.removeImageButton}
+                aria-label="Remove image"
+              >
+                <X size={16} />
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
       <textarea
         ref={textareaRef}

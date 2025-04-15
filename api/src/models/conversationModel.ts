@@ -242,7 +242,7 @@ export const isParticipant = async (
 /**
  * Deletes a conversation and all related data (participants and messages) in a transaction
  * Also deletes all image files from Cloudflare R2 associated with messages in the conversation
- * 
+ *
  * @param id Conversation ID to delete
  */
 export const deleteById = async (id: string): Promise<void> => {
@@ -268,7 +268,9 @@ export const deleteById = async (id: string): Promise<void> => {
           const key = getKeyFromUrl(message.imageUrl);
           if (key) {
             await deleteFile(key);
-            logger.info(`Deleted message image from conversation ${id}: ${key}`);
+            logger.info(
+              `Deleted message image from conversation ${id}: ${key}`
+            );
           }
         }
       }
@@ -286,8 +288,10 @@ export const deleteById = async (id: string): Promise<void> => {
         where: { id },
       }),
     ]);
-    
-    logger.info(`Conversation ${id} deleted successfully with all associated data`);
+
+    logger.info(
+      `Conversation ${id} deleted successfully with all associated data`
+    );
   } catch (error) {
     logger.error(`Error deleting conversation ${id}: ${error}`);
     throw error;

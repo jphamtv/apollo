@@ -1,5 +1,9 @@
 import { ChatOpenAI } from '@langchain/openai';
-import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages';
+import {
+  HumanMessage,
+  AIMessage,
+  SystemMessage,
+} from '@langchain/core/messages';
 import dotenv from 'dotenv';
 import { logger } from '../utils/logger';
 
@@ -9,9 +13,9 @@ type ContentItem = {
   type: string;
   text?: string;
   image_url?: {
-    url: string,
-    detail: string
-  }
+    url: string;
+    detail: string;
+  };
 };
 
 interface MessageContent {
@@ -37,7 +41,7 @@ const model = new ChatOpenAI({
 export async function generateBotResponse(
   systemPrompt: string,
   quotes: string[],
-  conversationHistory: Array<MessageContent>,
+  conversationHistory: Array<MessageContent>
 ): Promise<string> {
   try {
     // Select up to 15 random quotes if available
@@ -94,23 +98,21 @@ export async function generateBotResponse(
  * @returns Properly formatted content for LangChain
  */
 export function formatMessageWithImage(
-  text: string, 
-  imageUrl?: string, 
+  text: string,
+  imageUrl?: string,
   detail: string = 'low'
 ) {
-  const content: ContentItem[] = [
-    { type: 'text', text }
-  ];
-  
+  const content: ContentItem[] = [{ type: 'text', text }];
+
   if (imageUrl) {
     content.push({
       type: 'image_url',
-      image_url: { 
+      image_url: {
         url: imageUrl,
-        detail: detail
-      }
+        detail: detail,
+      },
     });
   }
-  
+
   return content;
 }

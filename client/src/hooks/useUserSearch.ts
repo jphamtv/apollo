@@ -22,17 +22,17 @@ export function useUserSearch() {
    */
   const loadAllUsers = useCallback(async () => {
     setIsLoading(true);
-    
+
     try {
       const data = await apiClient.get<User[]>('/users');
-      
+
       // Sort users alphabetically
       const sortedUsers = [...data].sort((a, b) => {
         const nameA = a.profile.displayName || a.username;
         const nameB = b.profile.displayName || b.username;
         return nameA.localeCompare(nameB);
       });
-      
+
       setAllUsers(sortedUsers);
       setFilteredUsers(sortedUsers); // Initialize filtered users with all users
     } catch (err) {
@@ -50,30 +50,35 @@ export function useUserSearch() {
   /**
    * Updates search query and filters users in real-time
    * Filters are applied instantly on each keystroke
-   * 
+   *
    * @param query Search terms to filter by username or display name
    */
-  const updateSearchQuery = useCallback((query: string) => {
-    setSearchQuery(query);
-    
-    if (!query.trim()) {
-      // If query is empty, show all users
-      setFilteredUsers(allUsers);
-    } else {
-      // Filter users based on query
-      const lowercaseQuery = query.toLowerCase();
-      const filtered = allUsers.filter(user => 
-        user.username.toLowerCase().includes(lowercaseQuery) || 
-        (user.profile.displayName && user.profile.displayName.toLowerCase().includes(lowercaseQuery))
-      );
-      setFilteredUsers(filtered);
-    }
-  }, [allUsers]);
+  const updateSearchQuery = useCallback(
+    (query: string) => {
+      setSearchQuery(query);
+
+      if (!query.trim()) {
+        // If query is empty, show all users
+        setFilteredUsers(allUsers);
+      } else {
+        // Filter users based on query
+        const lowercaseQuery = query.toLowerCase();
+        const filtered = allUsers.filter(
+          user =>
+            user.username.toLowerCase().includes(lowercaseQuery) ||
+            (user.profile.displayName &&
+              user.profile.displayName.toLowerCase().includes(lowercaseQuery))
+        );
+        setFilteredUsers(filtered);
+      }
+    },
+    [allUsers]
+  );
 
   return {
     users: filteredUsers,
     isLoading,
     searchQuery,
-    setSearchQuery: updateSearchQuery
+    setSearchQuery: updateSearchQuery,
   };
 }
