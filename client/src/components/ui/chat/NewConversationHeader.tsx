@@ -14,9 +14,8 @@ export default function NewConversationHeader({
   onUserSelect,
   disabled = false,
 }: Props) {
-  const [searchQuery, setSearchQuery] = useState<string>('');
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
-  const { users, isLoading, searchUsers } = useUserSearch();
+  const { users, isLoading, searchQuery, setSearchQuery } = useUserSearch();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const initials = (displayName: string) => {
     return displayName
@@ -46,19 +45,13 @@ export default function NewConversationHeader({
       setShowDropdown(false);
       return;
     }
-
-    const timer = setTimeout(() => {
-      if (searchQuery.trim()) {
-        searchUsers(searchQuery);
-      }
-    }, 300); // Debounce search
-
-    return () => clearTimeout(timer);
-  }, [searchQuery, searchUsers, disabled]);
+    setShowDropdown(true);
+  }, [disabled]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (!disabled) {
+      // Always show dropdown when focused on search field
       setShowDropdown(true);
     }
   };
@@ -76,7 +69,7 @@ export default function NewConversationHeader({
         <Input
           type="text"
           placeholder={
-            disabled ? 'Creating conversation...' : 'Type to search...'
+            disabled ? 'Creating conversation...' : 'Search or select a user...'
           }
           value={searchQuery}
           onChange={e => handleSearch(e.target.value)}
@@ -85,7 +78,7 @@ export default function NewConversationHeader({
           disabled={disabled}
           autoFocus
         />
-        {showDropdown && !disabled && (searchQuery || users.length > 0) && (
+        {showDropdown && !disabled && (
           <div ref={dropdownRef} className={styles.dropdown}>
             {isLoading ? (
               <div className={styles.dropdownMessage}>Searching...</div>
@@ -117,9 +110,9 @@ export default function NewConversationHeader({
                   </div>
                 </div>
               ))
-            ) : searchQuery ? (
+            ) : (
               <div className={styles.dropdownMessage}>No users found</div>
-            ) : null}
+            )}
           </div>
         )}
       </div>

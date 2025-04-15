@@ -6,6 +6,7 @@ import {
   findByQuery,
   updateProfileText,
   updateProfileImage,
+  findAll,
 } from '../models/userProfileModel';
 import { AuthRequest } from '../types';
 import { logger } from '../utils/logger';
@@ -91,20 +92,20 @@ export const getUserProfile = [
   },
 ] as RequestHandler[];
 
-export const searchUsers = [
+/**
+ * Retrieves all users except the current user
+ * Powers the user selection dropdown for creating new conversations
+ */
+export const getAllUsers = [
   async (req: AuthRequest, res: Response) => {
-    const query = req.query.q as string;
-
-    if (!query) {
-      return res.status(400).json({ message: 'Search query is required' });
-    }
-
     try {
-      const users = await findByQuery(query, req.user.id);
-      res.json({ users });
-    } catch (error) {
-      logger.error(`User search error: ${error}`);
-      res.status(500).json({ message: 'Error searching users' });
+      // Get all users except the current user
+      const users = await findAll(req.user.id);
+      
+      res.json(users);
+    } catch (err) {
+      logger.error(`Get all users error: ${err}`);
+      res.status(500).json({ message: 'Error getting users' });
     }
   },
 ] as unknown as RequestHandler[];

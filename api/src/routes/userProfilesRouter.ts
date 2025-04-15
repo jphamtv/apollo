@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import {
+  getAllUsers,
   getUserProfile,
-  searchUsers,
   updateUserProfile,
   uploadProfileImage,
   deleteProfileImage,
@@ -12,7 +12,7 @@ import { uploadProfileImage as uploadProfileImageMiddleware } from '../middlewar
 
 const router = express.Router();
 
-router.get('/search', authenticateJWT, generalLimiter, searchUsers);
+router.get('/', authenticateJWT, getAllUsers);
 router.get(
   '/profile/:username',
   authenticateJWT,

@@ -160,10 +160,43 @@ export const updateProfileImage = async (
   }
 };
 
+/**
+ * Retrieves all users except the current user
+ * Used for displaying available users in the new conversation selector
+ *
+ * @param id Current user ID to exclude from results
+ * @returns All users sorted alphabetically by display name
+ */
+export const findAll = async (id: string) => {
+  return prisma.user.findMany({
+    where: {
+      id: { not: id },
+    },
+    select: {
+      id: true,
+      username: true,
+      isBot: true,
+      profile: {
+        select: {
+          displayName: true,
+          imageUrl: true,
+          bio: true,
+        },
+      },
+    },
+    orderBy: {
+      profile: {
+        displayName: 'asc',
+      },
+    },
+  });
+};
+
 export default {
   findByUsername,
   findByUserId,
   findByQuery,
   updateProfileText,
   updateProfileImage,
+  findAll,
 };
