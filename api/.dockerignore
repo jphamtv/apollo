@@ -7,7 +7,7 @@
 !tsconfig*.json
 !package.json
 !package-lock.json
-!.eslintrc.json
+!.eslint.config.js
 
 # Exclude node_modules even if parent directory is included
 **/node_modules/

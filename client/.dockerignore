@@ -10,6 +10,7 @@
 !package.json
 !package-lock.json
 !.env.production
+!eslint.config.js
 
 # Exclude node_modules even if parent directory is included
 **/node_modules/
